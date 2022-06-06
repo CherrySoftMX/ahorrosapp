@@ -1,20 +1,15 @@
 package com.cherrysoft;
 
-import static org.junit.Assert.assertTrue;
+import com.cherrysoft.ahorrosapp.models.User;
+import org.junit.jupiter.api.Test;
 
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-/**
- * Unit test for simple App.
- */
-public class AppTest 
-{
-    /**
-     * Rigorous Test :-)
-     */
-    @Test
-    public void shouldAnswerWithTrue()
-    {
-        assertTrue( true );
-    }
+public class AppTest {
+
+  @Test
+  public void shouldAnswerWithTrue() {
+    var user = new User();
+    assertNull(null);
+  }
 }

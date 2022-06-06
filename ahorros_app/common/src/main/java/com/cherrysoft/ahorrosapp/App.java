@@ -1,5 +1,7 @@
 package com.cherrysoft.ahorrosapp;
 
-public class App {
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+@SpringBootApplication
+public class App {
 }

@@ -1,23 +1,29 @@
 package com.cherrysoft.ahorrosapp.models;
 
-import com.sun.istack.NotNull;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Table
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@ToString
 public class User {
   @Id
   @GeneratedValue
   @Column(name = "user_id")
+  @Setter(AccessLevel.NONE)
   private Long id;
 
   @Column(unique = true)
   private String username;
 
   @Column
-  @NotNull
   private String password;
 
   @OneToMany(
@@ -26,5 +32,6 @@ public class User {
       cascade = CascadeType.ALL,
       orphanRemoval = true
   )
+  @ToString.Exclude
   private List<PiggyBank> piggyBanks;
 }

@@ -1,19 +1,24 @@
 package com.cherrysoft.ahorrosapp.models;
 
-import com.sun.istack.NotNull;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @Table
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class PiggyBank {
   @Id
   @GeneratedValue
   @Column(name = "piggy_bank_id")
+  @Setter(AccessLevel.NONE)
   private Long id;
 
   @Column
-  @NotNull
   private String name;
 
   @ManyToOne
@@ -24,11 +29,6 @@ public class PiggyBank {
   )
   private User owner;
 
-  public User getOwner() {
-    return owner;
-  }
-
-  public void setOwner(User owner) {
-    this.owner = owner;
-  }
+  @Embedded
+  private SavingInterval savingInterval;
 }

@@ -5,8 +5,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication
 @Slf4j
+@SpringBootApplication
 public class App implements CommandLineRunner {
 
   public static void main(String[] args) {
@@ -15,7 +15,6 @@ public class App implements CommandLineRunner {
 
   @Override
   public void run(String... args) throws Exception {
-    log.info("Joining thread, you can press Ctrl+C to shutdown application");
-    Thread.currentThread().join();
+    log.info("Common module");
   }
 }

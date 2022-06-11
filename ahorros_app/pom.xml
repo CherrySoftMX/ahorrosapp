@@ -32,22 +32,32 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter</artifactId>
-      </dependency>
-      <dependency>
         <groupId>com.cherrysoft.ahorrosapp</groupId>
         <artifactId>common</artifactId>
         <version>0.0.1-SNAPSHOT</version>
       </dependency>
       <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter</artifactId>
+        <version>${spring.boot.version}</version>
+      </dependency>
+      <dependency>
         <groupId>org.projectlombok</groupId>
         <artifactId>lombok</artifactId>
+        <version>1.18.24</version>
         <optional>true</optional>
+      </dependency>
+
+      <!--Testing-->
+      <dependency>
+        <groupId>com.github.javafaker</groupId>
+        <artifactId>javafaker</artifactId>
+        <version>1.0.2</version>
       </dependency>
       <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-test</artifactId>
+        <version>${spring.boot.version}</version>
         <scope>test</scope>
       </dependency>
     </dependencies>

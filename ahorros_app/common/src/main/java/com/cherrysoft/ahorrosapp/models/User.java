@@ -3,6 +3,7 @@ package com.cherrysoft.ahorrosapp.models;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -20,10 +21,10 @@ public class User {
   @Setter(AccessLevel.NONE)
   private Long id;
 
-  @Column(unique = true)
+  @Column(unique = true, nullable = false)
   private String username;
 
-  @Column
+  @Column(nullable = false)
   private String password;
 
   @OneToMany(
@@ -34,4 +35,11 @@ public class User {
   )
   @ToString.Exclude
   private List<PiggyBank> piggyBanks;
+
+  public User(Long id, String username, String password) {
+    this.id = id;
+    this.username = username;
+    this.password = password;
+    this.piggyBanks = new ArrayList<>();
+  }
 }

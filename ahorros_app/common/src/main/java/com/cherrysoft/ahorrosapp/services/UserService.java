@@ -4,8 +4,6 @@ import com.cherrysoft.ahorrosapp.models.User;
 import com.cherrysoft.ahorrosapp.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class UserService {
   private final UserRepository userRepository;
@@ -14,7 +12,9 @@ public class UserService {
     this.userRepository = userRepository;
   }
 
-  public List<User> allUsers() {
-    return userRepository.findAll();
+  public User getByUsername(String username) {
+    return userRepository
+        .findByUsername(username)
+        .orElseThrow(() -> new UserNotFoundException(username));
   }
 }

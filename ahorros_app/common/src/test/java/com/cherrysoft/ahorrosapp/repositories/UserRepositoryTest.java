@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.cherrysoft.ahorrosapp.config.FakerConfig.FAKER_INSTANCE;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataJpaTest
@@ -20,7 +21,7 @@ class UserRepositoryTest {
 
 
   @BeforeEach
-  public void setup() {
+  void setup() {
     userRepository.saveAll(
         List.of(
             new User(1L, "chito", faker.internet().password()),
@@ -30,7 +31,7 @@ class UserRepositoryTest {
   }
 
   @Test
-  public void givenAnExistentUsername_thenReturnsCorrespondingUser() {
+  void givenAnExistentUsername_thenReturnsCorrespondingUser() {
     String username = "chito";
 
     Optional<User> userMaybe = userRepository.findByUsername(username);
@@ -39,12 +40,26 @@ class UserRepositoryTest {
   }
 
   @Test
-  public void givenANonExistentUsername_thenReturnsEmptyUser() {
+  void givenANonExistentUsername_thenReturnsEmptyUser() {
     String username = "hiking";
 
     Optional<User> userMaybe = userRepository.findByUsername(username);
 
     assertTrue(userMaybe.isEmpty());
+  }
+
+  @Test
+  void testExistsByUsername() {
+    String existentUsername = "nicolas";
+    String nonExistentUsername = "javier";
+
+    boolean shouldBeTrue = userRepository.existsByUsername(existentUsername);
+
+    assertTrue(shouldBeTrue);
+
+    boolean shouldBeFalse = userRepository.existsByUsername(nonExistentUsername);
+
+    assertFalse(shouldBeFalse);
   }
 
 }

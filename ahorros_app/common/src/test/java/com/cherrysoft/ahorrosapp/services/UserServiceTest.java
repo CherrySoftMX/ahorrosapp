@@ -28,8 +28,8 @@ class UserServiceTest {
   @InjectMocks private UserService userService;
 
   @Test
-  void whenGivenAnUsername_thenShouldReturnCorrespondingUser() {
-    User user = TestUtils.getUser();
+  void whenGivenAnUsername_thenReturnsCorrespondingUser() {
+    User user = TestUtils.newUser();
     String username = user.getUsername();
     given(userRepository.findByUsername(username)).willReturn(Optional.of(user));
 
@@ -39,8 +39,8 @@ class UserServiceTest {
   }
 
   @Test
-  void whenUsernameNotFound_thenShouldThrowAnException() {
-    given(userRepository.findByUsername(any(String.class))).willReturn(Optional.empty());
+  void whenUsernameNotFound_thenThrowsAnException() {
+    given(userRepository.findByUsername(any())).willReturn(Optional.empty());
 
     assertThrows(UserNotFoundException.class, () -> {
       userService.getUserByUsername(faker.name().username());
@@ -48,8 +48,8 @@ class UserServiceTest {
   }
 
   @Test
-  void whenUserSuccessfullyAdded_thenShouldReturnAddedUser() {
-    User newUser = TestUtils.getUser();
+  void whenUserSuccessfullyAdded_thenReturnsAddedUser() {
+    User newUser = TestUtils.newUser();
     given(userRepository.save(newUser)).willAnswer(invocationOnMock -> User.builder()
         .id(1L)
         .username(newUser.getUsername())
@@ -64,9 +64,9 @@ class UserServiceTest {
   }
 
   @Test
-  void whenUsernameAlreadyTaken_thenShouldThrowAnException() {
-    User newUser = TestUtils.getUser();
-    given(userRepository.existsByUsername(any(String.class))).willReturn(true);
+  void whenAddingAUserWithAnUsernameAlreadyTaken_thenThrowsAnException() {
+    User newUser = TestUtils.newUser();
+    given(userRepository.existsByUsername(any())).willReturn(true);
 
     assertThrows(UsernameAlreadyTakenException.class, () -> {
       userService.addUser(newUser);
@@ -75,8 +75,39 @@ class UserServiceTest {
   }
 
   @Test
-  void whenUserSuccessfullyDeleted_thenShouldReturnDeletedUser() {
-    User userToDelete = TestUtils.getUser();
+  void whenPartialUpdatingUser_thenUpdatesOnlyNonNullProperties() {
+    User savedUser = TestUtils.savedUser();
+    User partialUpdateUser = User.builder().username(faker.name().username()).build();
+    User updatedUser = User.builder()
+        .id(savedUser.getId())
+        .username(partialUpdateUser.getUsername())
+        .password(savedUser.getPassword())
+        .build();
+    given(userRepository.findByUsername(savedUser.getUsername())).willReturn(Optional.of(savedUser));
+    given(userRepository.save(updatedUser)).willReturn(updatedUser);
+
+    User resultUpdatedUser = userService.partialUpdateUser(savedUser.getUsername(), partialUpdateUser);
+
+    assertEquals(updatedUser, resultUpdatedUser);
+    assertEquals(savedUser.getId(), resultUpdatedUser.getId());
+    assertEquals(savedUser.getPassword(), resultUpdatedUser.getPassword());
+  }
+
+  @Test
+  void whenUpdatingUserWithAlreadyTakenUsername_thenThrowsAnException() {
+    User savedUser = TestUtils.savedUser();
+    User partialUpdateUser = User.builder().username(faker.name().username()).build();
+    given(userRepository.existsByUsername(any())).willReturn(true);
+
+    assertThrows(UsernameAlreadyTakenException.class, () -> {
+      userService.partialUpdateUser(savedUser.getUsername(), partialUpdateUser);
+    });
+    verify(userRepository, never()).save(any(User.class));
+  }
+
+  @Test
+  void whenUserSuccessfullyDeleted_thenReturnsDeletedUser() {
+    User userToDelete = TestUtils.newUser();
     String username = userToDelete.getUsername();
     given(userRepository.findByUsername(username)).willReturn(Optional.of(userToDelete));
 
@@ -86,7 +117,7 @@ class UserServiceTest {
   }
 
   @Test
-  void whenUsernameOfUserToDeleteIsNotFound_thenShouldThrowAnException() {
+  void whenUsernameOfUserToDeleteIsNotFound_thenThrowsAnException() {
     given(userRepository.findByUsername(any(String.class))).willReturn(Optional.empty());
 
     assertThrows(UserNotFoundException.class, () -> {
@@ -94,5 +125,4 @@ class UserServiceTest {
     });
     verify(userRepository, never()).delete(any(User.class));
   }
-
 }

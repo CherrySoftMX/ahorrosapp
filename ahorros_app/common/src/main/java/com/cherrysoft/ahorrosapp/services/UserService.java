@@ -4,15 +4,14 @@ import com.cherrysoft.ahorrosapp.models.User;
 import com.cherrysoft.ahorrosapp.repositories.UserRepository;
 import com.cherrysoft.ahorrosapp.services.exceptions.UserNotFoundException;
 import com.cherrysoft.ahorrosapp.services.exceptions.UsernameAlreadyTakenException;
+import com.cherrysoft.ahorrosapp.utils.BeanUtils;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
   private final UserRepository userRepository;
-
-  public UserService(UserRepository userRepository) {
-    this.userRepository = userRepository;
-  }
 
   public User getUserByUsername(String username) {
     return userRepository
@@ -20,9 +19,9 @@ public class UserService {
         .orElseThrow(() -> new UserNotFoundException(username));
   }
 
-  public User addUser(User newUser) {
-    checkUsernameAvailability(newUser.getUsername());
-    return userRepository.save(newUser);
+  public User addUser(User user) {
+    ensureUniqueUsername(user.getUsername());
+    return userRepository.save(user);
   }
 
   public User deleteUser(String username) {
@@ -31,7 +30,16 @@ public class UserService {
     return user;
   }
 
-  private void checkUsernameAvailability(String username) {
+  public User partialUpdateUser(String oldUsername, User updatedUser) {
+    if (!oldUsername.equals(updatedUser.getUsername())) {
+      ensureUniqueUsername(updatedUser.getUsername());
+    }
+    User user = getUserByUsername(oldUsername);
+    BeanUtils.copyProperties(updatedUser, user);
+    return userRepository.save(user);
+  }
+
+  private void ensureUniqueUsername(String username) {
     boolean usernameTaken = userRepository.existsByUsername(username);
     if (usernameTaken) {
       throw new UsernameAlreadyTakenException(username);

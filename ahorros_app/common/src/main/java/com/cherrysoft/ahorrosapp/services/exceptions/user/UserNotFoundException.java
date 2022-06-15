@@ -1,4 +1,4 @@
-package com.cherrysoft.ahorrosapp.services.exceptions;
+package com.cherrysoft.ahorrosapp.services.exceptions.user;
 
 public class UserNotFoundException extends RuntimeException {
 

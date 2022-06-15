@@ -2,8 +2,8 @@ package com.cherrysoft.ahorrosapp.services;
 
 import com.cherrysoft.ahorrosapp.models.User;
 import com.cherrysoft.ahorrosapp.repositories.UserRepository;
-import com.cherrysoft.ahorrosapp.services.exceptions.UserNotFoundException;
-import com.cherrysoft.ahorrosapp.services.exceptions.UsernameAlreadyTakenException;
+import com.cherrysoft.ahorrosapp.services.exceptions.user.UserNotFoundException;
+import com.cherrysoft.ahorrosapp.services.exceptions.user.UsernameAlreadyTakenException;
 import com.cherrysoft.ahorrosapp.utils.BeanUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

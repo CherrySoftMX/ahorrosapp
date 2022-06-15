@@ -1,14 +1,19 @@
 package com.cherrysoft.ahorrosapp.models;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.time.LocalDate;
 
 @Embeddable
+@NoArgsConstructor
+@AllArgsConstructor
 public class SavingInterval {
   @Column
-  public LocalDate startDate;
+  private LocalDate startDate;
 
   @Column
-  public LocalDate endDate;
+  private LocalDate endDate;
 }

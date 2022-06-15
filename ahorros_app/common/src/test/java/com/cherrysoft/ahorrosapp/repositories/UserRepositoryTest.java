@@ -19,7 +19,6 @@ class UserRepositoryTest {
   private final Faker faker = FAKER_INSTANCE;
   @Autowired private UserRepository userRepository;
 
-
   @BeforeEach
   void setup() {
     userRepository.saveAll(
@@ -34,18 +33,18 @@ class UserRepositoryTest {
   void givenAnExistentUsername_thenReturnsCorrespondingUser() {
     String username = "chito";
 
-    Optional<User> userMaybe = userRepository.findByUsername(username);
+    Optional<User> shouldBePresent = userRepository.findByUsername(username);
 
-    assertTrue(userMaybe.isPresent());
+    assertTrue(shouldBePresent.isPresent());
   }
 
   @Test
   void givenANonExistentUsername_thenReturnsEmptyUser() {
     String username = "hiking";
 
-    Optional<User> userMaybe = userRepository.findByUsername(username);
+    Optional<User> shouldBeEmpty = userRepository.findByUsername(username);
 
-    assertTrue(userMaybe.isEmpty());
+    assertTrue(shouldBeEmpty.isEmpty());
   }
 
   @Test

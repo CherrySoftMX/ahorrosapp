@@ -29,7 +29,7 @@ class UserServiceTest {
 
   @Test
   void whenGivenAnUsername_thenReturnsCorrespondingUser() {
-    User user = TestUtils.newUser();
+    User user = TestUtils.Users.newUser();
     String username = user.getUsername();
     given(userRepository.findByUsername(username)).willReturn(Optional.of(user));
 
@@ -49,7 +49,7 @@ class UserServiceTest {
 
   @Test
   void whenUserSuccessfullyAdded_thenReturnsAddedUser() {
-    User newUser = TestUtils.newUser();
+    User newUser = TestUtils.Users.newUser();
     given(userRepository.save(newUser)).willAnswer(invocationOnMock -> User.builder()
         .id(1L)
         .username(newUser.getUsername())
@@ -65,7 +65,7 @@ class UserServiceTest {
 
   @Test
   void whenAddingAUserWithAnUsernameAlreadyTaken_thenThrowsAnException() {
-    User newUser = TestUtils.newUser();
+    User newUser = TestUtils.Users.newUser();
     given(userRepository.existsByUsername(any())).willReturn(true);
 
     assertThrows(UsernameAlreadyTakenException.class, () -> {
@@ -76,7 +76,7 @@ class UserServiceTest {
 
   @Test
   void whenPartialUpdatingUser_thenUpdatesOnlyNonNullProperties() {
-    User savedUser = TestUtils.savedUser();
+    User savedUser = TestUtils.Users.savedUser();
     User partialUpdateUser = User.builder().username(faker.name().username()).build();
     User updatedUser = User.builder()
         .id(savedUser.getId())
@@ -95,7 +95,7 @@ class UserServiceTest {
 
   @Test
   void whenUpdatingUserWithAlreadyTakenUsername_thenThrowsAnException() {
-    User savedUser = TestUtils.savedUser();
+    User savedUser = TestUtils.Users.savedUser();
     User partialUpdateUser = User.builder().username(faker.name().username()).build();
     given(userRepository.existsByUsername(any())).willReturn(true);
 
@@ -107,7 +107,7 @@ class UserServiceTest {
 
   @Test
   void whenUserSuccessfullyDeleted_thenReturnsDeletedUser() {
-    User userToDelete = TestUtils.newUser();
+    User userToDelete = TestUtils.Users.newUser();
     String username = userToDelete.getUsername();
     given(userRepository.findByUsername(username)).willReturn(Optional.of(userToDelete));
 

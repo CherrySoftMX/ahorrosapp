@@ -31,8 +31,9 @@ public class UserService {
   }
 
   public User partialUpdateUser(String oldUsername, User updatedUser) {
-    if (!oldUsername.equals(updatedUser.getUsername())) {
-      ensureUniqueUsername(updatedUser.getUsername());
+    String updatedUsername = updatedUser.getUsername();
+    if (!oldUsername.equals(updatedUsername)) {
+      ensureUniqueUsername(updatedUsername);
     }
     User user = getUserByUsername(oldUsername);
     BeanUtils.copyProperties(updatedUser, user);

@@ -10,9 +10,7 @@ import java.util.Objects;
 
 @Entity
 @Table
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
 @ToString
@@ -38,11 +36,17 @@ public class User {
   @ToString.Exclude
   private List<PiggyBank> piggyBanks;
 
+  @Builder
   public User(Long id, String username, String password) {
     this.id = id;
     this.username = username;
     this.password = password;
     this.piggyBanks = new ArrayList<>();
+  }
+
+  public void addPiggyBank(PiggyBank pb) {
+    piggyBanks.add(pb);
+    pb.setOwner(this);
   }
 
   @Override

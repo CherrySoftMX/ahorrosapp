@@ -47,6 +47,16 @@ public class TestUtils {
           )
           .build();
     }
+
+    public static PiggyBank newPiggyBankNoStartDate() {
+      return PiggyBank.builder()
+          .name("piggy")
+          .savingInterval(new SavingInterval(
+              LocalDate.now().plusDays(5)
+          ))
+          .build();
+    }
+
   }
 
 }

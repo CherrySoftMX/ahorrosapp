@@ -4,6 +4,8 @@ import lombok.*;
 
 import javax.persistence.*;
 
+import static com.cherrysoft.ahorrosapp.utils.DateUtils.today;
+
 @Entity
 @Table
 @Builder
@@ -31,4 +33,14 @@ public class PiggyBank {
 
   @Embedded
   private SavingInterval savingInterval;
+
+  public void setStartSavingsToTodayIfEmpty() {
+    if (!hasStartSavingsDate()) {
+      savingInterval.setStartDate(today());
+    }
+  }
+
+  public boolean hasStartSavingsDate() {
+    return savingInterval.getStartDate() != null;
+  }
 }

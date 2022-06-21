@@ -49,6 +49,11 @@ public class User {
     pb.setOwner(this);
   }
 
+  public void removePiggyBank(PiggyBank pb) {
+    piggyBanks.remove(pb);
+    pb.setOwner(null);
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {

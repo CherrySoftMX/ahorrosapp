@@ -57,6 +57,14 @@ public class TestUtils {
           .build();
     }
 
+    public static PiggyBank newPiggyBankWithOwner() {
+      User owner = Users.newUser();
+      PiggyBank pb = newPiggyBank();
+      pb.setOwner(owner);
+      owner.addPiggyBank(pb);
+      return pb;
+    }
+
   }
 
 }

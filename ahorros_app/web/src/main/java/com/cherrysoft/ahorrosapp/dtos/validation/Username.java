@@ -8,7 +8,8 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.util.Objects;
+
+import static java.util.Objects.isNull;
 
 @Target({ElementType.FIELD, ElementType.TYPE_PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
@@ -25,13 +26,8 @@ class UsernameValidator implements ConstraintValidator<Username, String> {
   private static final String VALID_USERNAME_PATTERN = "^[a-zA-Z0-9]*$";
 
   @Override
-  public void initialize(Username constraintAnnotation) {
-
-  }
-
-  @Override
   public boolean isValid(String value, ConstraintValidatorContext context) {
-    if (Objects.isNull(value)) {
+    if (isNull(value)) {
       return false;
     }
     return value.matches(VALID_USERNAME_PATTERN);

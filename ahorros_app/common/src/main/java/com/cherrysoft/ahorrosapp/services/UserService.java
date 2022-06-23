@@ -24,12 +24,6 @@ public class UserService {
     return userRepository.save(user);
   }
 
-  public User deleteUser(String username) {
-    User user = getUserByUsername(username);
-    userRepository.delete(user);
-    return user;
-  }
-
   public User partialUpdateUser(String oldUsername, User updatedUser) {
     String newUsername = updatedUser.getUsername();
     if (!oldUsername.equals(newUsername)) {
@@ -38,6 +32,12 @@ public class UserService {
     User user = getUserByUsername(oldUsername);
     BeanUtils.copyProperties(updatedUser, user);
     return userRepository.save(user);
+  }
+
+  public User deleteUser(String username) {
+    User user = getUserByUsername(username);
+    userRepository.delete(user);
+    return user;
   }
 
   private void ensureUniqueUsername(String username) {

@@ -9,4 +9,6 @@ public interface UserMapper {
 
   User userDto2User(UserDTO dto);
 
+  UserDTO user2UserDto(User user);
+
 }

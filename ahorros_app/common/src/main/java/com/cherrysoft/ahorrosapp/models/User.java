@@ -4,7 +4,6 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -41,7 +40,6 @@ public class User {
     this.id = id;
     this.username = username;
     this.password = password;
-    this.piggyBanks = new ArrayList<>();
   }
 
   public void addPiggyBank(PiggyBank pb) {

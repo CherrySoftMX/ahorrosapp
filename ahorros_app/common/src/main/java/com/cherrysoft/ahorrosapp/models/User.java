@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table
+@Table(name = "users")
 @NoArgsConstructor
 @Getter
 @Setter
@@ -34,6 +34,10 @@ public class User {
   )
   @ToString.Exclude
   private List<PiggyBank> piggyBanks;
+
+  public User(String username, String password) {
+    this(null, username, password);
+  }
 
   @Builder
   public User(Long id, String username, String password) {

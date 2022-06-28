@@ -28,11 +28,11 @@ public class UserController {
   @ResponseStatus(HttpStatus.CREATED)
   @Validated(OnCreate.class)
   public ResponseEntity<UserDTO> addUser(@RequestBody @Valid UserDTO userDTO) throws URISyntaxException {
-    User providedUser = userMapper.userDto2User(userDTO);
+    User providedUser = userMapper.toUser(userDTO);
     User newUser = userService.addUser(providedUser);
     return ResponseEntity
         .created(new URI("/users/" + newUser.getId()))
-        .body(userMapper.user2UserDto(newUser));
+        .body(userMapper.toUserDto(newUser));
   }
 
   @PatchMapping("/{username}")
@@ -40,15 +40,15 @@ public class UserController {
       @PathVariable String username,
       @RequestBody @Valid UserDTO userDTO
   ) {
-    User partialUpdateUser = userMapper.userDto2User(userDTO);
+    User partialUpdateUser = userMapper.toUser(userDTO);
     User updatedUser = userService.partialUpdateUser(username, partialUpdateUser);
-    return ResponseEntity.ok(userMapper.user2UserDto(updatedUser));
+    return ResponseEntity.ok(userMapper.toUserDto(updatedUser));
   }
 
   @DeleteMapping("/{username}")
   public ResponseEntity<UserDTO> deleteUser(@PathVariable String username) {
     User deletedUser = userService.deleteUser(username);
-    return ResponseEntity.ok(userMapper.user2UserDto(deletedUser));
+    return ResponseEntity.ok(userMapper.toUserDto(deletedUser));
   }
 
 }

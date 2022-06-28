@@ -7,7 +7,7 @@ import javax.persistence.*;
 import static com.cherrysoft.ahorrosapp.utils.DateUtils.today;
 
 @Entity
-@Table
+@Table(name = "piggy_banks")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

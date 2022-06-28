@@ -7,8 +7,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
-@Table
-public class SavingRecord {
+@Table(name = "daily_saving_records")
+public class DailySavingRecord {
   @Id
   @GeneratedValue
   @Column(name = "saving_record_id")

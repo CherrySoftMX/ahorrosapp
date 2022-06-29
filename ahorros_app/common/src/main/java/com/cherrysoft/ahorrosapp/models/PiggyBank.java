@@ -3,8 +3,10 @@ package com.cherrysoft.ahorrosapp.models;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 import static com.cherrysoft.ahorrosapp.utils.DateUtils.today;
+import static java.util.Objects.isNull;
 
 @Entity
 @Table(name = "piggy_banks")
@@ -31,16 +33,42 @@ public class PiggyBank {
   )
   private User owner;
 
-  @Embedded
-  private SavingInterval savingInterval;
+  @Column
+  private LocalDate startSavings;
+
+  @Column
+  private LocalDate endSavings;
+
+  public void ensureSavingsIntervalIntegrity() {
+    ensureEndDateIsPresentOrFutureIfNotStartDate();
+    ensureStartDateIsBeforeEndDate();
+  }
+
+  public void ensureEndDateIsPresentOrFutureIfNotStartDate() {
+    if (isNull(startSavings) && endSavings.isBefore(today())) {
+      throw new RuntimeException("End date must be present or future.");
+    }
+  }
+
+  public void ensureStartDateIsBeforeEndDate() {
+    if (hasEndSavingsDate() && startSavings.isAfter(endSavings)) {
+      throw new RuntimeException("Start date must be before end date.");
+    }
+  }
 
   public void setStartSavingsToTodayIfEmpty() {
-    if (!hasStartSavingsDate()) {
-      savingInterval.setStartDate(today());
+    if (isNull(startSavings)) {
+      ensureEndDateIsPresentOrFutureIfNotStartDate();
+      setStartSavings(today());
     }
   }
 
   public boolean hasStartSavingsDate() {
-    return savingInterval.getStartDate() != null;
+    return !isNull(startSavings);
   }
+
+  public boolean hasEndSavingsDate() {
+    return !isNull(endSavings);
+  }
+
 }

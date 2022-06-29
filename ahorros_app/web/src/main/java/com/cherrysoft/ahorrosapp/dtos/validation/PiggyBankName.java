@@ -8,13 +8,14 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.util.Objects;
+
+import static java.util.Objects.isNull;
 
 @Target({ElementType.FIELD, ElementType.TYPE_PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = PiggyBankNameValidator.class)
 public @interface PiggyBankName {
-  String message() default "Username can only have letters, numbers, _ or -.";
+  String message() default "Piggy bank name can only have letters, numbers, _ or -.";
 
   Class<?>[] groups() default {};
 
@@ -26,8 +27,8 @@ class PiggyBankNameValidator implements ConstraintValidator<PiggyBankName, Strin
 
   @Override
   public boolean isValid(String value, ConstraintValidatorContext context) {
-    if (Objects.isNull(value)) {
-      return false;
+    if (isNull(value)) {
+      return true;
     }
     return value.matches(VALID_PIGGYBANK_NAME_PATTERN);
   }

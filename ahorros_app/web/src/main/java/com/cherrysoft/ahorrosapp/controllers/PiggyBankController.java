@@ -38,4 +38,23 @@ public class PiggyBankController {
         .body(pbMapper.toPiggyBankDto(addedPb));
   }
 
+  @PatchMapping("/{pbName}")
+  public ResponseEntity<PiggyBankDTO> partialUpdatePiggyBank(
+      @PathVariable String pbName,
+      @PathVariable String ownerUsername,
+      @RequestBody @Valid PiggyBankDTO pbDto
+  ) {
+    PiggyBank providedPb = pbMapper.toPiggyBank(pbDto);
+    PiggyBank updatedPb = pbService.partialUpdatePiggyBank(ownerUsername, pbName, providedPb);
+    return ResponseEntity.ok(pbMapper.toPiggyBankDto(updatedPb));
+  }
+
+  @DeleteMapping("/{pbName}")
+  public ResponseEntity<PiggyBankDTO> deletePiggyBank(
+      @PathVariable String pbName,
+      @PathVariable String ownerUsername
+  ) {
+    PiggyBank deletedPb = pbService.deletePiggyBank(pbName, ownerUsername);
+    return ResponseEntity.ok(pbMapper.toPiggyBankDto(deletedPb));
+  }
 }

@@ -25,6 +25,7 @@ public class PiggyBankService {
     User owner = userService.getUserByUsername(ownerUsername);
     ensureUniquePiggyBankNameForOwner(pb.getName(), owner);
     pb.setStartSavingsToTodayIfEmpty();
+    pb.ensureSavingsIntervalIntegrity();
     owner.addPiggyBank(pb);
     userService.partialUpdateUser(ownerUsername, owner);
     return getPiggyBankByName(pb.getName(), owner);
@@ -39,6 +40,7 @@ public class PiggyBankService {
       ensureUniquePiggyBankNameForOwner(updatedPb.getName(), owner);
     }
     BeanUtils.copyProperties(updatedPb, pb);
+    pb.ensureSavingsIntervalIntegrity();
     return pbRepository.save(pb);
   }
 

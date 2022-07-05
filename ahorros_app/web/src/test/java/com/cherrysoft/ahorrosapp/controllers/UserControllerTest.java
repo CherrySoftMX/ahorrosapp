@@ -34,7 +34,7 @@ class UserControllerTest {
     User providedUser = new User("hikingcarrot7", "123456");
     User addedUser = new User(1L, providedUser.getUsername(), providedUser.getPassword());
     String resourceLocation = String.format("%s/%d", UserController.BASE_URL, addedUser.getId());
-    when(userService.addUser(any(User.class))).thenReturn(addedUser);
+    when(userService.createUser(any(User.class))).thenReturn(addedUser);
 
     mockMvc
         .perform(
@@ -61,7 +61,7 @@ class UserControllerTest {
         .andDo(print())
         .andExpect(status().isBadRequest());
 
-    verify(userService, never()).addUser(any(User.class));
+    verify(userService, never()).createUser(any(User.class));
   }
 
   @Test

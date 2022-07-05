@@ -16,9 +16,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 @RestController
-@RequestMapping(PiggyBankController.BASE_URL)
-@Validated
 @AllArgsConstructor
+@Validated
+@RequestMapping(PiggyBankController.BASE_URL)
 public class PiggyBankController {
   public static final String BASE_URL = "/{ownerUsername}";
   private final PiggyBankMapper pbMapper;

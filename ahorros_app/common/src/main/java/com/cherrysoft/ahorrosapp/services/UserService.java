@@ -19,7 +19,7 @@ public class UserService {
         .orElseThrow(() -> new UserNotFoundException(username));
   }
 
-  public User addUser(User user) {
+  public User createUser(User user) {
     ensureUniqueUsername(user.getUsername());
     return userRepository.save(user);
   }
@@ -46,4 +46,5 @@ public class UserService {
       throw new UsernameAlreadyTakenException(username);
     }
   }
+
 }

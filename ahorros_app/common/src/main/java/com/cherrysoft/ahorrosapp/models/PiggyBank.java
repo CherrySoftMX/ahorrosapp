@@ -1,9 +1,11 @@
 package com.cherrysoft.ahorrosapp.models;
 
+import com.cherrysoft.ahorrosapp.services.exceptions.piggybank.InvalidSavingsIntervalException;
 import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 
 import static com.cherrysoft.ahorrosapp.utils.DateUtils.today;
 import static java.util.Objects.isNull;
@@ -33,11 +35,25 @@ public class PiggyBank {
   )
   private User owner;
 
+  @OneToMany(
+      fetch = FetchType.LAZY,
+      mappedBy = "piggyBank",
+      cascade = CascadeType.ALL,
+      orphanRemoval = true
+  )
+  @ToString.Exclude
+  private List<DailySaving> dailySavings;
+
   @Column
   private LocalDate startSavings;
 
   @Column
   private LocalDate endSavings;
+
+  public void addDailySaving(DailySaving dailySaving) {
+    dailySaving.setPiggyBank(this);
+    dailySavings.add(dailySaving);
+  }
 
   public void ensureSavingsIntervalIntegrity() {
     ensureEndDateIsPresentOrFutureIfNotStartDate();
@@ -46,13 +62,16 @@ public class PiggyBank {
 
   public void ensureEndDateIsPresentOrFutureIfNotStartDate() {
     if (isNull(startSavings) && endSavings.isBefore(today())) {
-      throw new RuntimeException("End date must be present or future.");
+      throw new InvalidSavingsIntervalException("End date must be present or future.");
     }
   }
 
   public void ensureStartDateIsBeforeEndDate() {
-    if (hasEndSavingsDate() && startSavings.isAfter(endSavings)) {
-      throw new RuntimeException("Start date must be before end date.");
+    if (hasEndSavingsDate()) {
+      boolean startDateIsEqualOrAfterEndDate = !startSavings.isBefore(endSavings);
+      if (startDateIsEqualOrAfterEndDate) {
+        throw new InvalidSavingsIntervalException("Start date must be before end date.");
+      }
     }
   }
 

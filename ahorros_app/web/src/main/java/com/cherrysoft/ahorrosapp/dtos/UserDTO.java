@@ -18,6 +18,7 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 public class UserDTO {
   @Null
+  @JsonProperty(access = JsonProperty.Access.READ_ONLY)
   private Long id;
 
   @Size(

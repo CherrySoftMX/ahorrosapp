@@ -4,6 +4,7 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -39,11 +40,16 @@ public class User {
     this(null, username, password);
   }
 
-  @Builder
   public User(Long id, String username, String password) {
+    this(id, username, password, new ArrayList<>());
+  }
+
+  @Builder
+  public User(Long id, String username, String password, List<PiggyBank> pbs) {
     this.id = id;
     this.username = username;
     this.password = password;
+    this.piggyBanks = pbs;
   }
 
   public void addPiggyBank(PiggyBank pb) {
@@ -72,4 +78,5 @@ public class User {
   public int hashCode() {
     return getClass().hashCode();
   }
+
 }

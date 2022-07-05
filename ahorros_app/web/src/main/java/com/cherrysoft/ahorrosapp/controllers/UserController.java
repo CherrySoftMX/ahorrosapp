@@ -16,9 +16,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 @RestController
-@RequestMapping(UserController.BASE_URL)
-@Validated
 @AllArgsConstructor
+@Validated
+@RequestMapping(UserController.BASE_URL)
 public class UserController {
   public static final String BASE_URL = "/users";
   private final UserService userService;
@@ -27,9 +27,9 @@ public class UserController {
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
   @Validated(OnCreate.class)
-  public ResponseEntity<UserDTO> addUser(@RequestBody @Valid UserDTO userDTO) throws URISyntaxException {
+  public ResponseEntity<UserDTO> createUser(@RequestBody @Valid UserDTO userDTO) throws URISyntaxException {
     User providedUser = userMapper.toUser(userDTO);
-    User newUser = userService.addUser(providedUser);
+    User newUser = userService.createUser(providedUser);
     return ResponseEntity
         .created(new URI("/users/" + newUser.getId()))
         .body(userMapper.toUserDto(newUser));

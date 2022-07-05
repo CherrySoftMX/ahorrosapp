@@ -15,6 +15,11 @@ public class PiggyBankService {
   private final UserService userService;
   private final PiggyBankRepository pbRepository;
 
+  public PiggyBank getPiggyBankByName(String pbName, String ownerUsername) {
+    User owner = userService.getUserByUsername(ownerUsername);
+    return getPiggyBankByName(pbName, owner);
+  }
+
   public PiggyBank getPiggyBankByName(String pbName, User owner) {
     return pbRepository
         .findByNameAndOwner(pbName, owner)

@@ -57,7 +57,7 @@ class UserServiceTest {
         .build()
     );
 
-    User addedUser = userService.addUser(newUser);
+    User addedUser = userService.createUser(newUser);
 
     assertNotNull(addedUser.getId());
     assertNotEquals(newUser, addedUser);
@@ -69,7 +69,7 @@ class UserServiceTest {
     given(userRepository.existsByUsername(any())).willReturn(true);
 
     assertThrows(UsernameAlreadyTakenException.class, () -> {
-      userService.addUser(newUser);
+      userService.createUser(newUser);
     });
     verify(userRepository, never()).save(any());
   }

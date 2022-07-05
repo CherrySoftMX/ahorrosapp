@@ -1,11 +1,12 @@
 package com.cherrysoft.ahorrosapp.utils;
 
 import com.cherrysoft.ahorrosapp.models.PiggyBank;
-import com.cherrysoft.ahorrosapp.models.SavingInterval;
 import com.cherrysoft.ahorrosapp.models.User;
 
-import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+
+import static com.cherrysoft.ahorrosapp.utils.DateUtils.today;
 
 public class TestUtils {
 
@@ -15,14 +16,27 @@ public class TestUtils {
       return User.builder()
           .username("hiking")
           .password("password")
+          .pbs(new ArrayList<>())
           .build();
     }
 
     public static List<User> newUsers() {
       return List.of(
-          User.builder().username("javier").password("12345").build(),
-          User.builder().username("diego").password("password").build(),
-          User.builder().username("nicolas").password("password123").build()
+          User.builder()
+              .username("javier")
+              .password("12345")
+              .pbs(new ArrayList<>())
+              .build(),
+          User.builder()
+              .username("diego")
+              .password("password")
+              .pbs(new ArrayList<>())
+              .build(),
+          User.builder()
+              .username("nicolas")
+              .password("password123")
+              .pbs(new ArrayList<>())
+              .build()
       );
     }
 
@@ -32,6 +46,7 @@ public class TestUtils {
           .id(1L)
           .username(newUser.getUsername())
           .password(newUser.getPassword())
+          .pbs(new ArrayList<>())
           .build();
     }
   }
@@ -41,19 +56,15 @@ public class TestUtils {
     public static PiggyBank newPiggyBank() {
       return PiggyBank.builder()
           .name("piggy")
-          .savingInterval(new SavingInterval(
-              LocalDate.now(),
-              LocalDate.now().plusDays(7))
-          )
+          .startSavings(today())
+          .endSavings(today().plusDays(7))
           .build();
     }
 
     public static PiggyBank newPiggyBankNoStartDate() {
       return PiggyBank.builder()
           .name("piggy")
-          .savingInterval(new SavingInterval(
-              LocalDate.now().plusDays(5)
-          ))
+          .endSavings(today().plusDays(5))
           .build();
     }
 

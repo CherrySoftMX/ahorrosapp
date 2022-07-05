@@ -3,6 +3,7 @@ package com.cherrysoft.ahorrosapp.services;
 import com.cherrysoft.ahorrosapp.models.PiggyBank;
 import com.cherrysoft.ahorrosapp.models.User;
 import com.cherrysoft.ahorrosapp.repositories.PiggyBankRepository;
+import com.cherrysoft.ahorrosapp.services.exceptions.piggybank.InvalidSavingsIntervalException;
 import com.cherrysoft.ahorrosapp.services.exceptions.piggybank.PiggyBankNameNotAvailableException;
 import com.cherrysoft.ahorrosapp.services.exceptions.piggybank.PiggyBankNotFoundException;
 import com.cherrysoft.ahorrosapp.utils.TestUtils;
@@ -51,7 +52,9 @@ class PiggyBankServiceTest {
   void whenPbAddedToUser_thenReturnsPbWithUserAsOwner_andUserHasNewPb() {
     User owner = TestUtils.Users.newUser();
     PiggyBank newPb = TestUtils.PiggyBanks.newPiggyBank();
-    fixtureAddPbToUser(owner, newPb);
+    given(userService.getUserByUsername(owner.getUsername())).willReturn(owner);
+    given(pbRepository.existsByNameAndOwner(any(), any())).willReturn(false);
+    given(pbRepository.findByNameAndOwner(newPb.getName(), owner)).willReturn(Optional.of(newPb));
 
     newPb = pbService.addPiggyBankTo(newPb, owner.getUsername());
 
@@ -63,18 +66,40 @@ class PiggyBankServiceTest {
   void givenAddPbToUser_whenPbHasNotInitialStartDate_thenInitialStartIsSetToday() {
     User owner = TestUtils.Users.newUser();
     PiggyBank newPb = TestUtils.PiggyBanks.newPiggyBankNoStartDate();
-    fixtureAddPbToUser(owner, newPb);
+    given(userService.getUserByUsername(owner.getUsername())).willReturn(owner);
+    given(pbRepository.existsByNameAndOwner(any(), any())).willReturn(false);
+    given(pbRepository.findByNameAndOwner(newPb.getName(), owner)).willReturn(Optional.of(newPb));
 
     newPb = pbService.addPiggyBankTo(newPb, owner.getUsername());
 
     assertTrue(newPb.hasStartSavingsDate());
-    assertEquals(newPb.getSavingInterval().getStartDate(), today());
+    assertEquals(newPb.getStartSavings(), today());
   }
 
-  private void fixtureAddPbToUser(User owner, PiggyBank newPb) {
+  @Test
+  void givenInvalidSavingsInterval_whenStartSavingsIsAfterEndSavings_thenThrowsAnExceptions() {
+    User owner = TestUtils.Users.newUser();
+    PiggyBank newPb = TestUtils.PiggyBanks.newPiggyBankNoStartDate();
+    newPb.setStartSavings(today().plusDays(14));
     given(userService.getUserByUsername(owner.getUsername())).willReturn(owner);
     given(pbRepository.existsByNameAndOwner(any(), any())).willReturn(false);
-    given(pbRepository.findByNameAndOwner(newPb.getName(), owner)).willReturn(Optional.of(newPb));
+
+    assertThrows(InvalidSavingsIntervalException.class, () -> {
+      pbService.addPiggyBankTo(newPb, owner.getUsername());
+    });
+  }
+
+  @Test
+  void givenInvalidSavingsInterval_whenStartSavingsIsEqualToEndSavings_thenThrowsAnException() {
+    User owner = TestUtils.Users.newUser();
+    PiggyBank newPb = TestUtils.PiggyBanks.newPiggyBankNoStartDate();
+    newPb.setStartSavings(newPb.getEndSavings());
+    given(userService.getUserByUsername(owner.getUsername())).willReturn(owner);
+    given(pbRepository.existsByNameAndOwner(any(), any())).willReturn(false);
+
+    assertThrows(InvalidSavingsIntervalException.class, () -> {
+      pbService.addPiggyBankTo(newPb, owner.getUsername());
+    });
   }
 
   @Test

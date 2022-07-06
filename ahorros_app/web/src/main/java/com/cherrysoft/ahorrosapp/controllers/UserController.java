@@ -40,8 +40,8 @@ public class UserController {
       @PathVariable String username,
       @RequestBody @Valid UserDTO userDTO
   ) {
-    User partialUpdateUser = userMapper.toUser(userDTO);
-    User updatedUser = userService.partialUpdateUser(username, partialUpdateUser);
+    User partialUpdatedUser = userMapper.toUser(userDTO);
+    User updatedUser = userService.partialUpdateUser(username, partialUpdatedUser);
     return ResponseEntity.ok(userMapper.toUserDto(updatedUser));
   }
 

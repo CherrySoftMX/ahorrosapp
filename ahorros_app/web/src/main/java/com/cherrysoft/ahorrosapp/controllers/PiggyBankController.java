@@ -44,8 +44,8 @@ public class PiggyBankController {
       @PathVariable String ownerUsername,
       @RequestBody @Valid PiggyBankDTO pbDto
   ) {
-    PiggyBank providedPb = pbMapper.toPiggyBank(pbDto);
-    PiggyBank updatedPb = pbService.partialUpdatePiggyBank(ownerUsername, pbName, providedPb);
+    PiggyBank partialUpdatedPb = pbMapper.toPiggyBank(pbDto);
+    PiggyBank updatedPb = pbService.partialUpdatePiggyBank(ownerUsername, pbName, partialUpdatedPb);
     return ResponseEntity.ok(pbMapper.toPiggyBankDto(updatedPb));
   }
 

@@ -7,6 +7,7 @@ import lombok.Data;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Data
 public class DailySavingDTO {
@@ -16,6 +17,8 @@ public class DailySavingDTO {
 
   @NotNull(groups = OnCreate.class)
   private BigDecimal amount;
+
+  private LocalDate date;
 
   private String description;
 }

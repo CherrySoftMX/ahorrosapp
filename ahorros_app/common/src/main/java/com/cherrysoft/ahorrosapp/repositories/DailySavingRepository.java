@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 @Repository
-public interface TodaySavingRepository extends JpaRepository<DailySaving, Long> {
+public interface DailySavingRepository extends JpaRepository<DailySaving, Long> {
 
   Optional<DailySaving> findByPiggyBankAndDate(PiggyBank piggyBank, LocalDate date);
 

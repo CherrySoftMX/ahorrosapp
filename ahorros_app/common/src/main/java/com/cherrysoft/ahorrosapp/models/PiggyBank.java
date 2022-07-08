@@ -55,6 +55,14 @@ public class PiggyBank {
     dailySavings.add(dailySaving);
   }
 
+  public boolean containedWithinSavingsInterval(LocalDate date) {
+    if (date.isBefore(startSavings)) {
+      return false;
+    }
+    boolean isAfterEndDate = hasEndSavingsDate() && date.isAfter(endSavings);
+    return !isAfterEndDate;
+  }
+
   public void ensureSavingsIntervalIntegrity() {
     ensureEndDateIsPresentOrFutureIfNotStartDate();
     ensureStartDateIsBeforeEndDate();

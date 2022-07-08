@@ -16,6 +16,8 @@ import java.util.Objects;
 @Setter
 @ToString
 public class DailySaving {
+  public static final String DAY_MONTH_YEAR = "dd-MM-yyyy";
+
   @Id
   @GeneratedValue
   @Column(name = "daily_saving_id")

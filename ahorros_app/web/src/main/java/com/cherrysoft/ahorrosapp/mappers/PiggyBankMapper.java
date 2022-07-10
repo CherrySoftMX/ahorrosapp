@@ -1,7 +1,7 @@
 package com.cherrysoft.ahorrosapp.mappers;
 
+import com.cherrysoft.ahorrosapp.core.models.PiggyBank;
 import com.cherrysoft.ahorrosapp.dtos.PiggyBankDTO;
-import com.cherrysoft.ahorrosapp.models.PiggyBank;
 import org.mapstruct.Mapper;
 
 @Mapper(

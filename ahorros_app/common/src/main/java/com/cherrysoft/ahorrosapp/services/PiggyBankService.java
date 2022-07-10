@@ -1,7 +1,7 @@
 package com.cherrysoft.ahorrosapp.services;
 
-import com.cherrysoft.ahorrosapp.models.PiggyBank;
-import com.cherrysoft.ahorrosapp.models.User;
+import com.cherrysoft.ahorrosapp.core.models.PiggyBank;
+import com.cherrysoft.ahorrosapp.core.models.User;
 import com.cherrysoft.ahorrosapp.repositories.PiggyBankRepository;
 import com.cherrysoft.ahorrosapp.services.exceptions.piggybank.PiggyBankNameNotAvailableException;
 import com.cherrysoft.ahorrosapp.services.exceptions.piggybank.PiggyBankNotFoundException;

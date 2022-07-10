@@ -1,7 +1,7 @@
 package com.cherrysoft.ahorrosapp.mappers;
 
+import com.cherrysoft.ahorrosapp.core.models.DailySaving;
 import com.cherrysoft.ahorrosapp.dtos.DailySavingDTO;
-import com.cherrysoft.ahorrosapp.models.DailySaving;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")

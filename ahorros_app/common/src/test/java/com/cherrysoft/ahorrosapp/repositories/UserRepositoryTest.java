@@ -1,6 +1,6 @@
 package com.cherrysoft.ahorrosapp.repositories;
 
-import com.cherrysoft.ahorrosapp.models.User;
+import com.cherrysoft.ahorrosapp.core.models.User;
 import com.github.javafaker.Faker;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

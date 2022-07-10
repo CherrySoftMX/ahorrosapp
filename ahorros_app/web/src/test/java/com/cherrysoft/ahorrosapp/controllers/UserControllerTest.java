@@ -1,8 +1,8 @@
 package com.cherrysoft.ahorrosapp.controllers;
 
+import com.cherrysoft.ahorrosapp.core.models.User;
 import com.cherrysoft.ahorrosapp.mappers.UserMapper;
 import com.cherrysoft.ahorrosapp.mappers.UserMapperImpl;
-import com.cherrysoft.ahorrosapp.models.User;
 import com.cherrysoft.ahorrosapp.services.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

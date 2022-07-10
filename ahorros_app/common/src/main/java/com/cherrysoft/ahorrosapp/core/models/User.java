@@ -1,4 +1,4 @@
-package com.cherrysoft.ahorrosapp.models;
+package com.cherrysoft.ahorrosapp.core.models;
 
 import lombok.*;
 import org.hibernate.Hibernate;

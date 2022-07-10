@@ -1,9 +1,9 @@
 package com.cherrysoft.ahorrosapp.controllers;
 
+import com.cherrysoft.ahorrosapp.core.models.PiggyBank;
 import com.cherrysoft.ahorrosapp.dtos.PiggyBankDTO;
 import com.cherrysoft.ahorrosapp.dtos.validation.OnCreate;
 import com.cherrysoft.ahorrosapp.mappers.PiggyBankMapper;
-import com.cherrysoft.ahorrosapp.models.PiggyBank;
 import com.cherrysoft.ahorrosapp.services.PiggyBankService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;

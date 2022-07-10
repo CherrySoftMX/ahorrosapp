@@ -1,4 +1,4 @@
-package com.cherrysoft.ahorrosapp.models;
+package com.cherrysoft.ahorrosapp.core.models;
 
 import com.cherrysoft.ahorrosapp.services.exceptions.piggybank.InvalidSavingsIntervalException;
 import lombok.*;

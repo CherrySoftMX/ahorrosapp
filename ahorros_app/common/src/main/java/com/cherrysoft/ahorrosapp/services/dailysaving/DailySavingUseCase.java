@@ -1,10 +1,10 @@
 package com.cherrysoft.ahorrosapp.services.dailysaving;
 
-import com.cherrysoft.ahorrosapp.models.DailySaving;
-import com.cherrysoft.ahorrosapp.models.PiggyBank;
+import com.cherrysoft.ahorrosapp.core.models.DailySaving;
+import com.cherrysoft.ahorrosapp.core.models.PiggyBank;
+import com.cherrysoft.ahorrosapp.core.queryparams.DailySavingQueryParams;
 import com.cherrysoft.ahorrosapp.repositories.DailySavingRepository;
 import com.cherrysoft.ahorrosapp.services.PiggyBankService;
-import com.cherrysoft.ahorrosapp.services.queries.DailySavingQueryParams;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;

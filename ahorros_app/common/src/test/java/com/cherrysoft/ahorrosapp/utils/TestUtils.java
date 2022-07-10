@@ -1,7 +1,7 @@
 package com.cherrysoft.ahorrosapp.utils;
 
-import com.cherrysoft.ahorrosapp.models.PiggyBank;
-import com.cherrysoft.ahorrosapp.models.User;
+import com.cherrysoft.ahorrosapp.core.models.PiggyBank;
+import com.cherrysoft.ahorrosapp.core.models.User;
 
 import java.util.ArrayList;
 import java.util.List;

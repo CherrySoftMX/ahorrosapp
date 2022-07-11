@@ -31,16 +31,12 @@ public class DailySavingService
   }
 
   @Override
-  public DailySaving createDailySaving(
-      DailySavingQueryParams params, DailySaving dailySaving
-  ) {
+  public DailySaving createDailySaving(DailySavingQueryParams params, DailySaving dailySaving) {
     return createDailySavingUseCase.createDailySaving(params, dailySaving);
   }
 
   @Override
-  public DailySaving partialUpdateDailySaving(
-      DailySavingQueryParams params, DailySaving dailySaving
-  ) {
+  public DailySaving partialUpdateDailySaving(DailySavingQueryParams params, DailySaving dailySaving) {
     return partialUpdateDailySavingUseCase.partialUpdateDailySaving(params, dailySaving);
   }
 

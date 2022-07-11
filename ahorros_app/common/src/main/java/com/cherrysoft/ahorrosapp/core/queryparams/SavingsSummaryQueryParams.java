@@ -13,4 +13,12 @@ public class SavingsSummaryQueryParams extends SavingQueryParams {
     this.summaryOptions = summaryOptions;
   }
 
+  public String getSummaryType() {
+    return summaryOptions.get("type");
+  }
+
+  public String getRawDate() {
+    return summaryOptions.get("date");
+  }
+
 }

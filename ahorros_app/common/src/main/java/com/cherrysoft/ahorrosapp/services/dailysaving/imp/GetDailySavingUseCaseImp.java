@@ -16,8 +16,11 @@ import java.util.Optional;
 @Primary
 public class GetDailySavingUseCaseImp extends DailySavingUseCase implements GetDailySavingUseCase {
 
-  public GetDailySavingUseCaseImp(PiggyBankService pbService, DailySavingRepository dsRepo) {
-    super(pbService, dsRepo);
+  public GetDailySavingUseCaseImp(
+      PiggyBankService pbService,
+      DailySavingRepository dailySavingRepository
+  ) {
+    super(pbService, dailySavingRepository);
   }
 
   @Override
@@ -29,8 +32,7 @@ public class GetDailySavingUseCaseImp extends DailySavingUseCase implements GetD
 
   @Override
   public DailySaving getDailySavingOrThrowIfNotPresent(DailySavingQueryParams params) {
-    setParams(params);
-    return getDailySaving(getParams())
+    return getDailySaving(params)
         .orElseThrow(() -> new RuntimeException(
             String.format("No saving for date: %s", params.getDate())
         ));

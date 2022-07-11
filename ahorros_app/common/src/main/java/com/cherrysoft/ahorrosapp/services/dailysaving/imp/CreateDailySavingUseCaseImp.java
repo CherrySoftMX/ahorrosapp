@@ -22,7 +22,7 @@ public class CreateDailySavingUseCaseImp extends DailySavingUseCase implements C
   public CreateDailySavingUseCaseImp(
       PiggyBankService pbService,
       DailySavingRepository dailySavingRepository,
-      GetDailySavingUseCaseImp getDailySavingUseCase
+      GetDailySavingUseCase getDailySavingUseCase
   ) {
     super(pbService, dailySavingRepository);
     this.getDailySavingUseCase = getDailySavingUseCase;

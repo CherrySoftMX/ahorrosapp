@@ -19,7 +19,7 @@ public class PartialUpdateDailySavingUseCaseImp extends DailySavingUseCase imple
   public PartialUpdateDailySavingUseCaseImp(
       PiggyBankService pbService,
       DailySavingRepository dailySavingRepository,
-      GetDailySavingUseCaseImp getDailySavingUseCase
+      GetDailySavingUseCase getDailySavingUseCase
   ) {
     super(pbService, dailySavingRepository);
     this.getDailySavingUseCase = getDailySavingUseCase;

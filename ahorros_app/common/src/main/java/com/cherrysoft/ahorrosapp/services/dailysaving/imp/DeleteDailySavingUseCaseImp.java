@@ -18,7 +18,7 @@ public class DeleteDailySavingUseCaseImp extends DailySavingUseCase implements D
   public DeleteDailySavingUseCaseImp(
       PiggyBankService pbService,
       DailySavingRepository dailySavingRepository,
-      GetDailySavingUseCaseImp getDailySavingUseCase
+      GetDailySavingUseCase getDailySavingUseCase
   ) {
     super(pbService, dailySavingRepository);
     this.getDailySavingUseCase = getDailySavingUseCase;

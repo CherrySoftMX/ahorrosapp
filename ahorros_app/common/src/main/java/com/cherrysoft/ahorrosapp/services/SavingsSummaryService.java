@@ -13,11 +13,7 @@ public class SavingsSummaryService {
 
   public SavingsSummary getSavingsSummary(SavingsSummaryQueryParams params) {
     var fetcherStrategy = fetcherStrategyFactory.createFetcherStrategy(params);
-    var savingsSummary = new SavingsSummary(fetcherStrategy.fetchSavings());
-    System.out.println(savingsSummary.getSavings());
-    System.out.println(savingsSummary.calculateTotal());
-    System.out.println(savingsSummary.calculateAverage());
-    return null;
+    return new SavingsSummary(fetcherStrategy.fetchSavings());
   }
 
 }

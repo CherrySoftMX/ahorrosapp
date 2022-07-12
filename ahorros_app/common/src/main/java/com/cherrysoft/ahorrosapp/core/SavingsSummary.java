@@ -13,12 +13,12 @@ import java.util.List;
 public class SavingsSummary {
   private List<DailySaving> savings;
 
-  public BigDecimal calculateAverage() {
-    BigDecimal total = calculateTotal();
+  public BigDecimal getAverage() {
+    BigDecimal total = getTotal();
     return total.divide(BigDecimal.valueOf(savings.size()), RoundingMode.DOWN);
   }
 
-  public BigDecimal calculateTotal() {
+  public BigDecimal getTotal() {
     BigDecimal total = BigDecimal.ZERO;
     for (DailySaving saving : savings) {
       total = total.add(saving.getAmount());

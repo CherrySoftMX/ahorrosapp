@@ -12,9 +12,9 @@ import java.util.List;
 
 public class MonthlyFetcherStrategy implements SavingsFetcherStrategy {
   private final SavingsSummaryQueryParams params;
+  private final MonthParser monthParser;
   private PiggyBankService pbService;
   private DailySavingRepository dailySavingRepository;
-  private final MonthParser monthParser;
 
   public MonthlyFetcherStrategy(SavingsSummaryQueryParams params) {
     this.params = params;

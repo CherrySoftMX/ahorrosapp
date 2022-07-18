@@ -1,23 +1,28 @@
 package com.cherrysoft.ahorrosapp.core.fetchers;
 
-import com.cherrysoft.ahorrosapp.core.MonthParser;
 import com.cherrysoft.ahorrosapp.core.models.DailySaving;
 import com.cherrysoft.ahorrosapp.core.models.PiggyBank;
 import com.cherrysoft.ahorrosapp.core.queryparams.SavingsSummaryQueryParams;
+import com.cherrysoft.ahorrosapp.core.utils.MonthParser;
 import com.cherrysoft.ahorrosapp.repositories.DailySavingRepository;
 import com.cherrysoft.ahorrosapp.services.PiggyBankService;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
 public class MonthlyFetcherStrategy implements SavingsFetcherStrategy {
   private final SavingsSummaryQueryParams params;
   private final MonthParser monthParser;
-  private PiggyBankService pbService;
-  private DailySavingRepository dailySavingRepository;
+  private final PiggyBankService pbService;
+  private final DailySavingRepository dailySavingRepository;
 
-  public MonthlyFetcherStrategy(SavingsSummaryQueryParams params) {
+  public MonthlyFetcherStrategy(
+      SavingsSummaryQueryParams params,
+      PiggyBankService pbService,
+      DailySavingRepository dailySavingRepository
+  ) {
     this.params = params;
+    this.pbService = pbService;
+    this.dailySavingRepository = dailySavingRepository;
     this.monthParser = new MonthParser();
   }
 
@@ -26,16 +31,6 @@ public class MonthlyFetcherStrategy implements SavingsFetcherStrategy {
     monthParser.setRawDate(params.getRawDate());
     PiggyBank pb = pbService.getPiggyBankByName(params);
     return dailySavingRepository.findByPiggyBankAndDateBetween(pb, monthParser.startOfMonth(), monthParser.endOfMonth());
-  }
-
-  @Autowired
-  public void setDailySavingRepository(DailySavingRepository dailySavingRepository) {
-    this.dailySavingRepository = dailySavingRepository;
-  }
-
-  @Autowired
-  public void setPbService(PiggyBankService pbService) {
-    this.pbService = pbService;
   }
 
 }

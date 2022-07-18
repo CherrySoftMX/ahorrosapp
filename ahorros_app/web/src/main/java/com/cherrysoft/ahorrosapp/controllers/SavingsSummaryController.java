@@ -1,7 +1,8 @@
 package com.cherrysoft.ahorrosapp.controllers;
 
-import com.cherrysoft.ahorrosapp.core.SavingsSummary;
 import com.cherrysoft.ahorrosapp.core.queryparams.SavingsSummaryQueryParams;
+import com.cherrysoft.ahorrosapp.dtos.summaries.IntervalSavingsSummaryDTO;
+import com.cherrysoft.ahorrosapp.dtos.summaries.PiggyBankSummaryDTO;
 import com.cherrysoft.ahorrosapp.mappers.SavingsSummaryMapper;
 import com.cherrysoft.ahorrosapp.services.SavingsSummaryService;
 import lombok.AllArgsConstructor;
@@ -19,14 +20,24 @@ public class SavingsSummaryController {
   private final SavingsSummaryMapper savingsSummaryMapper;
 
   @GetMapping
-  public ResponseEntity<Object> getSavingsSummary(
+  public ResponseEntity<IntervalSavingsSummaryDTO> getIntervalSavingsSummary(
       @PathVariable String ownerUsername,
       @PathVariable String pbName,
       @RequestParam Map<String, String> summaryOptions
   ) {
     var params = new SavingsSummaryQueryParams(ownerUsername, pbName, summaryOptions);
-    SavingsSummary savingsSummary = savingsSummaryService.getSavingsSummary(params);
-    return ResponseEntity.ok(savingsSummaryMapper.toSavingsSummaryDto(savingsSummary));
+    var savingsSummary = savingsSummaryService.getIntervalSavingsSummary(params);
+    return ResponseEntity.ok(savingsSummaryMapper.toIntervalSavingsSummaryDto(savingsSummary));
+  }
+
+  @GetMapping("/total")
+  public ResponseEntity<PiggyBankSummaryDTO> getPiggyBankSummary(
+      @PathVariable String ownerUsername,
+      @PathVariable String pbName
+  ) {
+    var params = new SavingsSummaryQueryParams(ownerUsername, pbName);
+    var pbSummary = savingsSummaryService.getPiggyBankSummary(params);
+    return ResponseEntity.ok(savingsSummaryMapper.toPiggyBankSummaryDto(pbSummary));
   }
 
 }

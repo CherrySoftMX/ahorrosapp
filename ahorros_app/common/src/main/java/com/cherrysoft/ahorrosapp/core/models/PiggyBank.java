@@ -1,9 +1,11 @@
 package com.cherrysoft.ahorrosapp.core.models;
 
+import com.cherrysoft.ahorrosapp.core.PiggyBankSummary;
 import com.cherrysoft.ahorrosapp.services.exceptions.piggybank.InvalidSavingsIntervalException;
 import lombok.*;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -27,6 +29,12 @@ public class PiggyBank {
   @Column
   private String name;
 
+  @Column
+  private BigDecimal initialAmount;
+
+  @Column
+  private BigDecimal borrowedAmount;
+
   @ManyToOne
   @JoinColumn(
       name = "owner_user_id",
@@ -49,6 +57,10 @@ public class PiggyBank {
 
   @Column
   private LocalDate endSavings;
+
+  public PiggyBankSummary getPiggyBankSummary() {
+    return new PiggyBankSummary(this);
+  }
 
   public void addDailySaving(DailySaving dailySaving) {
     dailySaving.setPiggyBank(this);

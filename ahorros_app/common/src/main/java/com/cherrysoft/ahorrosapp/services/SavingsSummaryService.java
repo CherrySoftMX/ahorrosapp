@@ -1,7 +1,9 @@
 package com.cherrysoft.ahorrosapp.services;
 
-import com.cherrysoft.ahorrosapp.core.SavingsSummary;
+import com.cherrysoft.ahorrosapp.core.IntervalSavingsSummary;
+import com.cherrysoft.ahorrosapp.core.PiggyBankSummary;
 import com.cherrysoft.ahorrosapp.core.fetchers.factories.SavingsFetcherStrategyFactory;
+import com.cherrysoft.ahorrosapp.core.models.PiggyBank;
 import com.cherrysoft.ahorrosapp.core.queryparams.SavingsSummaryQueryParams;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -10,10 +12,16 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class SavingsSummaryService {
   private final SavingsFetcherStrategyFactory fetcherStrategyFactory;
+  private final PiggyBankService pbService;
 
-  public SavingsSummary getSavingsSummary(SavingsSummaryQueryParams params) {
+  public IntervalSavingsSummary getIntervalSavingsSummary(SavingsSummaryQueryParams params) {
     var fetcherStrategy = fetcherStrategyFactory.createFetcherStrategy(params);
-    return new SavingsSummary(fetcherStrategy.fetchSavings());
+    return new IntervalSavingsSummary(fetcherStrategy.fetchSavings());
+  }
+
+  public PiggyBankSummary getPiggyBankSummary(SavingsSummaryQueryParams params) {
+    PiggyBank pb = pbService.getPiggyBankByName(params);
+    return pb.getPiggyBankSummary();
   }
 
 }

@@ -1,4 +1,4 @@
-package com.cherrysoft.ahorrosapp.core;
+package com.cherrysoft.ahorrosapp.core.utils;
 
 import lombok.AccessLevel;
 import lombok.Data;

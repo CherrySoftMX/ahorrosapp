@@ -10,13 +10,13 @@ import com.cherrysoft.ahorrosapp.services.PiggyBankService;
 import java.time.LocalDate;
 import java.util.List;
 
-public class MonthlyFetcherStrategy implements SavingsFetcherStrategy {
+public class MonthlyIntervalFetcherStrategy implements SavingsFetcherStrategy {
   private final SavingsSummaryQueryParams params;
   private final MonthParser monthParser;
   private final PiggyBankService pbService;
   private final DailySavingRepository dailySavingRepository;
 
-  public MonthlyFetcherStrategy(
+  public MonthlyIntervalFetcherStrategy(
       SavingsSummaryQueryParams params,
       PiggyBankService pbService,
       DailySavingRepository dailySavingRepository
@@ -29,11 +29,12 @@ public class MonthlyFetcherStrategy implements SavingsFetcherStrategy {
 
   @Override
   public List<DailySaving> fetchSavings() {
-    monthParser.setRawMonth(params.getMonth());
+    monthParser.setRawMonth(params.getStartMonth()).parseMonth();
+    LocalDate startMonth = monthParser.startOfMonth();
+    monthParser.setRawMonth(params.getEndMonth()).parseMonth();
+    LocalDate endMonth = monthParser.endOfMonth();
     PiggyBank pb = pbService.getPiggyBankByName(params);
-    LocalDate startOfMonth = monthParser.startOfMonth();
-    LocalDate endOfMonth = monthParser.endOfMonth();
-    return dailySavingRepository.findByPiggyBankAndDateBetween(pb, startOfMonth, endOfMonth);
+    return dailySavingRepository.findByPiggyBankAndDateBetween(pb, startMonth, endMonth);
   }
 
 }

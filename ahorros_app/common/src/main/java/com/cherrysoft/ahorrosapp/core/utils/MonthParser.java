@@ -7,7 +7,8 @@ import lombok.Setter;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
-import java.util.Objects;
+
+import static java.util.Objects.isNull;
 
 @Data
 public class MonthParser {
@@ -15,20 +16,20 @@ public class MonthParser {
   private final DateTimeFormatter formatter;
   @Setter(AccessLevel.NONE)
   private YearMonth parseResult;
-  private String rawDate;
+  private String rawMonth;
 
   public MonthParser() {
     this(null);
   }
 
-  public MonthParser(String rawDate) {
-    this(DateTimeFormatter.ofPattern(MONTH_YEAR_PATTERN), rawDate);
+  public MonthParser(String rawMonth) {
+    this(DateTimeFormatter.ofPattern(MONTH_YEAR_PATTERN), rawMonth);
   }
 
-  public MonthParser(DateTimeFormatter formatter, String rawDate) {
-    this.rawDate = rawDate;
+  public MonthParser(DateTimeFormatter formatter, String rawMonth) {
+    this.rawMonth = rawMonth;
     this.formatter = formatter;
-    parseRawDate();
+    parseMonth();
   }
 
   public LocalDate startOfMonth() {
@@ -39,14 +40,15 @@ public class MonthParser {
     return parseResult.atEndOfMonth();
   }
 
-  public void setRawDate(String rawDate) {
-    this.rawDate = rawDate;
-    parseRawDate();
+  public MonthParser setRawMonth(String rawMonth) {
+    this.rawMonth = rawMonth;
+    parseMonth();
+    return this;
   }
 
-  public void parseRawDate() {
-    if (!Objects.isNull(rawDate)) {
-      this.parseResult = YearMonth.parse(rawDate, formatter);
+  public void parseMonth() {
+    if (!isNull(rawMonth)) {
+      this.parseResult = YearMonth.parse(rawMonth, formatter);
     }
   }
 

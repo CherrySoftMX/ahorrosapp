@@ -15,6 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 public class PiggyBankSummaryDTO extends IntervalSavingsSummaryDTO {
   private BigDecimal initialAmount;
+  private BigDecimal piggyBankTotalAmount;
   private BigDecimal inHandAmount;
   private BigDecimal borrowedAmount;
 

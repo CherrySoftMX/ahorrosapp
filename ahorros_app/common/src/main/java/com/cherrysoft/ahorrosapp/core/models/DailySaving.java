@@ -1,6 +1,7 @@
 package com.cherrysoft.ahorrosapp.core.models;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.Hibernate;
@@ -15,6 +16,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 public class DailySaving {
   public static final String DAY_MONTH_YEAR = "dd-MM-yyyy";
 
@@ -39,6 +41,11 @@ public class DailySaving {
       foreignKey = @ForeignKey(name = "fk_piggy_bank_id")
   )
   private PiggyBank piggyBank;
+
+  public DailySaving(LocalDate date, BigDecimal amount) {
+    this.date = date;
+    this.amount = amount;
+  }
 
   @Override
   public boolean equals(Object o) {

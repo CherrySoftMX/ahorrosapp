@@ -15,17 +15,21 @@ public class IntervalSavingsSummary implements SavingsSummary {
   private List<DailySaving> savings;
 
   @Override
-  public BigDecimal getAverageAmount() {
-    return divide(getTotalAmount(), savings.size());
-  }
-
-  @Override
-  public BigDecimal getTotalAmount() {
+  public BigDecimal getSavingsTotalAmount() {
     BigDecimal totalAmount = BigDecimal.ZERO;
     for (DailySaving saving : savings) {
       totalAmount = totalAmount.add(saving.getAmount());
     }
     return totalAmount;
+  }
+
+  @Override
+  public BigDecimal getAverageAmount() {
+    BigDecimal totalAmount = getSavingsTotalAmount();
+    if (totalAmount.equals(BigDecimal.ZERO)) {
+      return BigDecimal.ZERO;
+    }
+    return divide(totalAmount, savings.size());
   }
 
 }

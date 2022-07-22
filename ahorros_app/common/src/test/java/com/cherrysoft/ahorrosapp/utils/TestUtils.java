@@ -1,10 +1,14 @@
 package com.cherrysoft.ahorrosapp.utils;
 
+import com.cherrysoft.ahorrosapp.core.models.DailySaving;
 import com.cherrysoft.ahorrosapp.core.models.PiggyBank;
 import com.cherrysoft.ahorrosapp.core.models.User;
+import com.cherrysoft.ahorrosapp.core.utils.MonthParser;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 import static com.cherrysoft.ahorrosapp.utils.DateUtils.today;
 
@@ -61,6 +65,13 @@ public class TestUtils {
           .build();
     }
 
+    public static PiggyBank newPiggyBankNoEndDate() {
+      return PiggyBank.builder()
+          .name("piggy")
+          .startSavings(today())
+          .build();
+    }
+
     public static PiggyBank newPiggyBankNoStartDate() {
       return PiggyBank.builder()
           .name("piggy")
@@ -74,6 +85,25 @@ public class TestUtils {
       pb.setOwner(owner);
       owner.addPiggyBank(pb);
       return pb;
+    }
+
+  }
+
+  public static class Savings {
+
+    public static List<DailySaving> generateSavingsForMonth(String month, double amountPerDay) {
+      List<DailySaving> savings = new ArrayList<>();
+      MonthParser monthParser = new MonthParser(month);
+      int totalMonthDays = monthParser.endOfMonth().getDayOfMonth();
+      IntStream.range(0, totalMonthDays).forEach(value -> {
+        savings.add(
+            new DailySaving(
+                monthParser.startOfMonth().plusDays(value),
+                BigDecimal.valueOf(amountPerDay)
+            )
+        );
+      });
+      return savings;
     }
 
   }

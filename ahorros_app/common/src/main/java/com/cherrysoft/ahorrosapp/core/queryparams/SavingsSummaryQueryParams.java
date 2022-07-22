@@ -22,8 +22,16 @@ public class SavingsSummaryQueryParams extends SavingQueryParams {
     return summaryOptions.get("type");
   }
 
-  public String getRawDate() {
-    return summaryOptions.get("date");
+  public String getMonth() {
+    return summaryOptions.get("month");
+  }
+
+  public String getStartMonth() {
+    return summaryOptions.get("start");
+  }
+
+  public String getEndMonth() {
+    return summaryOptions.get("end");
   }
 
 }

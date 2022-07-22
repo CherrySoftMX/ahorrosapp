@@ -13,6 +13,6 @@ import java.util.List;
 @AllArgsConstructor
 public class IntervalSavingsSummaryDTO {
   private List<DailySavingDTO> savings;
-  private BigDecimal totalAmount;
+  private BigDecimal savingsTotalAmount;
   private BigDecimal averageAmount;
 }

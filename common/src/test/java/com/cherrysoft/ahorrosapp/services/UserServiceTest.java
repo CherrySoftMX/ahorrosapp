@@ -125,4 +125,5 @@ class UserServiceTest {
     });
     verify(userRepository, never()).delete(any(User.class));
   }
+
 }

@@ -1,4 +1,4 @@
-package com.cherrysoft;
+package com.cherrysoft.ahorrosapp;
 
 import org.junit.jupiter.api.Test;
 
@@ -10,4 +10,5 @@ public class AppTest {
   public void shouldAnswerWithTrue() {
     assertNull(null);
   }
+
 }

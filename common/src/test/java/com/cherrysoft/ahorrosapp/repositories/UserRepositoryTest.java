@@ -1,11 +1,14 @@
 package com.cherrysoft.ahorrosapp.repositories;
 
+import com.cherrysoft.ahorrosapp.config.RepositoryTestingConfig;
 import com.cherrysoft.ahorrosapp.core.models.User;
 import com.github.javafaker.Faker;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ContextConfiguration;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +18,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataJpaTest
+@ContextConfiguration(classes = {UserRepository.class})
+@Import({RepositoryTestingConfig.class})
 class UserRepositoryTest {
   private final Faker faker = FAKER_INSTANCE;
   @Autowired private UserRepository userRepository;

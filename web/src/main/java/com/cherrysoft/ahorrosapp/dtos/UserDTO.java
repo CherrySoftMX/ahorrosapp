@@ -24,7 +24,7 @@ public class UserDTO {
   @Size(
       min = 5,
       max = 20,
-      message = "Username must be between 5 and 20 chars."
+      message = "Username must be between {min} and {max} chars."
   )
   @Username
   @NotBlank(groups = {OnCreate.class}, message = "A username is required.")
@@ -33,7 +33,7 @@ public class UserDTO {
   @Size(
       min = 6,
       max = 16,
-      message = "Password must be between 6 and 16 chars."
+      message = "Password must be between {min} and {max} chars."
   )
   @NotBlank(groups = {OnCreate.class}, message = "A password is required.")
   @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)

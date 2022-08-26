@@ -28,7 +28,7 @@ public class PiggyBankDTO {
   @Size(
       min = 5,
       max = 30,
-      message = "Piggy bank name must be between 5 and 30 chars."
+      message = "Piggy bank name must be between {min} and {max} chars."
   )
   @PiggyBankName
   @NotBlank(groups = OnCreate.class, message = "A piggy bank name is required.")

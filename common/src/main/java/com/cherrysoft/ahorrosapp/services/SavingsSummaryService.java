@@ -14,12 +14,12 @@ public class SavingsSummaryService {
   private final SavingsFetcherStrategyFactory fetcherStrategyFactory;
   private final PiggyBankService pbService;
 
-  public IntervalSavingsSummary getIntervalSavingsSummary(SavingsSummaryQueryParams params) {
+  public IntervalSavingsSummary calcIntervalSavingsSummary(SavingsSummaryQueryParams params) {
     var fetcherStrategy = fetcherStrategyFactory.createFetcherStrategy(params);
     return new IntervalSavingsSummary(fetcherStrategy.fetchSavings());
   }
 
-  public PiggyBankSummary getPiggyBankSummary(SavingsSummaryQueryParams params) {
+  public PiggyBankSummary calcPiggyBankSummary(SavingsSummaryQueryParams params) {
     PiggyBank pb = pbService.getPiggyBankByName(params);
     return pb.getPiggyBankSummary();
   }

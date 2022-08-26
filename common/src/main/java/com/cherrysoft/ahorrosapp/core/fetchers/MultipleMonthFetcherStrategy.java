@@ -10,13 +10,13 @@ import com.cherrysoft.ahorrosapp.services.PiggyBankService;
 import java.time.LocalDate;
 import java.util.List;
 
-public class MonthlyIntervalFetcherStrategy implements SavingsFetcherStrategy {
+public class MultipleMonthFetcherStrategy implements SavingsFetcherStrategy {
   private final SavingsSummaryQueryParams params;
   private final MonthParser monthParser;
   private final PiggyBankService pbService;
   private final DailySavingRepository dailySavingRepository;
 
-  public MonthlyIntervalFetcherStrategy(
+  public MultipleMonthFetcherStrategy(
       SavingsSummaryQueryParams params,
       PiggyBankService pbService,
       DailySavingRepository dailySavingRepository

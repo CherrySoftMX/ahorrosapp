@@ -1,7 +1,8 @@
 package com.cherrysoft.ahorrosapp.core.fetchers.factories.imp;
 
+import com.cherrysoft.ahorrosapp.core.SavingSummaryType;
 import com.cherrysoft.ahorrosapp.core.fetchers.MonthlyFetcherStrategy;
-import com.cherrysoft.ahorrosapp.core.fetchers.MonthlyIntervalFetcherStrategy;
+import com.cherrysoft.ahorrosapp.core.fetchers.MultipleMonthFetcherStrategy;
 import com.cherrysoft.ahorrosapp.core.fetchers.SavingsFetcherStrategy;
 import com.cherrysoft.ahorrosapp.core.fetchers.factories.SavingsFetcherStrategyFactory;
 import com.cherrysoft.ahorrosapp.core.queryparams.SavingsSummaryQueryParams;
@@ -18,15 +19,17 @@ public class SavingsFetcherStrategyFactoryImp implements SavingsFetcherStrategyF
 
   @Override
   public SavingsFetcherStrategy createFetcherStrategy(SavingsSummaryQueryParams params) {
-    String summaryType = params.getSummaryType();
+    SavingSummaryType summaryType = params.getSummaryType();
     PiggyBankService pbService = beanFactory.getBean(PiggyBankService.class);
     DailySavingRepository dailySavingRepository = beanFactory.getBean(DailySavingRepository.class);
-    if ("monthly".equals(summaryType)) {
-      return new MonthlyFetcherStrategy(params, pbService, dailySavingRepository);
-    } else if ("monthly-interval".equals(summaryType)) {
-      return new MonthlyIntervalFetcherStrategy(params, pbService, dailySavingRepository);
+    switch (summaryType) {
+      case MONTHLY:
+        return new MonthlyFetcherStrategy(params, pbService, dailySavingRepository);
+      case INTERVAL_MONTH:
+        return new MultipleMonthFetcherStrategy(params, pbService, dailySavingRepository);
+      default:
+        throw new RuntimeException("No fetcher strategy found!");
     }
-    throw new RuntimeException("No fetcher strategy found!");
   }
 
 }

@@ -30,7 +30,8 @@ public class CreateDailySavingUseCaseImp extends DailySavingUseCase implements C
 
   @Override
   public DailySaving createDailySaving(
-      DailySavingQueryParams params, DailySaving dailySaving
+      DailySavingQueryParams params,
+      DailySaving dailySaving
   ) {
     setParams(params);
     setDailySaving(dailySaving);

@@ -15,7 +15,7 @@ public class IntervalSavingsSummary implements SavingsSummary {
   private List<DailySaving> savings;
 
   @Override
-  public BigDecimal getSavingsTotalAmount() {
+  public BigDecimal calcSavingsTotalAmount() {
     BigDecimal totalAmount = BigDecimal.ZERO;
     for (DailySaving saving : savings) {
       totalAmount = totalAmount.add(saving.getAmount());
@@ -24,8 +24,8 @@ public class IntervalSavingsSummary implements SavingsSummary {
   }
 
   @Override
-  public BigDecimal getAverageAmount() {
-    BigDecimal totalAmount = getSavingsTotalAmount();
+  public BigDecimal calcAverageAmount() {
+    BigDecimal totalAmount = calcSavingsTotalAmount();
     if (totalAmount.equals(BigDecimal.ZERO)) {
       return BigDecimal.ZERO;
     }

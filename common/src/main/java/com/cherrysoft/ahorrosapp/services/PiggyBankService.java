@@ -3,6 +3,7 @@ package com.cherrysoft.ahorrosapp.services;
 import com.cherrysoft.ahorrosapp.core.models.PiggyBank;
 import com.cherrysoft.ahorrosapp.core.models.User;
 import com.cherrysoft.ahorrosapp.core.queryparams.SavingQueryParams;
+import com.cherrysoft.ahorrosapp.core.queryparams.UpdatePiggyBankQueryParams;
 import com.cherrysoft.ahorrosapp.repositories.PiggyBankRepository;
 import com.cherrysoft.ahorrosapp.services.exceptions.piggybank.PiggyBankNameNotAvailableException;
 import com.cherrysoft.ahorrosapp.services.exceptions.piggybank.PiggyBankNotFoundException;
@@ -41,15 +42,13 @@ public class PiggyBankService {
     return getPiggyBankByName(pb.getName(), owner);
   }
 
-  public PiggyBank partialUpdatePiggyBank(
-      String ownerUsername, String oldPbName, PiggyBank updatedPb
-  ) {
-    User owner = userService.getUserByUsername(ownerUsername);
-    PiggyBank pb = getPiggyBankByName(oldPbName, owner);
-    if (!oldPbName.equals(updatedPb.getName())) {
-      ensureUniquePiggyBankNameForOwner(updatedPb.getName(), owner);
+  public PiggyBank partialUpdatePiggyBank(UpdatePiggyBankQueryParams params) {
+    User owner = userService.getUserByUsername(params.getOwnerUsername());
+    PiggyBank pb = getPiggyBankByName(params.getOldPbName(), owner);
+    if (!params.getOldPbName().equals(params.getUpdatedPb().getName())) {
+      ensureUniquePiggyBankNameForOwner(params.getUpdatedPb().getName(), owner);
     }
-    BeanUtils.copyProperties(updatedPb, pb);
+    BeanUtils.copyProperties(params.getUpdatedPb(), pb);
     pb.ensureSavingsIntervalIntegrity();
     return pbRepository.save(pb);
   }

@@ -1,7 +1,7 @@
 package com.cherrysoft.ahorrosapp.controllers.summaries;
 
+import com.cherrysoft.ahorrosapp.controllers.summaries.factories.SummaryResponseFormatFactory;
 import com.cherrysoft.ahorrosapp.core.queryparams.SavingsSummaryQueryParams;
-import com.cherrysoft.ahorrosapp.dtos.summaries.IntervalSavingsSummaryDTO;
 import com.cherrysoft.ahorrosapp.dtos.summaries.PiggyBankSummaryDTO;
 import com.cherrysoft.ahorrosapp.mappers.SavingsSummaryMapper;
 import com.cherrysoft.ahorrosapp.services.SavingsSummaryService;
@@ -18,16 +18,17 @@ public class SavingsSummaryController {
   public static final String BASE_URL = "{ownerUsername}/{pbName}/summary";
   private final SavingsSummaryService savingsSummaryService;
   private final SavingsSummaryMapper savingsSummaryMapper;
+  private final SummaryResponseFormatFactory summaryResponseFormatFactory;
 
   @GetMapping
-  public ResponseEntity<IntervalSavingsSummaryDTO> intervalSavingsSummary(
+  public ResponseEntity<Object> intervalSavingsSummary(
       @PathVariable String ownerUsername,
       @PathVariable String pbName,
       @RequestParam Map<String, String> summaryOptions
   ) {
     var params = new SavingsSummaryQueryParams(ownerUsername, pbName, summaryOptions);
-    var savingsSummary = savingsSummaryService.calcIntervalSavingsSummary(params);
-    return ResponseEntity.ok(savingsSummaryMapper.toIntervalSavingsSummaryDto(savingsSummary));
+    var formatStrategy = summaryResponseFormatFactory.createSummaryResponseStrategy(params);
+    return formatStrategy.formatResponse();
   }
 
   @GetMapping("/total")

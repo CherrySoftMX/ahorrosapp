@@ -22,7 +22,7 @@ class PiggyBankSummaryTest {
 
   @Test
   void calculatesSavingsTotalAmount() {
-    assertEquals(BigDecimal.valueOf(3100.0), piggyBankSummary.calcSavingsTotalAmount());
+    assertEquals(BigDecimal.valueOf(3100.0), piggyBankSummary.getSavingsTotalAmount());
   }
 
   @Test

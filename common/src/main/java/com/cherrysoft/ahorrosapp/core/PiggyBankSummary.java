@@ -15,7 +15,7 @@ public class PiggyBankSummary extends IntervalSavingsSummary {
   }
 
   public BigDecimal calcPiggyBankTotalAmount() {
-    BigDecimal savingsTotalAmount = calcSavingsTotalAmount();
+    BigDecimal savingsTotalAmount = getSavingsTotalAmount();
     return savingsTotalAmount.add(getInitialAmount());
   }
 

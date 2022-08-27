@@ -29,12 +29,20 @@ public class MultipleMonthFetcherStrategy implements SavingsFetcherStrategy {
 
   @Override
   public List<DailySaving> fetchSavings() {
-    monthParser.setRawMonth(params.getStartMonth()).parseMonth();
-    LocalDate startMonth = monthParser.startOfMonth();
-    monthParser.setRawMonth(params.getEndMonth()).parseMonth();
-    LocalDate endMonth = monthParser.endOfMonth();
     PiggyBank pb = pbService.getPiggyBankByName(params);
-    return dailySavingRepository.findByPiggyBankAndDateBetween(pb, startMonth, endMonth);
+    return dailySavingRepository.findByPiggyBankAndDateBetween(pb, startDay(), endDay());
+  }
+
+  @Override
+  public LocalDate startDay() {
+    monthParser.setMonthYearString(params.getStartMonth()).parseMonth();
+    return monthParser.startOfMonth();
+  }
+
+  @Override
+  public LocalDate endDay() {
+    monthParser.setMonthYearString(params.getEndMonth()).parseMonth();
+    return monthParser.endOfMonth();
   }
 
 }

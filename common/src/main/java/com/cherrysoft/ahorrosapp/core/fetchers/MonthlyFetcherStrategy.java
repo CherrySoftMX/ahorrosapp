@@ -24,16 +24,23 @@ public class MonthlyFetcherStrategy implements SavingsFetcherStrategy {
     this.params = params;
     this.pbService = pbService;
     this.dailySavingRepository = dailySavingRepository;
-    this.monthParser = new MonthParser();
+    this.monthParser = new MonthParser(params.getMonth());
   }
 
   @Override
   public List<DailySaving> fetchSavings() {
-    monthParser.setRawMonth(params.getMonth());
     PiggyBank pb = pbService.getPiggyBankByName(params);
-    LocalDate startOfMonth = monthParser.startOfMonth();
-    LocalDate endOfMonth = monthParser.endOfMonth();
-    return dailySavingRepository.findByPiggyBankAndDateBetween(pb, startOfMonth, endOfMonth);
+    return dailySavingRepository.findByPiggyBankAndDateBetween(pb, startDay(), endDay());
+  }
+
+  @Override
+  public LocalDate startDay() {
+    return monthParser.startOfMonth();
+  }
+
+  @Override
+  public LocalDate endDay() {
+    return monthParser.endOfMonth();
   }
 
 }

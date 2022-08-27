@@ -16,18 +16,19 @@ public class MonthParser {
   private final DateTimeFormatter formatter;
   @Setter(AccessLevel.NONE)
   private YearMonth parseResult;
-  private String rawMonth;
+  @Setter(AccessLevel.NONE)
+  private String monthYearString;
 
   public MonthParser() {
     this(null);
   }
 
-  public MonthParser(String rawMonth) {
-    this(DateTimeFormatter.ofPattern(MONTH_YEAR_PATTERN), rawMonth);
+  public MonthParser(String monthYearString) {
+    this(DateTimeFormatter.ofPattern(MONTH_YEAR_PATTERN), monthYearString);
   }
 
-  public MonthParser(DateTimeFormatter formatter, String rawMonth) {
-    this.rawMonth = rawMonth;
+  public MonthParser(DateTimeFormatter formatter, String monthYearString) {
+    this.monthYearString = monthYearString;
     this.formatter = formatter;
     parseMonth();
   }
@@ -40,15 +41,15 @@ public class MonthParser {
     return parseResult.atEndOfMonth();
   }
 
-  public MonthParser setRawMonth(String rawMonth) {
-    this.rawMonth = rawMonth;
+  public MonthParser setMonthYearString(String rawMonth) {
+    this.monthYearString = rawMonth;
     parseMonth();
     return this;
   }
 
   public void parseMonth() {
-    if (!isNull(rawMonth)) {
-      this.parseResult = YearMonth.parse(rawMonth, formatter);
+    if (!isNull(monthYearString)) {
+      this.parseResult = YearMonth.parse(monthYearString, formatter);
     }
   }
 

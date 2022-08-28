@@ -13,6 +13,7 @@ import static java.util.Objects.isNull;
 @Data
 public class MonthParser {
   public static final String MONTH_YEAR_PATTERN = "MM-yyyy";
+  public static final DateTimeFormatter MONTH_YEAR_FORMATTER = DateTimeFormatter.ofPattern(MONTH_YEAR_PATTERN);
   private final DateTimeFormatter formatter;
   @Setter(AccessLevel.NONE)
   private YearMonth parseResult;
@@ -24,7 +25,7 @@ public class MonthParser {
   }
 
   public MonthParser(String monthYearString) {
-    this(DateTimeFormatter.ofPattern(MONTH_YEAR_PATTERN), monthYearString);
+    this(MONTH_YEAR_FORMATTER, monthYearString);
   }
 
   public MonthParser(DateTimeFormatter formatter, String monthYearString) {

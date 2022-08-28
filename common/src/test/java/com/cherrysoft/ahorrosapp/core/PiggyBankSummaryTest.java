@@ -29,14 +29,14 @@ class PiggyBankSummaryTest {
   void calculatesPiggyBankTotalAmount() {
     piggyBank.setInitialAmount(BigDecimal.valueOf(50));
 
-    assertEquals(BigDecimal.valueOf(3150.0), piggyBankSummary.calcPiggyBankTotalAmount());
+    assertEquals(BigDecimal.valueOf(3150.0), piggyBankSummary.getPiggyBankTotalAmount());
   }
 
   @Test
   void calculatesInHandAmount() {
     piggyBank.setBorrowedAmount(BigDecimal.valueOf(200));
 
-    assertEquals(BigDecimal.valueOf(2900.0), piggyBankSummary.calcInHandAmount());
+    assertEquals(BigDecimal.valueOf(2900.0), piggyBankSummary.getInHandAmount());
   }
 
   @Test
@@ -44,7 +44,7 @@ class PiggyBankSummaryTest {
     piggyBank.setInitialAmount(BigDecimal.valueOf(50));
     piggyBank.setBorrowedAmount(BigDecimal.valueOf(200));
 
-    assertEquals(BigDecimal.valueOf(2950.0), piggyBankSummary.calcInHandAmount());
+    assertEquals(BigDecimal.valueOf(2950.0), piggyBankSummary.getInHandAmount());
   }
 
 }

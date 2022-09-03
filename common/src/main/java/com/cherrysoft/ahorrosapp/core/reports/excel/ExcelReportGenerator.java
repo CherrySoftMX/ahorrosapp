@@ -1,5 +1,6 @@
 package com.cherrysoft.ahorrosapp.core.reports.excel;
 
+import com.cherrysoft.ahorrosapp.core.reports.excel.sheet.MonthlySheetGenerator;
 import com.cherrysoft.ahorrosapp.core.splitters.SavingsSplit;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -18,7 +19,8 @@ public class ExcelReportGenerator {
     var byteArray = new ByteArrayOutputStream();
     try {
       workbook = new SXSSFWorkbook(1000);
-      generateSheets();
+      generateSheetPerMonth();
+      workbook.setForceFormulaRecalculation(true);
       workbook.write(byteArray);
       workbook.close();
     } catch (IOException e) {
@@ -27,7 +29,7 @@ public class ExcelReportGenerator {
     return byteArray.toByteArray();
   }
 
-  private void generateSheets() {
+  private void generateSheetPerMonth() {
     MonthlySheetGenerator monthlySheetGenerator = new MonthlySheetGenerator(workbook);
     savingsSplits.forEach(monthlySheetGenerator::createSheet);
   }

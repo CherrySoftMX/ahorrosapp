@@ -27,7 +27,8 @@ public class PartialUpdateDailySavingUseCaseImp extends DailySavingUseCase imple
 
   @Override
   public DailySaving partialUpdateDailySaving(
-      DailySavingQueryParams params, DailySaving updatedDailySaving
+      DailySavingQueryParams params,
+      DailySaving updatedDailySaving
   ) {
     setParams(params);
     setDailySaving(updatedDailySaving);

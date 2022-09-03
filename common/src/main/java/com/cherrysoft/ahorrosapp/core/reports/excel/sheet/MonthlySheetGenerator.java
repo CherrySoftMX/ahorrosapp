@@ -1,4 +1,4 @@
-package com.cherrysoft.ahorrosapp.core.reports.excel;
+package com.cherrysoft.ahorrosapp.core.reports.excel.sheet;
 
 import com.cherrysoft.ahorrosapp.core.models.DailySaving;
 import com.cherrysoft.ahorrosapp.core.splitters.SavingsSplit;
@@ -9,20 +9,22 @@ import org.apache.poi.ss.util.CellRangeAddress;
 
 import java.util.List;
 
+import static com.cherrysoft.ahorrosapp.core.reports.excel.ExcelWorkbookUtils.centeredCellStyle;
+
 @RequiredArgsConstructor
 public class MonthlySheetGenerator {
   public static final int TABLE_INITIAL_ROW = 2;
   private final Workbook workbook;
-  @Setter
-  private SavingsSplit savingsSplit;
+  @Setter private SavingsSplit savingsSplit;
   private Sheet sheet;
+  private SheetSavingsTableGenerator savingsTableGenerator;
+  private SheetSummaryTableGenerator summaryTableGenerator;
 
   public void createSheet(SavingsSplit split) {
     setSavingsSplit(split);
     sheet = workbook.createSheet(savingsSplit.splitRepresentation());
     createSheetHeader();
-    createSavingsTableHeader();
-    populateSavingsTable();
+    createSheetSavingsTable();
     createSheetSummary();
   }
 
@@ -32,7 +34,7 @@ public class MonthlySheetGenerator {
     sheetHeaderFont.setFontHeightInPoints((short) 18);
 
     CellStyle cellStyle = workbook.createCellStyle();
-    cellStyle.cloneStyleFrom(centeredCellStyle());
+    cellStyle.cloneStyleFrom(centeredCellStyle(workbook));
     cellStyle.setBorderBottom(BorderStyle.THIN);
     cellStyle.setFont(sheetHeaderFont);
 
@@ -46,63 +48,22 @@ public class MonthlySheetGenerator {
     cell.setCellStyle(cellStyle);
   }
 
-  private void createSavingsTableHeader() {
-    Row tableHeader = sheet.createRow(2);
-
-    Cell amountCol = tableHeader.createCell(1);
-    amountCol.setCellValue("AMOUNT");
-    amountCol.setCellStyle(centeredCellStyle());
-
-    Cell accumulatedCol = tableHeader.createCell(2);
-    accumulatedCol.setCellValue("ACCUMULATED");
-    accumulatedCol.setCellStyle(centeredCellStyle());
-  }
-
-  private void populateSavingsTable() {
+  private void createSheetSavingsTable() {
     List<DailySaving> dailySavings = savingsSplit.getDailySavings();
-    int tableInitialRow = TABLE_INITIAL_ROW;
-    for (DailySaving dailySaving : dailySavings) {
-      Row row = sheet.createRow(tableInitialRow);
-
-      Cell dateCell = row.createCell(0);
-      dateCell.setCellValue(dailySaving.getDate());
-      dateCell.setCellStyle(dateCellStyle());
-
-      Cell amountCell = row.createCell(1);
-      amountCell.setCellValue(dailySaving.getAmount().toString());
-      amountCell.setCellStyle(currencyCellStyle());
-
-      tableInitialRow++;
-    }
+    savingsTableGenerator = new SheetSavingsTableGenerator(sheet, dailySavings);
+    savingsTableGenerator.createTableOnRow(TABLE_INITIAL_ROW);
   }
 
   private void createSheetSummary() {
-    int tableInitialRow = sheetSummaryTableInitialRow();
-    System.out.println(tableInitialRow);
-  }
-
-  private CellStyle centeredCellStyle() {
-    CellStyle centeredCellStyle = workbook.createCellStyle();
-    centeredCellStyle.setAlignment(HorizontalAlignment.CENTER);
-    return centeredCellStyle;
-  }
-
-  private CellStyle currencyCellStyle() {
-    CellStyle currencyCellStyle = workbook.createCellStyle();
-    currencyCellStyle.setDataFormat((short) 8);
-    return currencyCellStyle;
-  }
-
-  private CellStyle dateCellStyle() {
-    CellStyle dateCellStyle = workbook.createCellStyle();
-    CreationHelper creationHelper = workbook.getCreationHelper();
-    short dateFormat = creationHelper.createDataFormat().getFormat("MM/dd/yyyy");
-    dateCellStyle.setDataFormat(dateFormat);
-    return dateCellStyle;
+    summaryTableGenerator = new SheetSummaryTableGenerator(sheet);
+    summaryTableGenerator.createSummaryTableOnRow(
+        sheetSummaryTableInitialRow(),
+        savingsTableGenerator.getAmountCellsRange()
+    );
   }
 
   private int sheetSummaryTableInitialRow() {
-    return TABLE_INITIAL_ROW + savingsSplit.getDailySavings().size() + 1;
+    return savingsTableGenerator.lastTableRow() + 2;
   }
 
 }

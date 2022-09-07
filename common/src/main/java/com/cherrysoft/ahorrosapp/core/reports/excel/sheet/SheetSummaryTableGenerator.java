@@ -1,34 +1,30 @@
 package com.cherrysoft.ahorrosapp.core.reports.excel.sheet;
 
-import lombok.RequiredArgsConstructor;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
 
 import static com.cherrysoft.ahorrosapp.core.reports.excel.ExcelWorkbookUtils.currencyCellStyle;
 
-@RequiredArgsConstructor
-public class SheetSummaryTableGenerator {
-  private final Sheet sheet;
-  private int initialRow;
-  private String amountCellsRange;
+public class SheetSummaryTableGenerator extends SheetComponentGenerator {
+  public SheetSummaryTableGenerator(Sheet sheet) {
+    super(sheet);
+  }
 
-  public void createSummaryTableOnRow(int initialRow, String amountCellsRange) {
-    this.initialRow = initialRow;
-    this.amountCellsRange = amountCellsRange;
+  @Override
+  public void generateComponent() {
     createMonthTotalAmountRow();
   }
 
   private void createMonthTotalAmountRow() {
-    Row row = sheet.createRow(initialRow);
+    Row row = sheet().createRow(sheetInfo().monthTotalAmountRow());
 
     Cell monthTotalCellLabel = row.createCell(0);
-    monthTotalCellLabel.setCellValue("Month total: ");
+    monthTotalCellLabel.setCellValue("MONTH TOTAL:");
 
-    Workbook workbook = sheet.getWorkbook();
-    FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
     Cell monthTotalCell = row.createCell(1);
-    monthTotalCell.setCellFormula(String.format("SUM(%s)", amountCellsRange));
-    monthTotalCell.setCellStyle(currencyCellStyle(workbook));
-    evaluator.evaluateFormulaCell(monthTotalCell);
+    monthTotalCell.setCellFormula(String.format("SUM(%s)", sheetInfo().getAmountCellsRange()));
+    monthTotalCell.setCellStyle(currencyCellStyle(sheet().getWorkbook()));
   }
 
 }

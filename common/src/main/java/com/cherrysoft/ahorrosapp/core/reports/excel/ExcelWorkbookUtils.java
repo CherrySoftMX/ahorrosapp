@@ -1,9 +1,6 @@
 package com.cherrysoft.ahorrosapp.core.reports.excel;
 
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.CreationHelper;
-import org.apache.poi.ss.usermodel.HorizontalAlignment;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 
 public class ExcelWorkbookUtils {
 
@@ -25,6 +22,10 @@ public class ExcelWorkbookUtils {
     CellStyle centeredCellStyle = workbook.createCellStyle();
     centeredCellStyle.setAlignment(HorizontalAlignment.CENTER);
     return centeredCellStyle;
+  }
+
+  public static String getCellAddressString(Cell cell) {
+    return cell.getAddress().formatAsString();
   }
 
 }

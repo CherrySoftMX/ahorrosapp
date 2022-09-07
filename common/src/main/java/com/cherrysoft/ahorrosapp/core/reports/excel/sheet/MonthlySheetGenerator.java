@@ -13,12 +13,10 @@ import static com.cherrysoft.ahorrosapp.core.reports.excel.ExcelWorkbookUtils.ce
 
 @RequiredArgsConstructor
 public class MonthlySheetGenerator {
-  public static final int TABLE_INITIAL_ROW = 2;
   private final Workbook workbook;
-  @Setter private SavingsSplit savingsSplit;
   private Sheet sheet;
-  private SheetSavingsTableGenerator savingsTableGenerator;
-  private SheetSummaryTableGenerator summaryTableGenerator;
+  @Setter private SavingsSplit savingsSplit;
+  @Setter private MonthlySheetInfo previousSheetInfo;
 
   public void createSheet(SavingsSplit split) {
     setSavingsSplit(split);
@@ -50,20 +48,24 @@ public class MonthlySheetGenerator {
 
   private void createSheetSavingsTable() {
     List<DailySaving> dailySavings = savingsSplit.getDailySavings();
-    savingsTableGenerator = new SheetSavingsTableGenerator(sheet, dailySavings);
-    savingsTableGenerator.createTableOnRow(TABLE_INITIAL_ROW);
+    var savingsTableGenerator = new SheetSavingsTableGenerator(sheet, dailySavings);
+    initSheetComponentGenerator(savingsTableGenerator);
+    savingsTableGenerator.generateComponent();
   }
 
   private void createSheetSummary() {
-    summaryTableGenerator = new SheetSummaryTableGenerator(sheet);
-    summaryTableGenerator.createSummaryTableOnRow(
-        sheetSummaryTableInitialRow(),
-        savingsTableGenerator.getAmountCellsRange()
-    );
+    var summaryTableGenerator = new SheetSummaryTableGenerator(sheet);
+    initSheetComponentGenerator(summaryTableGenerator);
+    summaryTableGenerator.generateComponent();
   }
 
-  private int sheetSummaryTableInitialRow() {
-    return savingsTableGenerator.lastTableRow() + 2;
+  private void initSheetComponentGenerator(SheetComponentGenerator componentGenerator) {
+    componentGenerator.sheetInfo(monthlySheetInfo());
+    componentGenerator.previousSheetInfo(previousSheetInfo);
+  }
+
+  public MonthlySheetInfo monthlySheetInfo() {
+    return new MonthlySheetInfo(savingsSplit.getDailySavings().size());
   }
 
 }

@@ -17,7 +17,7 @@ public class JsonSummaryResponseStrategy extends SummaryResponseStrategy {
 
   @Override
   public ResponseEntity<Object> formatResponse() {
-    var savingsSummary = summaryService.calcIntervalSavingsSummary(params);
+    var savingsSummary = summaryService.getIntervalSavingsSummary(params);
     var savingsSummaryDTO = summaryMapper.toIntervalSavingsSummaryDto(savingsSummary);
     return ResponseEntity.ok(savingsSummaryDTO);
   }

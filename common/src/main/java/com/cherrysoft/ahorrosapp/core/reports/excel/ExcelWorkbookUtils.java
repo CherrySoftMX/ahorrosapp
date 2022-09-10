@@ -24,7 +24,7 @@ public class ExcelWorkbookUtils {
     return centeredCellStyle;
   }
 
-  public static String getCellAddressString(Cell cell) {
+  public static String getCellAddressAsString(Cell cell) {
     return cell.getAddress().formatAsString();
   }
 

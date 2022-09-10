@@ -13,8 +13,8 @@ import org.apache.poi.ss.usermodel.Workbook;
 @RequiredArgsConstructor
 public abstract class SheetComponentGenerator {
   private final Sheet sheet;
-  private MonthlySheetInfo sheetInfo;
-  private MonthlySheetInfo previousSheetInfo;
+  private MonthlySheetContext sheetContext;
+  private MonthlySheetContext previousSheetContext;
 
   public abstract void generateComponent();
 

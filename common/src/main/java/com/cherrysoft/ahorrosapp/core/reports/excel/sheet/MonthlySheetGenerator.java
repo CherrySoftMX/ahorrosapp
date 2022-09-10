@@ -16,7 +16,7 @@ public class MonthlySheetGenerator {
   private final Workbook workbook;
   private Sheet sheet;
   @Setter private SavingsSplit savingsSplit;
-  @Setter private MonthlySheetInfo previousSheetInfo;
+  @Setter private MonthlySheetContext previousSheetContext;
 
   public void createSheet(SavingsSplit split) {
     setSavingsSplit(split);
@@ -60,12 +60,12 @@ public class MonthlySheetGenerator {
   }
 
   private void initSheetComponentGenerator(SheetComponentGenerator componentGenerator) {
-    componentGenerator.sheetInfo(monthlySheetInfo());
-    componentGenerator.previousSheetInfo(previousSheetInfo);
+    componentGenerator.sheetContext(getMonthlyContext());
+    componentGenerator.previousSheetContext(previousSheetContext);
   }
 
-  public MonthlySheetInfo monthlySheetInfo() {
-    return new MonthlySheetInfo(savingsSplit.getDailySavings().size());
+  public MonthlySheetContext getMonthlyContext() {
+    return new MonthlySheetContext(savingsSplit.getDailySavings().size());
   }
 
 }

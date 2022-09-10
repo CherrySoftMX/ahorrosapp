@@ -17,7 +17,7 @@ public class SavingsSummaryService {
   private final SavingsFetcherStrategyFactory fetcherStrategyFactory;
   private final PiggyBankService pbService;
 
-  public IntervalSavingsSummary calcIntervalSavingsSummary(SavingsSummaryQueryParams params) {
+  public IntervalSavingsSummary getIntervalSavingsSummary(SavingsSummaryQueryParams params) {
     var fetcher = fetcherStrategyFactory.createFetcherStrategy(params);
     return new IntervalSavingsSummary(fetcher.fetchSavings());
   }
@@ -29,7 +29,7 @@ public class SavingsSummaryService {
     return new ExcelReportGenerator(savingsSplitter.split()).generateReport();
   }
 
-  public PiggyBankSummary calcPiggyBankSummary(SavingsSummaryQueryParams params) {
+  public PiggyBankSummary getPiggyBankSummary(SavingsSummaryQueryParams params) {
     PiggyBank pb = pbService.getPiggyBankByName(params);
     return pb.getPiggyBankSummary();
   }

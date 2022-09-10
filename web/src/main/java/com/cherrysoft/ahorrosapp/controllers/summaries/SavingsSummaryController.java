@@ -37,7 +37,7 @@ public class SavingsSummaryController {
       @PathVariable String pbName
   ) {
     var params = new SavingsSummaryQueryParams(ownerUsername, pbName);
-    var pbSummary = savingsSummaryService.calcPiggyBankSummary(params);
+    var pbSummary = savingsSummaryService.getPiggyBankSummary(params);
     return ResponseEntity.ok(savingsSummaryMapper.toPiggyBankSummaryDto(pbSummary));
   }
 

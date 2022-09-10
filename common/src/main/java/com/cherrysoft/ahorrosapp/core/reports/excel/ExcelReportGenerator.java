@@ -47,7 +47,7 @@ public class ExcelReportGenerator {
     for (SavingsSplit savingsSplit : savingsSplits) {
       MonthlySheetGenerator monthlySheet = new MonthlySheetGenerator(workbook);
       if (nonNull(previousMonthlySheet)) {
-        monthlySheet.setPreviousSheetInfo(previousMonthlySheet.monthlySheetInfo());
+        monthlySheet.setPreviousSheetContext(previousMonthlySheet.getMonthlyContext());
       }
       monthlySheet.createSheet(savingsSplit);
       previousMonthlySheet = monthlySheet;

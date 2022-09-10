@@ -1,7 +1,6 @@
 package com.cherrysoft.ahorrosapp.controllers;
 
 import com.cherrysoft.ahorrosapp.core.models.PiggyBank;
-import com.cherrysoft.ahorrosapp.core.queryparams.UpdatePiggyBankQueryParams;
 import com.cherrysoft.ahorrosapp.dtos.PiggyBankDTO;
 import com.cherrysoft.ahorrosapp.dtos.validation.OnCreate;
 import com.cherrysoft.ahorrosapp.mappers.PiggyBankMapper;
@@ -46,8 +45,7 @@ public class PiggyBankController {
       @RequestBody @Valid PiggyBankDTO pbDto
   ) {
     PiggyBank partialUpdatedPb = pbMapper.toPiggyBank(pbDto);
-    var params = new UpdatePiggyBankQueryParams(ownerUsername, pbName, partialUpdatedPb);
-    PiggyBank updatedPb = pbService.partialUpdatePiggyBank(params);
+    PiggyBank updatedPb = pbService.partialUpdatePiggyBank(ownerUsername, pbName, partialUpdatedPb);
     return ResponseEntity.ok(pbMapper.toPiggyBankDto(updatedPb));
   }
 

@@ -17,14 +17,21 @@ public class SheetSummaryTableGenerator extends SheetComponentGenerator {
   }
 
   private void createMonthTotalAmountRow() {
-    Row row = sheet().createRow(sheetInfo().monthTotalAmountRow());
+    Row row = sheet().createRow(sheetContext().getMonthTotalAmountRow());
 
-    Cell monthTotalCellLabel = row.createCell(0);
-    monthTotalCellLabel.setCellValue("MONTH TOTAL:");
+    Cell monthTotalAmountLabel = row.createCell(0);
+    monthTotalAmountLabel.setCellValue("MONTH TOTAL:");
 
     Cell monthTotalCell = row.createCell(1);
-    monthTotalCell.setCellFormula(String.format("SUM(%s)", sheetInfo().getAmountCellsRange()));
+    monthTotalCell.setCellFormula(String.format("SUM(%s)", sheetContext().getAmountCellsRangeAddressAsString()));
     monthTotalCell.setCellStyle(currencyCellStyle(sheet().getWorkbook()));
+  }
+
+  private void createMonthAccumAmountRow() {
+    Row row = sheet().createRow(sheetContext().getMonthAccumAmountRow());
+
+    Cell monthAccumAmountLabel = row.createCell(0);
+
   }
 
 }

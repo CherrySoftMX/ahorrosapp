@@ -84,8 +84,8 @@ public class SheetSavingsTableGenerator extends SheetComponentGenerator {
     if (nonNull(previousRow)) {
       accumCell.setCellFormula(
           String.format("SUM(%s, %s)",
-              getCellAddressString(currentRow.getCell(SAVING_AMOUNT_COL)),
-              getCellAddressString(previousRow.getCell(SAVINGS_ACCUM_COL))
+              getCellAddressAsString(currentRow.getCell(SAVING_AMOUNT_COL)),
+              getCellAddressAsString(previousRow.getCell(SAVINGS_ACCUM_COL))
           )
       );
     }

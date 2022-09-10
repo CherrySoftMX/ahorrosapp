@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.util.CellReference;
 
+import static com.cherrysoft.ahorrosapp.core.reports.excel.sheet.SheetSavingsTableGenerator.SAVINGS_ACCUM_COL;
 import static com.cherrysoft.ahorrosapp.core.reports.excel.sheet.SheetSavingsTableGenerator.SAVING_AMOUNT_COL;
 
 @Getter
@@ -39,12 +40,16 @@ public class MonthlySheetContext {
     return getMonthAccumAmountRow() + 1;
   }
 
-  public int getStartAmountRow() {
+  public int getSavingsStartAmountRow() {
     return getMonthAverageAmountRow() + 1;
   }
 
-  public String getStartAmountCellAddressAsString() {
-    return CellReference.convertNumToColString(1) + (getStartAmountRow() + 1);
+  public String getSavingsStartAmountCellAddressAsString() {
+    return CellReference.convertNumToColString(1) + (getSavingsStartAmountRow() + 1);
+  }
+
+  public String getLastAccumCellAddressAsString() {
+    return CellReference.convertNumToColString(SAVINGS_ACCUM_COL) + (getDailySavingsTableLastRow() + 1);
   }
 
 }

@@ -41,17 +41,13 @@ public class PiggyBankService {
     return getPiggyBankByName(pb.getName(), owner);
   }
 
-  public PiggyBank partialUpdatePiggyBank(
-      String ownerUsername,
-      String oldPbName,
-      PiggyBank updatedPb
-  ) {
-    User owner = userService.getUserByUsername(ownerUsername);
-    PiggyBank pb = getPiggyBankByName(oldPbName, owner);
-    if (!oldPbName.equals(updatedPb.getName())) {
-      ensureUniquePiggyBankNameForOwner(updatedPb.getName(), owner);
+  public PiggyBank partialUpdatePiggyBank(UpdatePiggyBankParams params) {
+    User owner = userService.getUserByUsername(params.getOwnerUsername());
+    PiggyBank pb = getPiggyBankByName(owner, params.getOldPbName());
+    if (!params.getOldPbName().equals(params.getUpdatedPb().getName())) {
+      ensureUniquePiggyBankNameForOwner(owner, params.getUpdatedPb().getName());
     }
-    BeanUtils.copyProperties(updatedPb, pb);
+    BeanUtils.copyProperties(params.getUpdatedPb(), pb);
     pb.ensureSavingsIntervalIntegrity();
     return pbRepository.save(pb);
   }

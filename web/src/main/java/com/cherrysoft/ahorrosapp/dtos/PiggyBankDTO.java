@@ -4,10 +4,7 @@ import com.cherrysoft.ahorrosapp.dtos.validation.OnCreate;
 import com.cherrysoft.ahorrosapp.dtos.validation.PiggyBankName;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Null;
@@ -16,14 +13,11 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class PiggyBankDTO {
   @Null
   @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-  private Long id;
+  private final Long id;
 
   @Size(
       min = 5,
@@ -32,13 +26,13 @@ public class PiggyBankDTO {
   )
   @PiggyBankName
   @NotBlank(groups = OnCreate.class, message = "A piggy bank name is required.")
-  private String name;
+  private final String name;
 
-  private BigDecimal initialAmount;
+  private final BigDecimal initialAmount;
 
-  private BigDecimal borrowedAmount;
+  private final BigDecimal borrowedAmount;
 
-  private LocalDate startSavings;
+  private final LocalDate startSavings;
 
-  private LocalDate endSavings;
+  private final LocalDate endSavings;
 }

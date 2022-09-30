@@ -13,12 +13,12 @@ import java.time.LocalDate;
 public class DailySavingDTO {
   @Null
   @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-  private Long id;
+  private final Long id;
 
   @NotNull(groups = OnCreate.class)
-  private BigDecimal amount;
+  private final BigDecimal amount;
 
-  private LocalDate date;
+  private final LocalDate date;
 
-  private String description;
+  private final String description;
 }

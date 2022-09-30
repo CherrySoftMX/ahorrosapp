@@ -3,23 +3,17 @@ package com.cherrysoft.ahorrosapp.dtos;
 import com.cherrysoft.ahorrosapp.dtos.validation.OnCreate;
 import com.cherrysoft.ahorrosapp.dtos.validation.Username;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Null;
 import javax.validation.constraints.Size;
 
 @Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
 public class UserDTO {
   @Null
   @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-  private Long id;
+  private final Long id;
 
   @Size(
       min = 5,
@@ -28,7 +22,7 @@ public class UserDTO {
   )
   @Username
   @NotBlank(groups = {OnCreate.class}, message = "A username is required.")
-  private String username;
+  private final String username;
 
   @Size(
       min = 6,
@@ -37,5 +31,5 @@ public class UserDTO {
   )
   @NotBlank(groups = {OnCreate.class}, message = "A password is required.")
   @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-  private String password;
+  private final String password;
 }

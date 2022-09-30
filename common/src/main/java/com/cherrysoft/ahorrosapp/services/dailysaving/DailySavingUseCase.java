@@ -2,7 +2,7 @@ package com.cherrysoft.ahorrosapp.services.dailysaving;
 
 import com.cherrysoft.ahorrosapp.core.models.DailySaving;
 import com.cherrysoft.ahorrosapp.core.models.PiggyBank;
-import com.cherrysoft.ahorrosapp.core.queryparams.DailySavingQueryParams;
+import com.cherrysoft.ahorrosapp.core.params.DailySavingParams;
 import com.cherrysoft.ahorrosapp.repositories.DailySavingRepository;
 import com.cherrysoft.ahorrosapp.services.PiggyBankService;
 import lombok.Getter;
@@ -15,8 +15,7 @@ import lombok.Setter;
 public abstract class DailySavingUseCase {
   protected final PiggyBankService pbService;
   protected final DailySavingRepository dailySavingRepository;
-
-  protected DailySavingQueryParams params;
+  protected DailySavingParams params;
   protected DailySaving dailySaving;
 
   protected void ensureDailySavingDateIsWithinPbSavingsInterval() {

@@ -5,7 +5,7 @@ import com.cherrysoft.ahorrosapp.controllers.summaries.reponsestrategies.ExcelSu
 import com.cherrysoft.ahorrosapp.controllers.summaries.reponsestrategies.JsonSummaryResponseStrategy;
 import com.cherrysoft.ahorrosapp.controllers.summaries.reponsestrategies.SummaryResponseStrategy;
 import com.cherrysoft.ahorrosapp.core.SavingSummaryFormatType;
-import com.cherrysoft.ahorrosapp.core.queryparams.SavingsSummaryQueryParams;
+import com.cherrysoft.ahorrosapp.core.params.SavingsSummaryParams;
 import com.cherrysoft.ahorrosapp.mappers.SavingsSummaryMapper;
 import com.cherrysoft.ahorrosapp.services.SavingsSummaryService;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ public class SummaryResponseFormatFactoryImp implements SummaryResponseFormatFac
   private final AutowireCapableBeanFactory beanFactory;
 
   @Override
-  public SummaryResponseStrategy createSummaryResponseStrategy(SavingsSummaryQueryParams params) {
+  public SummaryResponseStrategy createSummaryResponseStrategy(SavingsSummaryParams params) {
     SavingSummaryFormatType formatType = params.getSummaryFormatType();
     var summaryService = beanFactory.getBean(SavingsSummaryService.class);
     var summaryMapper = beanFactory.getBean(SavingsSummaryMapper.class);

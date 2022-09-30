@@ -1,7 +1,7 @@
 package com.cherrysoft.ahorrosapp.services.dailysaving.imp;
 
 import com.cherrysoft.ahorrosapp.core.models.DailySaving;
-import com.cherrysoft.ahorrosapp.core.queryparams.DailySavingQueryParams;
+import com.cherrysoft.ahorrosapp.core.params.DailySavingParams;
 import com.cherrysoft.ahorrosapp.repositories.DailySavingRepository;
 import com.cherrysoft.ahorrosapp.services.PiggyBankService;
 import com.cherrysoft.ahorrosapp.services.dailysaving.DailySavingUseCase;
@@ -26,10 +26,7 @@ public class PartialUpdateDailySavingUseCaseImp extends DailySavingUseCase imple
   }
 
   @Override
-  public DailySaving partialUpdateDailySaving(
-      DailySavingQueryParams params,
-      DailySaving updatedDailySaving
-  ) {
+  public DailySaving partialUpdateDailySaving(DailySavingParams params, DailySaving updatedDailySaving) {
     setParams(params);
     setDailySaving(updatedDailySaving);
     ensureDailySavingDateIsWithinPbSavingsInterval();

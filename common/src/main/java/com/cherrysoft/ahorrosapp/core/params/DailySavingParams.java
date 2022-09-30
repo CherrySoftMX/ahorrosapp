@@ -1,4 +1,4 @@
-package com.cherrysoft.ahorrosapp.core.queryparams;
+package com.cherrysoft.ahorrosapp.core.params;
 
 import lombok.Getter;
 import lombok.ToString;
@@ -9,15 +9,15 @@ import static com.cherrysoft.ahorrosapp.utils.DateUtils.today;
 
 @Getter
 @ToString(callSuper = true)
-public class DailySavingQueryParams extends SavingQueryParams {
+public class DailySavingParams extends SavingParams {
   private final LocalDate date;
 
-  public DailySavingQueryParams(String ownerUsername, String pbName) {
+  public DailySavingParams(String ownerUsername, String pbName) {
     super(ownerUsername, pbName);
     this.date = today();
   }
 
-  public DailySavingQueryParams(String ownerUsername, String pbName, LocalDate date) {
+  public DailySavingParams(String ownerUsername, String pbName, LocalDate date) {
     super(ownerUsername, pbName);
     this.date = date;
   }

@@ -1,4 +1,4 @@
-package com.cherrysoft.ahorrosapp.core.queryparams;
+package com.cherrysoft.ahorrosapp.core.params;
 
 import com.cherrysoft.ahorrosapp.core.SavingSummaryFormatType;
 import com.cherrysoft.ahorrosapp.core.SavingSummaryType;
@@ -11,14 +11,14 @@ import java.util.Map;
 import static java.util.Objects.isNull;
 
 @ToString(callSuper = true)
-public class SavingsSummaryQueryParams extends SavingQueryParams {
+public class SavingsSummaryParams extends SavingParams {
   private final Map<String, String> summaryOptions;
 
-  public SavingsSummaryQueryParams(String ownerUsername, String pbName) {
+  public SavingsSummaryParams(String ownerUsername, String pbName) {
     this(ownerUsername, pbName, new HashMap<>());
   }
 
-  public SavingsSummaryQueryParams(String ownerUsername, String pbName, Map<String, String> summaryOptions) {
+  public SavingsSummaryParams(String ownerUsername, String pbName, Map<String, String> summaryOptions) {
     super(ownerUsername, pbName);
     this.summaryOptions = summaryOptions;
   }

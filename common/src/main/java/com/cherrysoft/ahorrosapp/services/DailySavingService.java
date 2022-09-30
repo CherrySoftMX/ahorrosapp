@@ -1,7 +1,7 @@
 package com.cherrysoft.ahorrosapp.services;
 
 import com.cherrysoft.ahorrosapp.core.models.DailySaving;
-import com.cherrysoft.ahorrosapp.core.queryparams.DailySavingQueryParams;
+import com.cherrysoft.ahorrosapp.core.params.DailySavingParams;
 import com.cherrysoft.ahorrosapp.services.dailysaving.CreateDailySavingUseCase;
 import com.cherrysoft.ahorrosapp.services.dailysaving.DeleteDailySavingUseCase;
 import com.cherrysoft.ahorrosapp.services.dailysaving.GetDailySavingUseCase;
@@ -21,27 +21,27 @@ public class DailySavingService
   private final DeleteDailySavingUseCase deleteDailySavingUseCase;
 
   @Override
-  public Optional<DailySaving> getDailySaving(DailySavingQueryParams params) {
+  public Optional<DailySaving> getDailySaving(DailySavingParams params) {
     return getDailySavingUseCase.getDailySaving(params);
   }
 
   @Override
-  public DailySaving getDailySavingOrThrowIfNotPresent(DailySavingQueryParams params) {
+  public DailySaving getDailySavingOrThrowIfNotPresent(DailySavingParams params) {
     return getDailySavingUseCase.getDailySavingOrThrowIfNotPresent(params);
   }
 
   @Override
-  public DailySaving createDailySaving(DailySavingQueryParams params, DailySaving dailySaving) {
+  public DailySaving createDailySaving(DailySavingParams params, DailySaving dailySaving) {
     return createDailySavingUseCase.createDailySaving(params, dailySaving);
   }
 
   @Override
-  public DailySaving partialUpdateDailySaving(DailySavingQueryParams params, DailySaving dailySaving) {
+  public DailySaving partialUpdateDailySaving(DailySavingParams params, DailySaving dailySaving) {
     return partialUpdateDailySavingUseCase.partialUpdateDailySaving(params, dailySaving);
   }
 
   @Override
-  public DailySaving deleteDailySaving(DailySavingQueryParams params) {
+  public DailySaving deleteDailySaving(DailySavingParams params) {
     return deleteDailySavingUseCase.deleteDailySaving(params);
   }
 

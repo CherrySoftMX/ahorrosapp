@@ -1,7 +1,7 @@
 package com.cherrysoft.ahorrosapp.controllers;
 
 import com.cherrysoft.ahorrosapp.core.models.DailySaving;
-import com.cherrysoft.ahorrosapp.core.queryparams.DailySavingQueryParams;
+import com.cherrysoft.ahorrosapp.core.params.DailySavingParams;
 import com.cherrysoft.ahorrosapp.dtos.DailySavingDTO;
 import com.cherrysoft.ahorrosapp.dtos.validation.OnCreate;
 import com.cherrysoft.ahorrosapp.mappers.DailySavingMapper;
@@ -32,7 +32,7 @@ public class DailySavingController {
       @PathVariable String pbName,
       @PathVariable @DateTimeFormat(pattern = DAY_MONTH_YEAR) LocalDate date
   ) {
-    var params = new DailySavingQueryParams(ownerUsername, pbName, date);
+    var params = new DailySavingParams(ownerUsername, pbName, date);
     DailySaving dailySaving = dailySavingService.getDailySavingOrThrowIfNotPresent(params);
     return ResponseEntity.ok(dailySavingMapper.toDailySavingDto(dailySaving));
   }
@@ -45,7 +45,7 @@ public class DailySavingController {
       @PathVariable @DateTimeFormat(pattern = DAY_MONTH_YEAR) LocalDate date,
       @RequestBody @Valid DailySavingDTO dailySavingDTO
   ) {
-    var params = new DailySavingQueryParams(ownerUsername, pbName, date);
+    var params = new DailySavingParams(ownerUsername, pbName, date);
     DailySaving providedDailySaving = dailySavingMapper.toDailySaving(dailySavingDTO);
     DailySaving createdDailySaving = dailySavingService.createDailySaving(params, providedDailySaving);
     return ResponseEntity.ok(dailySavingMapper.toDailySavingDto(createdDailySaving));
@@ -58,7 +58,7 @@ public class DailySavingController {
       @PathVariable @DateTimeFormat(pattern = DAY_MONTH_YEAR) LocalDate date,
       @RequestBody @Valid DailySavingDTO dailySavingDTO
   ) {
-    var params = new DailySavingQueryParams(ownerUsername, pbName, date);
+    var params = new DailySavingParams(ownerUsername, pbName, date);
     DailySaving partialUpdatedDailySaving = dailySavingMapper.toDailySaving(dailySavingDTO);
     DailySaving updatedDailySaving = dailySavingService.partialUpdateDailySaving(params, partialUpdatedDailySaving);
     return ResponseEntity.ok(dailySavingMapper.toDailySavingDto(updatedDailySaving));
@@ -70,7 +70,7 @@ public class DailySavingController {
       @PathVariable String pbName,
       @PathVariable @DateTimeFormat(pattern = DAY_MONTH_YEAR) LocalDate date
   ) {
-    var params = new DailySavingQueryParams(ownerUsername, pbName, date);
+    var params = new DailySavingParams(ownerUsername, pbName, date);
     DailySaving deletedDailySaving = dailySavingService.deleteDailySaving(params);
     return ResponseEntity.ok(dailySavingMapper.toDailySavingDto(deletedDailySaving));
   }

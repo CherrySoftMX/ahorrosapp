@@ -1,7 +1,7 @@
 package com.cherrysoft.ahorrosapp.controllers;
 
 import com.cherrysoft.ahorrosapp.core.models.DailySaving;
-import com.cherrysoft.ahorrosapp.core.queryparams.DailySavingQueryParams;
+import com.cherrysoft.ahorrosapp.core.params.DailySavingParams;
 import com.cherrysoft.ahorrosapp.dtos.DailySavingDTO;
 import com.cherrysoft.ahorrosapp.dtos.TodaySavingDTO;
 import com.cherrysoft.ahorrosapp.dtos.validation.OnCreate;
@@ -28,7 +28,7 @@ public class TodaySavingController {
       @PathVariable String ownerUsername,
       @PathVariable String pbName
   ) {
-    var params = new DailySavingQueryParams(ownerUsername, pbName);
+    var params = new DailySavingParams(ownerUsername, pbName);
     DailySaving todaySaving = todaySavingService.getDailySavingOrThrowIfNotPresent(params);
     return ResponseEntity.ok(dailySavingMapper.toDailySavingDto(todaySaving));
   }
@@ -40,7 +40,7 @@ public class TodaySavingController {
       @PathVariable String pbName,
       @RequestBody @Valid TodaySavingDTO todaySavingDto
   ) {
-    var params = new DailySavingQueryParams(ownerUsername, pbName);
+    var params = new DailySavingParams(ownerUsername, pbName);
     DailySaving providedTodaySaving = dailySavingMapper.toDailySaving(todaySavingDto);
     DailySaving createdTodaySaving = todaySavingService.createDailySaving(params, providedTodaySaving);
     return ResponseEntity.ok(dailySavingMapper.toDailySavingDto(createdTodaySaving));
@@ -52,7 +52,7 @@ public class TodaySavingController {
       @PathVariable String pbName,
       @RequestBody @Valid TodaySavingDTO todaySavingDTO
   ) {
-    var params = new DailySavingQueryParams(ownerUsername, pbName);
+    var params = new DailySavingParams(ownerUsername, pbName);
     DailySaving partialUpdatedTodaySaving = dailySavingMapper.toDailySaving(todaySavingDTO);
     DailySaving updatedTodaySaving = todaySavingService.partialUpdateDailySaving(params, partialUpdatedTodaySaving);
     return ResponseEntity.ok(dailySavingMapper.toDailySavingDto(updatedTodaySaving));
@@ -63,7 +63,7 @@ public class TodaySavingController {
       @PathVariable String ownerUsername,
       @PathVariable String pbName
   ) {
-    var params = new DailySavingQueryParams(ownerUsername, pbName);
+    var params = new DailySavingParams(ownerUsername, pbName);
     DailySaving deletedTodaySaving = todaySavingService.deleteDailySaving(params);
     return ResponseEntity.ok(dailySavingMapper.toDailySavingDto(deletedTodaySaving));
   }

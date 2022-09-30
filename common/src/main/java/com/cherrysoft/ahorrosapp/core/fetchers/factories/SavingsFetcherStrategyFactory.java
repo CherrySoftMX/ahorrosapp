@@ -1,10 +1,10 @@
 package com.cherrysoft.ahorrosapp.core.fetchers.factories;
 
 import com.cherrysoft.ahorrosapp.core.fetchers.SavingsFetcherStrategy;
-import com.cherrysoft.ahorrosapp.core.queryparams.SavingsSummaryQueryParams;
+import com.cherrysoft.ahorrosapp.core.params.SavingsSummaryParams;
 
 public interface SavingsFetcherStrategyFactory {
 
-  SavingsFetcherStrategy createFetcherStrategy(SavingsSummaryQueryParams params);
+  SavingsFetcherStrategy createFetcherStrategy(SavingsSummaryParams params);
 
 }

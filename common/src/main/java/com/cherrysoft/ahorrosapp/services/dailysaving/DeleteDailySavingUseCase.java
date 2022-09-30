@@ -1,10 +1,10 @@
 package com.cherrysoft.ahorrosapp.services.dailysaving;
 
 import com.cherrysoft.ahorrosapp.core.models.DailySaving;
-import com.cherrysoft.ahorrosapp.core.queryparams.DailySavingQueryParams;
+import com.cherrysoft.ahorrosapp.core.params.DailySavingParams;
 
 public interface DeleteDailySavingUseCase {
 
-  DailySaving deleteDailySaving(DailySavingQueryParams params);
+  DailySaving deleteDailySaving(DailySavingParams params);
 
 }

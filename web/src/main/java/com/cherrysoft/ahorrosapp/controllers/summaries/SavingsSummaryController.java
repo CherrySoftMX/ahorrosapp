@@ -1,7 +1,7 @@
 package com.cherrysoft.ahorrosapp.controllers.summaries;
 
 import com.cherrysoft.ahorrosapp.controllers.summaries.factories.SummaryResponseFormatFactory;
-import com.cherrysoft.ahorrosapp.core.queryparams.SavingsSummaryQueryParams;
+import com.cherrysoft.ahorrosapp.core.params.SavingsSummaryParams;
 import com.cherrysoft.ahorrosapp.dtos.summaries.PiggyBankSummaryDTO;
 import com.cherrysoft.ahorrosapp.mappers.SavingsSummaryMapper;
 import com.cherrysoft.ahorrosapp.services.SavingsSummaryService;
@@ -26,7 +26,7 @@ public class SavingsSummaryController {
       @PathVariable String pbName,
       @RequestParam Map<String, String> summaryOptions
   ) {
-    var params = new SavingsSummaryQueryParams(ownerUsername, pbName, summaryOptions);
+    var params = new SavingsSummaryParams(ownerUsername, pbName, summaryOptions);
     var formatStrategy = summaryResponseFormatFactory.createSummaryResponseStrategy(params);
     return formatStrategy.formatResponse();
   }
@@ -36,7 +36,7 @@ public class SavingsSummaryController {
       @PathVariable String ownerUsername,
       @PathVariable String pbName
   ) {
-    var params = new SavingsSummaryQueryParams(ownerUsername, pbName);
+    var params = new SavingsSummaryParams(ownerUsername, pbName);
     var pbSummary = savingsSummaryService.getPiggyBankSummary(params);
     return ResponseEntity.ok(savingsSummaryMapper.toPiggyBankSummaryDto(pbSummary));
   }

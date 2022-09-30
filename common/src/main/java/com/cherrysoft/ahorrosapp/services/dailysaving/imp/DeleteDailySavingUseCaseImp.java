@@ -1,7 +1,7 @@
 package com.cherrysoft.ahorrosapp.services.dailysaving.imp;
 
 import com.cherrysoft.ahorrosapp.core.models.DailySaving;
-import com.cherrysoft.ahorrosapp.core.queryparams.DailySavingQueryParams;
+import com.cherrysoft.ahorrosapp.core.params.DailySavingParams;
 import com.cherrysoft.ahorrosapp.repositories.DailySavingRepository;
 import com.cherrysoft.ahorrosapp.services.PiggyBankService;
 import com.cherrysoft.ahorrosapp.services.dailysaving.DailySavingUseCase;
@@ -25,7 +25,7 @@ public class DeleteDailySavingUseCaseImp extends DailySavingUseCase implements D
   }
 
   @Override
-  public DailySaving deleteDailySaving(DailySavingQueryParams params) {
+  public DailySaving deleteDailySaving(DailySavingParams params) {
     DailySaving dailySaving = getDailySavingUseCase.getDailySavingOrThrowIfNotPresent(params);
     dailySavingRepository.delete(dailySaving);
     return dailySaving;

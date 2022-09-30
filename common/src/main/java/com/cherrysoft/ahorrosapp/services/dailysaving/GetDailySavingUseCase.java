@@ -1,14 +1,14 @@
 package com.cherrysoft.ahorrosapp.services.dailysaving;
 
 import com.cherrysoft.ahorrosapp.core.models.DailySaving;
-import com.cherrysoft.ahorrosapp.core.queryparams.DailySavingQueryParams;
+import com.cherrysoft.ahorrosapp.core.params.DailySavingParams;
 
 import java.util.Optional;
 
 public interface GetDailySavingUseCase {
 
-  Optional<DailySaving> getDailySaving(DailySavingQueryParams params);
+  Optional<DailySaving> getDailySaving(DailySavingParams params);
 
-  DailySaving getDailySavingOrThrowIfNotPresent(DailySavingQueryParams params);
+  DailySaving getDailySavingOrThrowIfNotPresent(DailySavingParams params);
 
 }

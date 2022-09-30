@@ -2,7 +2,7 @@ package com.cherrysoft.ahorrosapp.services.dailysaving.imp;
 
 import com.cherrysoft.ahorrosapp.core.models.DailySaving;
 import com.cherrysoft.ahorrosapp.core.models.PiggyBank;
-import com.cherrysoft.ahorrosapp.core.queryparams.DailySavingQueryParams;
+import com.cherrysoft.ahorrosapp.core.params.DailySavingParams;
 import com.cherrysoft.ahorrosapp.repositories.DailySavingRepository;
 import com.cherrysoft.ahorrosapp.services.PiggyBankService;
 import com.cherrysoft.ahorrosapp.services.dailysaving.CreateDailySavingUseCase;
@@ -29,10 +29,7 @@ public class CreateDailySavingUseCaseImp extends DailySavingUseCase implements C
   }
 
   @Override
-  public DailySaving createDailySaving(
-      DailySavingQueryParams params,
-      DailySaving dailySaving
-  ) {
+  public DailySaving createDailySaving(DailySavingParams params, DailySaving dailySaving) {
     setParams(params);
     setDailySaving(dailySaving);
     ensureDailySavingDateIsWithinPbSavingsInterval();

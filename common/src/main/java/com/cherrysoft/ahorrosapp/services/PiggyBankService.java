@@ -2,7 +2,8 @@ package com.cherrysoft.ahorrosapp.services;
 
 import com.cherrysoft.ahorrosapp.core.models.PiggyBank;
 import com.cherrysoft.ahorrosapp.core.models.User;
-import com.cherrysoft.ahorrosapp.core.queryparams.SavingQueryParams;
+import com.cherrysoft.ahorrosapp.core.params.SavingParams;
+import com.cherrysoft.ahorrosapp.core.params.piggybank.UpdatePiggyBankParams;
 import com.cherrysoft.ahorrosapp.repositories.PiggyBankRepository;
 import com.cherrysoft.ahorrosapp.services.exceptions.piggybank.PiggyBankNameNotAvailableException;
 import com.cherrysoft.ahorrosapp.services.exceptions.piggybank.PiggyBankNotFoundException;
@@ -16,8 +17,8 @@ public class PiggyBankService {
   private final UserService userService;
   private final PiggyBankRepository pbRepository;
 
-  public PiggyBank getPiggyBankByName(SavingQueryParams params) {
-    return getPiggyBankByName(params.getPbName(), params.getOwnerUsername());
+  public PiggyBank getPiggyBank(SavingParams params) {
+    return getPiggyBankByName(params.getOwnerUsername(), params.getPbName());
   }
 
   public PiggyBank getPiggyBankByName(String pbName, String ownerUsername) {

@@ -2,7 +2,7 @@ package com.cherrysoft.ahorrosapp.core.fetchers;
 
 import com.cherrysoft.ahorrosapp.core.models.DailySaving;
 import com.cherrysoft.ahorrosapp.core.models.PiggyBank;
-import com.cherrysoft.ahorrosapp.core.queryparams.SavingsSummaryQueryParams;
+import com.cherrysoft.ahorrosapp.core.params.SavingsSummaryParams;
 import com.cherrysoft.ahorrosapp.core.utils.MonthParser;
 import com.cherrysoft.ahorrosapp.repositories.DailySavingRepository;
 import com.cherrysoft.ahorrosapp.services.PiggyBankService;
@@ -11,13 +11,13 @@ import java.time.LocalDate;
 import java.util.List;
 
 public class MultipleMonthFetcherStrategy implements SavingsFetcherStrategy {
-  private final SavingsSummaryQueryParams params;
+  private final SavingsSummaryParams params;
   private final MonthParser monthParser;
   private final PiggyBankService pbService;
   private final DailySavingRepository dailySavingRepository;
 
   public MultipleMonthFetcherStrategy(
-      SavingsSummaryQueryParams params,
+      SavingsSummaryParams params,
       PiggyBankService pbService,
       DailySavingRepository dailySavingRepository
   ) {

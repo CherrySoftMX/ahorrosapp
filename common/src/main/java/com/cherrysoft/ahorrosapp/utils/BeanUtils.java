@@ -32,4 +32,5 @@ public class BeanUtils extends org.springframework.beans.BeanUtils {
   public static void copyProperties(Object src, Object target) {
     BeanUtils.copyProperties(src, target, getNullPropertyNames(src));
   }
+
 }

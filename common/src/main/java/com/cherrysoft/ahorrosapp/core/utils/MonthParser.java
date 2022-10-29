@@ -48,7 +48,7 @@ public class MonthParser {
     return this;
   }
 
-  public void parseMonth() {
+  private void parseMonth() {
     if (!isNull(monthYearString)) {
       this.parseResult = YearMonth.parse(monthYearString, formatter);
     }

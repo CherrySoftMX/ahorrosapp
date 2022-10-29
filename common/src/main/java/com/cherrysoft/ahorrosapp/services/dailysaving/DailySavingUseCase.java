@@ -26,7 +26,7 @@ public abstract class DailySavingUseCase {
   }
 
   protected final PiggyBank getCorrespondingPiggyBank() {
-    return pbService.getPiggyBankByName(params);
+    return pbService.getPiggyBank(params);
   }
 
 }

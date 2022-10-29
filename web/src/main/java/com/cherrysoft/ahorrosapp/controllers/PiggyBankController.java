@@ -5,6 +5,7 @@ import com.cherrysoft.ahorrosapp.dtos.PiggyBankDTO;
 import com.cherrysoft.ahorrosapp.dtos.validation.OnCreate;
 import com.cherrysoft.ahorrosapp.mappers.PiggyBankMapper;
 import com.cherrysoft.ahorrosapp.services.PiggyBankService;
+import com.cherrysoft.ahorrosapp.core.params.piggybank.UpdatePiggyBankParams;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +33,7 @@ public class PiggyBankController {
       @RequestBody @Valid PiggyBankDTO pbDto
   ) throws URISyntaxException {
     PiggyBank providedPb = pbMapper.toPiggyBank(pbDto);
-    PiggyBank addedPb = pbService.addPiggyBankTo(providedPb, ownerUsername);
+    PiggyBank addedPb = pbService.addPiggyBankTo(ownerUsername, providedPb);
     return ResponseEntity
         .created(new URI(String.format("/%s/%s", ownerUsername, addedPb.getName())))
         .body(pbMapper.toPiggyBankDto(addedPb));
@@ -45,7 +46,8 @@ public class PiggyBankController {
       @RequestBody @Valid PiggyBankDTO pbDto
   ) {
     PiggyBank partialUpdatedPb = pbMapper.toPiggyBank(pbDto);
-    PiggyBank updatedPb = pbService.partialUpdatePiggyBank(ownerUsername, pbName, partialUpdatedPb);
+    var params = new UpdatePiggyBankParams(ownerUsername, pbName, partialUpdatedPb);
+    PiggyBank updatedPb = pbService.partialUpdatePiggyBank(params);
     return ResponseEntity.ok(pbMapper.toPiggyBankDto(updatedPb));
   }
 
@@ -54,7 +56,7 @@ public class PiggyBankController {
       @PathVariable String pbName,
       @PathVariable String ownerUsername
   ) {
-    PiggyBank deletedPb = pbService.deletePiggyBank(pbName, ownerUsername);
+    PiggyBank deletedPb = pbService.deletePiggyBank(ownerUsername, pbName);
     return ResponseEntity.ok(pbMapper.toPiggyBankDto(deletedPb));
   }
 

@@ -21,25 +21,25 @@ public class PiggyBankService {
     return getPiggyBankByName(params.getOwnerUsername(), params.getPbName());
   }
 
-  public PiggyBank getPiggyBankByName(String pbName, String ownerUsername) {
+  public PiggyBank getPiggyBankByName(String ownerUsername, String pbName) {
     User owner = userService.getUserByUsername(ownerUsername);
-    return getPiggyBankByName(pbName, owner);
+    return getPiggyBankByName(owner, pbName);
   }
 
-  public PiggyBank getPiggyBankByName(String pbName, User owner) {
+  public PiggyBank getPiggyBankByName(User owner, String pbName) {
     return pbRepository
         .findByNameAndOwner(pbName, owner)
         .orElseThrow(() -> new PiggyBankNotFoundException(pbName));
   }
 
-  public PiggyBank addPiggyBankTo(PiggyBank pb, String ownerUsername) {
+  public PiggyBank addPiggyBankTo(String ownerUsername, PiggyBank pb) {
     User owner = userService.getUserByUsername(ownerUsername);
-    ensureUniquePiggyBankNameForOwner(pb.getName(), owner);
+    ensureUniquePiggyBankNameForOwner(owner, pb.getName());
     pb.setStartSavingsToTodayIfEmpty();
     pb.ensureSavingsIntervalIntegrity();
     owner.addPiggyBank(pb);
     userService.partialUpdateUser(ownerUsername, owner);
-    return getPiggyBankByName(pb.getName(), owner);
+    return getPiggyBankByName(owner, pb.getName());
   }
 
   public PiggyBank partialUpdatePiggyBank(UpdatePiggyBankParams params) {
@@ -53,15 +53,15 @@ public class PiggyBankService {
     return pbRepository.save(pb);
   }
 
-  public PiggyBank deletePiggyBank(String pbName, String ownerUsername) {
+  public PiggyBank deletePiggyBank(String ownerUsername, String pbName) {
     User owner = userService.getUserByUsername(ownerUsername);
-    PiggyBank pb = getPiggyBankByName(pbName, owner);
+    PiggyBank pb = getPiggyBankByName(owner, pbName);
     owner.removePiggyBank(pb);
     pbRepository.delete(pb);
     return pb;
   }
 
-  private void ensureUniquePiggyBankNameForOwner(String pbName, User owner) {
+  private void ensureUniquePiggyBankNameForOwner(User owner, String pbName) {
     boolean pbNameAlreadyTaken = pbRepository.existsByNameAndOwner(pbName, owner);
     if (pbNameAlreadyTaken) {
       throw new PiggyBankNameNotAvailableException(pbName, owner.getUsername());

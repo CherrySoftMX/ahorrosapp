@@ -33,7 +33,7 @@ class PiggyBankServiceTest {
     PiggyBank pb = TestUtils.PiggyBanks.newPiggyBankWithOwner();
     given(pbRepository.findByNameAndOwner(pb.getName(), pb.getOwner())).willReturn(Optional.of(pb));
 
-    pb = pbService.getPiggyBankByName(pb.getName(), pb.getOwner());
+    pb = pbService.getPiggyBankByName(pb.getOwner(), pb.getName());
 
     assertNotNull(pb);
   }
@@ -44,7 +44,7 @@ class PiggyBankServiceTest {
     given(pbRepository.findByNameAndOwner(any(), any())).willReturn(Optional.empty());
 
     assertThrows(PiggyBankNotFoundException.class, () -> {
-      pbService.getPiggyBankByName(pb.getName(), pb.getOwner());
+      pbService.getPiggyBankByName(pb.getOwner(), pb.getName());
     });
   }
 
@@ -56,7 +56,7 @@ class PiggyBankServiceTest {
     given(pbRepository.existsByNameAndOwner(any(), any())).willReturn(false);
     given(pbRepository.findByNameAndOwner(newPb.getName(), owner)).willReturn(Optional.of(newPb));
 
-    newPb = pbService.addPiggyBankTo(newPb, owner.getUsername());
+    newPb = pbService.addPiggyBankTo(owner.getUsername(), newPb);
 
     assertEquals(owner, newPb.getOwner());
     assertThat(owner.getPiggyBanks(), hasSize(1));
@@ -70,7 +70,7 @@ class PiggyBankServiceTest {
     given(pbRepository.existsByNameAndOwner(any(), any())).willReturn(false);
     given(pbRepository.findByNameAndOwner(newPb.getName(), owner)).willReturn(Optional.of(newPb));
 
-    newPb = pbService.addPiggyBankTo(newPb, owner.getUsername());
+    newPb = pbService.addPiggyBankTo(owner.getUsername(), newPb);
 
     assertTrue(newPb.hasStartSavingsDate());
     assertEquals(newPb.getStartSavings(), today());
@@ -85,7 +85,7 @@ class PiggyBankServiceTest {
     given(pbRepository.existsByNameAndOwner(any(), any())).willReturn(false);
 
     assertThrows(InvalidSavingsIntervalException.class, () -> {
-      pbService.addPiggyBankTo(newPb, owner.getUsername());
+      pbService.addPiggyBankTo(owner.getUsername(), newPb);
     });
   }
 
@@ -98,7 +98,7 @@ class PiggyBankServiceTest {
     given(pbRepository.existsByNameAndOwner(any(), any())).willReturn(false);
 
     assertThrows(InvalidSavingsIntervalException.class, () -> {
-      pbService.addPiggyBankTo(newPb, owner.getUsername());
+      pbService.addPiggyBankTo(owner.getUsername(), newPb);
     });
   }
 
@@ -110,7 +110,7 @@ class PiggyBankServiceTest {
     given(userService.getUserByUsername(owner.getUsername())).willReturn(owner);
 
     assertThrows(PiggyBankNameNotAvailableException.class, () -> {
-      pbService.addPiggyBankTo(newPb, owner.getUsername());
+      pbService.addPiggyBankTo(owner.getUsername(), newPb);
     });
   }
 
@@ -121,7 +121,7 @@ class PiggyBankServiceTest {
     given(userService.getUserByUsername(owner.getUsername())).willReturn(owner);
     given(pbRepository.findByNameAndOwner(pb.getName(), owner)).willReturn(Optional.of(pb));
 
-    pb = pbService.deletePiggyBank(pb.getName(), owner.getUsername());
+    pb = pbService.deletePiggyBank(owner.getUsername(), pb.getName());
 
     assertThat(owner.getPiggyBanks(), not(hasItem(pb)));
   }

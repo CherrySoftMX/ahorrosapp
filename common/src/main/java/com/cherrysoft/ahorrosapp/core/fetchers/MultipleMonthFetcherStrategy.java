@@ -29,7 +29,7 @@ public class MultipleMonthFetcherStrategy implements SavingsFetcherStrategy {
 
   @Override
   public List<DailySaving> fetchSavings() {
-    PiggyBank pb = pbService.getPiggyBankByName(params);
+    PiggyBank pb = pbService.getPiggyBank(params);
     return dailySavingRepository.findByPiggyBankAndDateBetween(pb, startDay(), endDay());
   }
 

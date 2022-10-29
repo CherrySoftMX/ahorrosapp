@@ -9,6 +9,7 @@ import org.hibernate.Hibernate;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.Objects;
 
 @Entity
@@ -45,6 +46,10 @@ public class DailySaving {
   public DailySaving(LocalDate date, BigDecimal amount) {
     this.date = date;
     this.amount = amount;
+  }
+
+  public YearMonth getYearMonthDate() {
+    return YearMonth.from(getDate());
   }
 
   @Override

@@ -7,7 +7,7 @@ import com.cherrysoft.ahorrosapp.core.fetchers.factories.SavingsFetcherStrategyF
 import com.cherrysoft.ahorrosapp.core.models.PiggyBank;
 import com.cherrysoft.ahorrosapp.core.params.SavingsSummaryParams;
 import com.cherrysoft.ahorrosapp.core.reports.excel.ExcelReportGenerator;
-import com.cherrysoft.ahorrosapp.core.splitters.MonthlySavingsSplitter;
+import com.cherrysoft.ahorrosapp.core.collectors.MonthlySavingsCollector;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,8 +25,8 @@ public class SavingsSummaryService {
   public byte[] getSavingsSummaryAsXlsxFile(SavingsSummaryParams params) {
     var fetcher = fetcherStrategyFactory.createFetcherStrategy(params);
     var gapFiller = new IntervalSavingsGapFiller(fetcher.fetchSavings(), fetcher.startDay(), fetcher.endDay());
-    var savingsSplitter = new MonthlySavingsSplitter(gapFiller.fillGaps());
-    return new ExcelReportGenerator(savingsSplitter.split()).generateReport();
+    var savingsSplitter = new MonthlySavingsCollector(gapFiller.fillGaps());
+    return new ExcelReportGenerator(savingsSplitter.collect()).generateReport();
   }
 
   public PiggyBankSummary getPiggyBankSummary(SavingsSummaryParams params) {

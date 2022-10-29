@@ -1,7 +1,7 @@
 package com.cherrysoft.ahorrosapp.core.reports.excel.sheet;
 
+import com.cherrysoft.ahorrosapp.core.collectors.SavingsGroup;
 import com.cherrysoft.ahorrosapp.core.models.DailySaving;
-import com.cherrysoft.ahorrosapp.core.splitters.SavingsSplit;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.apache.poi.ss.usermodel.*;
@@ -15,12 +15,12 @@ import static com.cherrysoft.ahorrosapp.core.reports.excel.ExcelWorkbookUtils.ce
 public class MonthlySheetGenerator {
   private final Workbook workbook;
   private Sheet sheet;
-  @Setter private SavingsSplit savingsSplit;
+  @Setter private SavingsGroup savingsGroup;
   @Setter private MonthlySheetContext previousSheetContext;
 
-  public void createSheet(SavingsSplit split) {
-    setSavingsSplit(split);
-    sheet = workbook.createSheet(savingsSplit.splitRepresentation());
+  public void createSheet(SavingsGroup group) {
+    setSavingsGroup(group);
+    sheet = workbook.createSheet(savingsGroup.getGroupName());
     createSheetHeader();
     createSheetSavingsTable();
     createSheetSummary();
@@ -42,30 +42,30 @@ public class MonthlySheetGenerator {
 
     sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 3));
     Cell cell = sheet.getRow(0).getCell(0);
-    cell.setCellValue(savingsSplit.splitRepresentation());
+    cell.setCellValue(savingsGroup.getGroupName());
     cell.setCellStyle(cellStyle);
   }
 
   private void createSheetSavingsTable() {
-    List<DailySaving> dailySavings = savingsSplit.getDailySavings();
+    List<DailySaving> dailySavings = savingsGroup.getDailySavings();
     var savingsTableGenerator = new SheetSavingsTableGenerator(sheet, dailySavings);
-    initSheetComponentGenerator(savingsTableGenerator);
+    initSheetComponentContext(savingsTableGenerator);
     savingsTableGenerator.generateComponent();
   }
 
   private void createSheetSummary() {
     var summaryTableGenerator = new SheetSummaryTableGenerator(sheet);
-    initSheetComponentGenerator(summaryTableGenerator);
+    initSheetComponentContext(summaryTableGenerator);
     summaryTableGenerator.generateComponent();
   }
 
-  private void initSheetComponentGenerator(SheetComponentGenerator componentGenerator) {
+  private void initSheetComponentContext(SheetComponentGenerator componentGenerator) {
     componentGenerator.sheetContext(getMonthlyContext());
     componentGenerator.previousSheetContext(previousSheetContext);
   }
 
   public MonthlySheetContext getMonthlyContext() {
-    return new MonthlySheetContext(savingsSplit.getDailySavings().size());
+    return new MonthlySheetContext(savingsGroup.getDailySavings().size());
   }
 
 }

@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 import static com.cherrysoft.ahorrosapp.utils.DateUtils.today;
+import static java.util.stream.Collectors.toList;
 
 public class TestUtils {
 
@@ -92,18 +93,14 @@ public class TestUtils {
   public static class Savings {
 
     public static List<DailySaving> generateSavingsForMonth(String month, double amountPerDay) {
-      List<DailySaving> savings = new ArrayList<>();
       MonthParser monthParser = new MonthParser(month);
       int totalMonthDays = monthParser.endOfMonth().getDayOfMonth();
-      IntStream.range(0, totalMonthDays).forEach(value -> {
-        savings.add(
-            new DailySaving(
-                monthParser.startOfMonth().plusDays(value),
-                BigDecimal.valueOf(amountPerDay)
-            )
-        );
-      });
-      return savings;
+      return IntStream.range(0, totalMonthDays)
+          .mapToObj(value -> new DailySaving(
+              monthParser.startOfMonth().plusDays(value),
+              BigDecimal.valueOf(amountPerDay)
+          ))
+          .collect(toList());
     }
 
   }

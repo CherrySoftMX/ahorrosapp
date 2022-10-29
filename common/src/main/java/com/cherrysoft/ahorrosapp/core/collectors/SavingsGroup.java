@@ -1,18 +1,16 @@
-package com.cherrysoft.ahorrosapp.core.splitters;
+package com.cherrysoft.ahorrosapp.core.collectors;
 
 import com.cherrysoft.ahorrosapp.core.IntervalSavingsSummary;
 import com.cherrysoft.ahorrosapp.core.models.DailySaving;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.experimental.Accessors;
 
 import java.util.List;
 
 @Getter
 @AllArgsConstructor
-public class SavingsSplit {
-  @Accessors(fluent = true)
-  private String splitRepresentation;
+public class SavingsGroup {
+  private String groupName;
   private List<DailySaving> dailySavings;
 
   public IntervalSavingsSummary summary() {
@@ -21,7 +19,7 @@ public class SavingsSplit {
 
   @Override
   public String toString() {
-    return splitRepresentation;
+    return groupName;
   }
 
 }

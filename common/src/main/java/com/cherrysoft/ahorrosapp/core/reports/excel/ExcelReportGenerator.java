@@ -1,7 +1,7 @@
 package com.cherrysoft.ahorrosapp.core.reports.excel;
 
 import com.cherrysoft.ahorrosapp.core.reports.excel.sheet.MonthlySheetGenerator;
-import com.cherrysoft.ahorrosapp.core.splitters.SavingsSplit;
+import com.cherrysoft.ahorrosapp.core.collectors.SavingsGroup;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -15,7 +15,7 @@ import static java.util.Objects.nonNull;
 
 @RequiredArgsConstructor
 public class ExcelReportGenerator {
-  private final List<SavingsSplit> savingsSplits;
+  private final List<SavingsGroup> savingsGroups;
   private Workbook workbook;
 
   public byte[] generateReport() {
@@ -36,22 +36,22 @@ public class ExcelReportGenerator {
     return byteArray.toByteArray();
   }
 
-  private void evaluateAllFormulas() {
-    workbook.setForceFormulaRecalculation(true);
-    FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
-    evaluator.evaluateAll();
-  }
-
   private void generateSheetPerMonth() {
     MonthlySheetGenerator previousMonthlySheet = null;
-    for (SavingsSplit savingsSplit : savingsSplits) {
+    for (SavingsGroup savingsGroup : savingsGroups) {
       MonthlySheetGenerator monthlySheet = new MonthlySheetGenerator(workbook);
       if (nonNull(previousMonthlySheet)) {
         monthlySheet.setPreviousSheetContext(previousMonthlySheet.getMonthlyContext());
       }
-      monthlySheet.createSheet(savingsSplit);
+      monthlySheet.createSheet(savingsGroup);
       previousMonthlySheet = monthlySheet;
     }
+  }
+
+  private void evaluateAllFormulas() {
+    workbook.setForceFormulaRecalculation(true);
+    FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
+    evaluator.evaluateAll();
   }
 
 }

@@ -3,12 +3,9 @@ package com.cherrysoft.ahorrosapp.core.reports.excel.sheet;
 import com.cherrysoft.ahorrosapp.core.models.DailySaving;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-
-import java.util.List;
 
 import static com.cherrysoft.ahorrosapp.core.reports.excel.ExcelWorkbookUtils.*;
-import static java.util.Objects.nonNull;
+import static java.util.Objects.isNull;
 
 public class SheetSavingsTableGenerator extends SheetComponentGenerator {
   public static final int TABLE_INITIAL_ROW = 2;
@@ -16,14 +13,15 @@ public class SheetSavingsTableGenerator extends SheetComponentGenerator {
   public static final int SAVING_AMOUNT_COL = 1;
   public static final int SAVINGS_ACCUM_COL = 2;
   public static final int SAVING_DESCRIPTION_COL = 3;
-  private final List<DailySaving> dailySavings;
-  private Row previousRow;
+  private Row prevRow;
   private Row currentRow;
-  private DailySaving currentDailySaving;
+  private DailySaving currentSaving;
 
-  public SheetSavingsTableGenerator(Sheet sheet, List<DailySaving> dailySavings) {
-    super(sheet);
-    this.dailySavings = dailySavings;
+  public SheetSavingsTableGenerator(
+      MonthlySheetContext sheetContext,
+      MonthlySheetContext prevSheetContext
+  ) {
+    super(sheetContext, prevSheetContext);
   }
 
   @Override
@@ -50,10 +48,10 @@ public class SheetSavingsTableGenerator extends SheetComponentGenerator {
 
   private void createSavingsTable() {
     int tableSavingsInitialRow = TABLE_INITIAL_ROW + 1;
-    previousRow = null;
-    for (DailySaving dailySaving : dailySavings) {
+    prevRow = null;
+    for (DailySaving savings : sheetContext().getSavings()) {
       currentRow = sheet().createRow(tableSavingsInitialRow);
-      currentDailySaving = dailySaving;
+      currentSaving = savings;
 
       generateDateCell();
       generateAmountCell();
@@ -61,39 +59,55 @@ public class SheetSavingsTableGenerator extends SheetComponentGenerator {
       generateDescriptionCell();
 
       tableSavingsInitialRow++;
-      previousRow = currentRow;
+      prevRow = currentRow;
     }
   }
 
   private void generateDateCell() {
     Cell dateCell = currentRow.createCell(SAVING_DATE_COL);
-    dateCell.setCellValue(currentDailySaving.getDate());
+    dateCell.setCellValue(currentSaving.getDate());
     dateCell.setCellStyle(dateCellStyle(workbook()));
   }
 
   private void generateAmountCell() {
     Cell amountCell = currentRow.createCell(SAVING_AMOUNT_COL);
-    amountCell.setCellValue(currentDailySaving.getAmount().doubleValue());
+    amountCell.setCellValue(currentSaving.getAmount().doubleValue());
     amountCell.setCellStyle(currencyCellStyle(workbook()));
   }
 
   private void generateAccumCell() {
     Cell accumCell = currentRow.createCell(SAVINGS_ACCUM_COL);
     accumCell.setCellStyle(currencyCellStyle(workbook()));
+    accumCell.setCellFormula(getAccumCellFormula());
+  }
 
-    if (nonNull(previousRow)) {
-      accumCell.setCellFormula(
-          String.format("SUM(%s, %s)",
-              getCellAddressAsString(currentRow.getCell(SAVING_AMOUNT_COL)),
-              getCellAddressAsString(previousRow.getCell(SAVINGS_ACCUM_COL))
-          )
+  private String getAccumCellFormula() {
+    if (isFirstSheet() && isNull(prevRow)) {
+      return String.format("%s",
+          getCellAddressAsString(currentRow.getCell(SAVING_AMOUNT_COL))
       );
     }
+
+    if (isNull(prevRow)) {
+      int prevAccumAmountRowIndex = prevSheetContext().getAccumAmountRow();
+      Row prevAccumAmountRow = prevSheetContext().getSheet().getRow(prevAccumAmountRowIndex);
+      return String.format(
+          "SUM('%s'!%s, %s)",
+          prevSheetContext().getName(),
+          getCellAddressAsString(prevAccumAmountRow.getCell(1)),
+          getCellAddressAsString(currentRow.getCell(SAVING_AMOUNT_COL))
+      );
+    }
+
+    return String.format("SUM(%s, %s)",
+        getCellAddressAsString(currentRow.getCell(SAVING_AMOUNT_COL)),
+        getCellAddressAsString(prevRow.getCell(SAVINGS_ACCUM_COL))
+    );
   }
 
   private void generateDescriptionCell() {
     Cell descriptionCell = currentRow.createCell(SAVING_DESCRIPTION_COL);
-    descriptionCell.setCellValue(currentDailySaving.getDescription());
+    descriptionCell.setCellValue(currentSaving.getDescription());
   }
 
 }

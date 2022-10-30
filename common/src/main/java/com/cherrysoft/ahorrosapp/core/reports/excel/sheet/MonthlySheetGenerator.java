@@ -1,13 +1,10 @@
 package com.cherrysoft.ahorrosapp.core.reports.excel.sheet;
 
 import com.cherrysoft.ahorrosapp.core.collectors.SavingsGroup;
-import com.cherrysoft.ahorrosapp.core.models.DailySaving;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
-
-import java.util.List;
 
 import static com.cherrysoft.ahorrosapp.core.reports.excel.ExcelWorkbookUtils.centeredCellStyle;
 
@@ -16,14 +13,14 @@ public class MonthlySheetGenerator {
   private final Workbook workbook;
   private Sheet sheet;
   @Setter private SavingsGroup savingsGroup;
-  @Setter private MonthlySheetContext previousSheetContext;
+  @Setter private MonthlySheetContext prevSheetContext;
 
   public void createSheet(SavingsGroup group) {
     setSavingsGroup(group);
     sheet = workbook.createSheet(savingsGroup.getGroupName());
     createSheetHeader();
-    createSheetSavingsTable();
-    createSheetSummary();
+    generateSheetSavingsTable();
+    generateSheetSummary();
   }
 
   private void createSheetHeader() {
@@ -46,26 +43,22 @@ public class MonthlySheetGenerator {
     cell.setCellStyle(cellStyle);
   }
 
-  private void createSheetSavingsTable() {
-    List<DailySaving> dailySavings = savingsGroup.getDailySavings();
-    var savingsTableGenerator = new SheetSavingsTableGenerator(sheet, dailySavings);
-    initSheetComponentContext(savingsTableGenerator);
+  private void generateSheetSavingsTable() {
+    var savingsTableGenerator = new SheetSavingsTableGenerator(getMonthlyContext(), prevSheetContext);
     savingsTableGenerator.generateComponent();
   }
 
-  private void createSheetSummary() {
-    var summaryTableGenerator = new SheetSummaryTableGenerator(sheet);
-    initSheetComponentContext(summaryTableGenerator);
+  private void generateSheetSummary() {
+    var summaryTableGenerator = new SheetSummaryTableGenerator(getMonthlyContext(), prevSheetContext);
     summaryTableGenerator.generateComponent();
   }
 
-  private void initSheetComponentContext(SheetComponentGenerator componentGenerator) {
-    componentGenerator.sheetContext(getMonthlyContext());
-    componentGenerator.previousSheetContext(previousSheetContext);
-  }
-
   public MonthlySheetContext getMonthlyContext() {
-    return new MonthlySheetContext(savingsGroup.getDailySavings().size());
+    return MonthlySheetContext.builder()
+        .sheet(sheet)
+        .name(savingsGroup.getGroupName())
+        .savings(savingsGroup.getSavings())
+        .build();
   }
 
 }

@@ -11,10 +11,14 @@ import java.util.List;
 @AllArgsConstructor
 public class SavingsGroup {
   private String groupName;
-  private List<DailySaving> dailySavings;
+  private List<DailySaving> savings;
 
   public IntervalSavingsSummary summary() {
-    return new IntervalSavingsSummary(dailySavings);
+    return new IntervalSavingsSummary(savings);
+  }
+
+  public int getSavingsCount() {
+    return savings.size();
   }
 
   @Override

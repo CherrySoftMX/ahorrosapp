@@ -12,24 +12,24 @@ import static java.util.Objects.isNull;
 
 @Data
 public class MonthParser {
-  public static final String MONTH_YEAR_PATTERN = "MM-yyyy";
-  public static final DateTimeFormatter MONTH_YEAR_FORMATTER = DateTimeFormatter.ofPattern(MONTH_YEAR_PATTERN);
+  public static final String MM_YYYY_PATTERN = "MM-yyyy";
+  public static final DateTimeFormatter MM_YYYY_FORMATTER = DateTimeFormatter.ofPattern(MM_YYYY_PATTERN);
   private final DateTimeFormatter formatter;
   @Setter(AccessLevel.NONE)
   private YearMonth parseResult;
   @Setter(AccessLevel.NONE)
-  private String monthYearString;
+  private String mmyyyyString;
 
   public MonthParser() {
     this(null);
   }
 
-  public MonthParser(String monthYearString) {
-    this(MONTH_YEAR_FORMATTER, monthYearString);
+  public MonthParser(String mmyyyyString) {
+    this(MM_YYYY_FORMATTER, mmyyyyString);
   }
 
-  public MonthParser(DateTimeFormatter formatter, String monthYearString) {
-    this.monthYearString = monthYearString;
+  public MonthParser(DateTimeFormatter formatter, String mmyyyyString) {
+    this.mmyyyyString = mmyyyyString;
     this.formatter = formatter;
     parseMonth();
   }
@@ -42,15 +42,15 @@ public class MonthParser {
     return parseResult.atEndOfMonth();
   }
 
-  public MonthParser setMonthYearString(String rawMonth) {
-    this.monthYearString = rawMonth;
+  public MonthParser setMMYYYYString(String mmyyyyString) {
+    this.mmyyyyString = mmyyyyString;
     parseMonth();
     return this;
   }
 
   private void parseMonth() {
-    if (!isNull(monthYearString)) {
-      this.parseResult = YearMonth.parse(monthYearString, formatter);
+    if (!isNull(mmyyyyString)) {
+      this.parseResult = YearMonth.parse(mmyyyyString, formatter);
     }
   }
 

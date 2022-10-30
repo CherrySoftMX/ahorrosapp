@@ -35,12 +35,12 @@ public class MultipleMonthFetcherStrategy implements SavingsFetcherStrategy {
 
   @Override
   public LocalDate startDay() {
-    return monthParser.setMonthYearString(params.getStartMonth()).startOfMonth();
+    return monthParser.setMMYYYYString(params.getStartMonth()).startOfMonth();
   }
 
   @Override
   public LocalDate endDay() {
-    return monthParser.setMonthYearString(params.getEndMonth()).endOfMonth();
+    return monthParser.setMMYYYYString(params.getEndMonth()).endOfMonth();
   }
 
 }

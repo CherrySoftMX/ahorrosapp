@@ -25,8 +25,8 @@ public class MonthlySavingsCollector implements SavingsCollector {
   }
 
   private SavingsGroup createSavingsGroup(YearMonth yearMonth, List<DailySaving> groupedSavings) {
-    String monthYearString = yearMonth.format(MonthParser.MONTH_YEAR_FORMATTER);
-    return new SavingsGroup(monthYearString, groupedSavings);
+    String mmyyyyString = yearMonth.format(MonthParser.MM_YYYY_FORMATTER);
+    return new SavingsGroup(mmyyyyString, groupedSavings);
   }
 
 }

@@ -18,8 +18,8 @@ class MonthParserTest {
   }
 
   @Test
-  void givenValidMonthYearString_thenReturnStartAndEndOfMonth() {
-    monthParser.setMonthYearString("07-2022");
+  void givenValidMMYYYYString_thenReturnStartAndEndOfMonth() {
+    monthParser.setMMYYYYString("07-2022");
 
     LocalDate result = monthParser.startOfMonth();
 

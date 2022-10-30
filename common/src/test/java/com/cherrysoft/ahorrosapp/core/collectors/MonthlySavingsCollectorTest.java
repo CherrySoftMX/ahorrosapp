@@ -61,7 +61,7 @@ class MonthlySavingsCollectorTest {
 
   private void assertSavingsGroup(SavingsGroup group, String expectedName, int expectedSavingsCount) {
     assertThat(group.getGroupName(), is(expectedName));
-    assertThat(group.getDailySavings(), hasSize(expectedSavingsCount));
+    assertThat(group.getSavings(), hasSize(expectedSavingsCount));
   }
 
 }

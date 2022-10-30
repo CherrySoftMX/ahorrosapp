@@ -25,8 +25,8 @@ public class SavingsSummaryService {
   public byte[] getSavingsSummaryAsXlsxFile(SavingsSummaryParams params) {
     var fetcher = fetcherStrategyFactory.createFetcherStrategy(params);
     var gapFiller = new IntervalSavingsGapFiller(fetcher.fetchSavings(), fetcher.startDay(), fetcher.endDay());
-    var savingsSplitter = new MonthlySavingsCollector(gapFiller.fillGaps());
-    return new ExcelReportGenerator(savingsSplitter.collect()).generateReport();
+    var monthlySavingsCollector = new MonthlySavingsCollector(gapFiller.fillGaps());
+    return new ExcelReportGenerator(monthlySavingsCollector.collect()).generateReport();
   }
 
   public PiggyBankSummary getPiggyBankSummary(SavingsSummaryParams params) {

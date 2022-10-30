@@ -8,6 +8,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.util.regex.Pattern;
 
 import static java.util.Objects.isNull;
 
@@ -23,13 +24,14 @@ public @interface PiggyBankName {
 }
 
 class PiggyBankNameValidator implements ConstraintValidator<PiggyBankName, String> {
-  public static final String VALID_PIGGYBANK_NAME_PATTERN = "^[a-zA-Z0-9_-]*$";
+  public static final Pattern VALID_PIGGYBANK_NAME_PATTERN = Pattern.compile("^[a-zA-Z0-9_-]*$");
 
   @Override
   public boolean isValid(String value, ConstraintValidatorContext context) {
     if (isNull(value)) {
       return true;
     }
-    return value.matches(VALID_PIGGYBANK_NAME_PATTERN);
+    return VALID_PIGGYBANK_NAME_PATTERN.matcher(value).matches();
   }
+
 }

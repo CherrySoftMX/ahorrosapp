@@ -4,6 +4,7 @@ import javax.validation.Constraint;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import javax.validation.Payload;
+import javax.validation.constraints.Size;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -15,6 +16,10 @@ import static java.util.Objects.isNull;
 @Target({ElementType.FIELD, ElementType.TYPE_PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = PiggyBankNameValidator.class)
+@Size(
+    min = 5, max = 30,
+    message = "Piggy bank name must be between {min} and {max} chars."
+)
 public @interface PiggyBankName {
   String message() default "Piggy bank name can only have letters, numbers, _ or -.";
 

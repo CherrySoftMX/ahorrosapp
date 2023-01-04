@@ -8,11 +8,11 @@ import com.cherrysoft.ahorrosapp.repositories.PiggyBankRepository;
 import com.cherrysoft.ahorrosapp.services.exceptions.piggybank.PiggyBankNameNotAvailableException;
 import com.cherrysoft.ahorrosapp.services.exceptions.piggybank.PiggyBankNotFoundException;
 import com.cherrysoft.ahorrosapp.utils.BeanUtils;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class PiggyBankService {
   private final UserService userService;
   private final PiggyBankRepository pbRepository;
@@ -38,8 +38,7 @@ public class PiggyBankService {
     pb.setStartSavingsToTodayIfEmpty();
     pb.ensureSavingsIntervalIntegrity();
     owner.addPiggyBank(pb);
-    userService.partialUpdateUser(ownerUsername, owner);
-    return getPiggyBankByName(owner, pb.getName());
+    return pbRepository.saveAndFlush(pb);
   }
 
   public PiggyBank partialUpdatePiggyBank(UpdatePiggyBankParams params) {

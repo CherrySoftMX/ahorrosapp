@@ -29,11 +29,19 @@ public class PiggyBank {
   @Column
   private String name;
 
-  @Column
-  private BigDecimal initialAmount;
+  @Column(nullable = false)
+  @Builder.Default
+  private BigDecimal initialAmount = BigDecimal.ZERO;
+
+  @Column(nullable = false)
+  @Builder.Default
+  private BigDecimal borrowedAmount = BigDecimal.ZERO;
 
   @Column
-  private BigDecimal borrowedAmount;
+  private LocalDate startSavings;
+
+  @Column
+  private LocalDate endSavings;
 
   @ManyToOne
   @JoinColumn(
@@ -51,12 +59,6 @@ public class PiggyBank {
   )
   @ToString.Exclude
   private List<DailySaving> dailySavings;
-
-  @Column
-  private LocalDate startSavings;
-
-  @Column
-  private LocalDate endSavings;
 
   public PiggyBankSummary getPiggyBankSummary() {
     return new PiggyBankSummary(this);

@@ -6,9 +6,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Null;
-import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -19,20 +19,17 @@ public class PiggyBankDTO {
   @JsonProperty(access = JsonProperty.Access.READ_ONLY)
   private final Long id;
 
-  @Size(
-      min = 5,
-      max = 30,
-      message = "Piggy bank name must be between {min} and {max} chars."
-  )
   @PiggyBankName
   @NotBlank(groups = OnCreate.class, message = "A piggy bank name is required.")
   private final String name;
 
   private final BigDecimal initialAmount;
 
+  @DecimalMin(value = "0.0", inclusive = false)
   private final BigDecimal borrowedAmount;
 
   private final LocalDate startSavings;
 
   private final LocalDate endSavings;
+
 }

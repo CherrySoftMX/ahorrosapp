@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Null;
 import java.math.BigDecimal;
@@ -24,6 +25,7 @@ public class PiggyBankDTO {
 
   private final BigDecimal initialAmount;
 
+  @DecimalMin(value = "0.0", inclusive = false)
   private final BigDecimal borrowedAmount;
 
   private final LocalDate startSavings;

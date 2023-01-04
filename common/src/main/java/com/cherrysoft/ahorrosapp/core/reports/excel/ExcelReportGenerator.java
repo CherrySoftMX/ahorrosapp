@@ -1,7 +1,7 @@
 package com.cherrysoft.ahorrosapp.core.reports.excel;
 
-import com.cherrysoft.ahorrosapp.core.reports.excel.sheet.MonthlySheetGenerator;
 import com.cherrysoft.ahorrosapp.core.collectors.SavingsGroup;
+import com.cherrysoft.ahorrosapp.core.reports.excel.sheet.MonthlySheetGenerator;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -37,14 +37,14 @@ public class ExcelReportGenerator {
   }
 
   private void generateSheetPerMonth() {
-    MonthlySheetGenerator previousMonthlySheet = null;
+    MonthlySheetGenerator prevMonthlySheet = null;
     for (SavingsGroup savingsGroup : savingsGroups) {
       MonthlySheetGenerator monthlySheet = new MonthlySheetGenerator(workbook);
-      if (nonNull(previousMonthlySheet)) {
-        monthlySheet.setPrevSheetContext(previousMonthlySheet.getMonthlyContext());
+      if (nonNull(prevMonthlySheet)) {
+        monthlySheet.setPrevSheetContext(prevMonthlySheet.getMonthlySheetContext());
       }
       monthlySheet.createSheet(savingsGroup);
-      previousMonthlySheet = monthlySheet;
+      prevMonthlySheet = monthlySheet;
     }
   }
 

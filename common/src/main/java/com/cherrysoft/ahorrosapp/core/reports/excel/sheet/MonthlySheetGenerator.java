@@ -44,16 +44,16 @@ public class MonthlySheetGenerator {
   }
 
   private void generateSheetSavingsTable() {
-    var savingsTableGenerator = new SheetSavingsTableGenerator(getMonthlyContext(), prevSheetContext);
+    var savingsTableGenerator = new SheetSavingsTableGenerator(getMonthlySheetContext(), prevSheetContext);
     savingsTableGenerator.generateComponent();
   }
 
   private void generateSheetSummary() {
-    var summaryTableGenerator = new SheetSummaryTableGenerator(getMonthlyContext(), prevSheetContext);
+    var summaryTableGenerator = new SheetSummaryTableGenerator(getMonthlySheetContext(), prevSheetContext);
     summaryTableGenerator.generateComponent();
   }
 
-  public MonthlySheetContext getMonthlyContext() {
+  public MonthlySheetContext getMonthlySheetContext() {
     return MonthlySheetContext.builder()
         .sheet(sheet)
         .name(savingsGroup.getGroupName())

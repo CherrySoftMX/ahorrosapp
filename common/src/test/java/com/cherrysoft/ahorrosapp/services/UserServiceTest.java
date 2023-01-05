@@ -86,7 +86,7 @@ class UserServiceTest {
     given(userRepository.findByUsername(savedUser.getUsername())).willReturn(Optional.of(savedUser));
     given(userRepository.save(updatedUser)).willReturn(updatedUser);
 
-    User resultUpdatedUser = userService.partialUpdateUser(savedUser.getUsername(), partialUpdateUser);
+    User resultUpdatedUser = userService.updateUser(savedUser.getUsername(), partialUpdateUser);
 
     assertEquals(updatedUser, resultUpdatedUser);
     assertEquals(savedUser.getId(), resultUpdatedUser.getId());
@@ -100,7 +100,7 @@ class UserServiceTest {
     given(userRepository.existsByUsername(any())).willReturn(true);
 
     assertThrows(UsernameAlreadyTakenException.class, () -> {
-      userService.partialUpdateUser(savedUser.getUsername(), partialUpdateUser);
+      userService.updateUser(savedUser.getUsername(), partialUpdateUser);
     });
     verify(userRepository, never()).save(any(User.class));
   }

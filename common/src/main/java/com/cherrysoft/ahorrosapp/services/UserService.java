@@ -24,7 +24,7 @@ public class UserService {
     return userRepository.save(user);
   }
 
-  public User partialUpdateUser(String oldUsername, User updatedUser) {
+  public User updateUser(String oldUsername, User updatedUser) {
     String newUsername = updatedUser.getUsername();
     if (!oldUsername.equals(newUsername)) {
       ensureUniqueUsername(newUsername);

@@ -34,9 +34,7 @@ public class GetDailySavingUseCaseImp extends DailySavingUseCase implements GetD
   @Override
   public DailySaving getDailySavingOrElseThrow(DailySavingSpec dailySavingSpec) {
     return getDailySaving(dailySavingSpec)
-        .orElseThrow(() -> new RuntimeException(
-            String.format("No saving for date: %s", dailySavingSpec.getSavingDate())
-        ));
+        .orElseThrow(() -> new SavingNotFoundException(dailySavingSpec.getSavingDate()));
   }
 
 }

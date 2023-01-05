@@ -23,7 +23,7 @@ public abstract class DailySavingUseCase {
     PiggyBank correspondingPb = getCorrespondingPiggyBank();
     LocalDate savingDate = dailySavingSpec.getSavingDate();
     if (!correspondingPb.containedWithinSavingsInterval(savingDate)) {
-      throw new RuntimeException(":(");
+      throw new SavingOutOfDateRangeException(savingDate, correspondingPb.getSavingDateRange());
     }
   }
 

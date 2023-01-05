@@ -18,6 +18,7 @@ public class DailySavingDTO {
   @NotNull(groups = OnCreate.class)
   private final BigDecimal amount;
 
+  @JsonProperty(access = JsonProperty.Access.READ_ONLY)
   private final LocalDate date;
 
   private final String description;

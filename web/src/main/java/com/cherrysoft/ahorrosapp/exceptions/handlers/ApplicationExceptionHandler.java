@@ -5,6 +5,8 @@ import com.cherrysoft.ahorrosapp.exceptions.ErrorResponse;
 import com.cherrysoft.ahorrosapp.services.exceptions.piggybank.InvalidSavingsIntervalException;
 import com.cherrysoft.ahorrosapp.services.exceptions.piggybank.PiggyBankNameNotAvailableException;
 import com.cherrysoft.ahorrosapp.services.exceptions.piggybank.PiggyBankNotFoundException;
+import com.cherrysoft.ahorrosapp.services.exceptions.saving.SavingNotFoundException;
+import com.cherrysoft.ahorrosapp.services.exceptions.saving.SavingOutOfDateRangeException;
 import com.cherrysoft.ahorrosapp.services.exceptions.user.UserNotFoundException;
 import com.cherrysoft.ahorrosapp.services.exceptions.user.UsernameAlreadyTakenException;
 import org.springframework.core.Ordered;
@@ -35,6 +37,18 @@ public class ApplicationExceptionHandler {
   @ResponseStatus(HttpStatus.NOT_FOUND)
   public ResponseEntity<Object> userExceptionHandler(final UserNotFoundException e) {
     return throwCustomException(e, HttpStatus.NOT_FOUND);
+  }
+
+  @ExceptionHandler(SavingNotFoundException.class)
+  @ResponseStatus(HttpStatus.NOT_FOUND)
+  public ResponseEntity<Object> userExceptionHandler(final SavingNotFoundException e) {
+    return throwCustomException(e, HttpStatus.NOT_FOUND);
+  }
+
+  @ExceptionHandler(SavingOutOfDateRangeException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public ResponseEntity<Object> userExceptionHandler(final SavingOutOfDateRangeException e) {
+    return throwCustomException(e, HttpStatus.BAD_REQUEST);
   }
 
   @ExceptionHandler(PiggyBankNameNotAvailableException.class)

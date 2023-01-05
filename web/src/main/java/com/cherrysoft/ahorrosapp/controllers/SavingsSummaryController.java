@@ -1,6 +1,6 @@
 package com.cherrysoft.ahorrosapp.controllers;
 
-import com.cherrysoft.ahorrosapp.core.params.SavingsSummaryParams;
+import com.cherrysoft.ahorrosapp.core.models.specs.SavingsSummarySpec;
 import com.cherrysoft.ahorrosapp.dtos.summaries.IntervalSavingsSummaryDTO;
 import com.cherrysoft.ahorrosapp.dtos.summaries.PiggyBankSummaryDTO;
 import com.cherrysoft.ahorrosapp.mappers.SavingsSummaryMapper;
@@ -30,8 +30,8 @@ public class SavingsSummaryController {
       @PathVariable String pbName,
       @RequestParam Map<String, String> summaryOptions
   ) {
-    var params = new SavingsSummaryParams(ownerUsername, pbName, summaryOptions);
-    var savingsSummary = savingsSummaryService.getIntervalSavingsSummary(params);
+    var spec = new SavingsSummarySpec(ownerUsername, pbName, summaryOptions);
+    var savingsSummary = savingsSummaryService.getIntervalSavingsSummary(spec);
     var savingsSummaryDto = savingsSummaryMapper.toIntervalSavingsSummaryDto(savingsSummary);
     return ResponseEntity.ok(savingsSummaryDto);
   }
@@ -43,13 +43,13 @@ public class SavingsSummaryController {
       @RequestParam Map<String, String> summaryOptions
   ) {
     String fileName = "test";
-    var params = new SavingsSummaryParams(ownerUsername, pbName, summaryOptions);
+    var spec = new SavingsSummarySpec(ownerUsername, pbName, summaryOptions);
     return ResponseEntity
         .ok()
         .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + ".xls\"")
         .contentType(MediaType.parseMediaType(ExtraMediaTypes.APPLICATION_EXCEL_VALUE))
         .cacheControl(CacheControl.noCache())
-        .body(new ByteArrayResource(savingsSummaryService.getIntervalSavingsSummaryAsXlsx(params)));
+        .body(new ByteArrayResource(savingsSummaryService.getIntervalSavingsSummaryAsXlsx(spec)));
   }
 
   @GetMapping("/total")
@@ -57,8 +57,8 @@ public class SavingsSummaryController {
       @PathVariable String ownerUsername,
       @PathVariable String pbName
   ) {
-    var params = new SavingsSummaryParams(ownerUsername, pbName);
-    var pbSummary = savingsSummaryService.getPiggyBankSummary(params);
+    var spec = new SavingsSummarySpec(ownerUsername, pbName);
+    var pbSummary = savingsSummaryService.getPiggyBankSummary(spec);
     return ResponseEntity.ok(savingsSummaryMapper.toPiggyBankSummaryDto(pbSummary));
   }
 

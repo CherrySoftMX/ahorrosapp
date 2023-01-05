@@ -12,6 +12,9 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.Objects;
 
+import static com.cherrysoft.ahorrosapp.utils.DateUtils.today;
+import static java.util.Objects.nonNull;
+
 @Entity
 @Table(name = "daily_savings")
 @Getter
@@ -27,7 +30,7 @@ public class DailySaving {
   private Long id;
 
   @Column
-  private LocalDate date;
+  private LocalDate date = today();
 
   @Column
   private BigDecimal amount;
@@ -67,6 +70,13 @@ public class DailySaving {
   @Override
   public int hashCode() {
     return getClass().hashCode();
+  }
+
+  public DailySaving setDate(LocalDate date) {
+    if (nonNull(date)) {
+      this.date = date;
+    }
+    return this;
   }
 
 }

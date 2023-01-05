@@ -2,7 +2,7 @@ package com.cherrysoft.ahorrosapp.core.fetchers;
 
 import com.cherrysoft.ahorrosapp.core.models.DailySaving;
 import com.cherrysoft.ahorrosapp.core.models.PiggyBank;
-import com.cherrysoft.ahorrosapp.core.params.SavingsSummaryParams;
+import com.cherrysoft.ahorrosapp.core.models.specs.SavingsSummarySpec;
 import com.cherrysoft.ahorrosapp.core.utils.MonthParser;
 import com.cherrysoft.ahorrosapp.repositories.DailySavingRepository;
 import com.cherrysoft.ahorrosapp.services.PiggyBankService;
@@ -11,13 +11,13 @@ import java.time.LocalDate;
 import java.util.List;
 
 public class MonthlyFetcherStrategy implements SavingsFetcherStrategy {
-  private final SavingsSummaryParams params;
+  private final SavingsSummarySpec params;
   private final MonthParser monthParser;
   private final PiggyBankService pbService;
   private final DailySavingRepository dailySavingRepository;
 
   public MonthlyFetcherStrategy(
-      SavingsSummaryParams params,
+      SavingsSummarySpec params,
       PiggyBankService pbService,
       DailySavingRepository dailySavingRepository
   ) {
@@ -29,7 +29,7 @@ public class MonthlyFetcherStrategy implements SavingsFetcherStrategy {
 
   @Override
   public List<DailySaving> fetchSavings() {
-    PiggyBank pb = pbService.getPiggyBank(params);
+    PiggyBank pb = pbService.getPiggyBankByName(params.getOwnerUsername(), params.getPbName());
     return dailySavingRepository.findByPiggyBankAndDateBetween(pb, startDay(), endDay());
   }
 

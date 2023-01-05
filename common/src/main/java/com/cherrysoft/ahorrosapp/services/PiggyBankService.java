@@ -2,8 +2,7 @@ package com.cherrysoft.ahorrosapp.services;
 
 import com.cherrysoft.ahorrosapp.core.models.PiggyBank;
 import com.cherrysoft.ahorrosapp.core.models.User;
-import com.cherrysoft.ahorrosapp.core.params.SavingParams;
-import com.cherrysoft.ahorrosapp.core.params.piggybank.UpdatePiggyBankParams;
+import com.cherrysoft.ahorrosapp.core.models.specs.piggybank.UpdatePiggyBankSpec;
 import com.cherrysoft.ahorrosapp.repositories.PiggyBankRepository;
 import com.cherrysoft.ahorrosapp.services.exceptions.piggybank.PiggyBankNameNotAvailableException;
 import com.cherrysoft.ahorrosapp.services.exceptions.piggybank.PiggyBankNotFoundException;
@@ -16,10 +15,6 @@ import org.springframework.stereotype.Service;
 public class PiggyBankService {
   private final UserService userService;
   private final PiggyBankRepository pbRepository;
-
-  public PiggyBank getPiggyBank(SavingParams params) {
-    return getPiggyBankByName(params.getOwnerUsername(), params.getPbName());
-  }
 
   public PiggyBank getPiggyBankByName(String ownerUsername, String pbName) {
     User owner = userService.getUserByUsername(ownerUsername);
@@ -41,7 +36,7 @@ public class PiggyBankService {
     return pbRepository.saveAndFlush(pb);
   }
 
-  public PiggyBank partialUpdatePiggyBank(UpdatePiggyBankParams params) {
+  public PiggyBank partialUpdatePiggyBank(UpdatePiggyBankSpec params) {
     User owner = userService.getUserByUsername(params.getOwnerUsername());
     PiggyBank pb = getPiggyBankByName(owner, params.getOldPbName());
     if (!params.getOldPbName().equals(params.getUpdatedPb().getName())) {

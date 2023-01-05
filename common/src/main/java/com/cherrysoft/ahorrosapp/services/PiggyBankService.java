@@ -8,6 +8,8 @@ import com.cherrysoft.ahorrosapp.services.exceptions.piggybank.PiggyBankNameNotA
 import com.cherrysoft.ahorrosapp.services.exceptions.piggybank.PiggyBankNotFoundException;
 import com.cherrysoft.ahorrosapp.utils.BeanUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,6 +17,10 @@ import org.springframework.stereotype.Service;
 public class PiggyBankService {
   private final UserService userService;
   private final PiggyBankRepository pbRepository;
+
+  public Page<PiggyBank> getPiggyBanks(String ownerUsername, Pageable pageable) {
+    return pbRepository.getPiggyBanksByOwner_Username(ownerUsername, pageable);
+  }
 
   public PiggyBank getPiggyBankByName(String ownerUsername, String pbName) {
     User owner = userService.getUserByUsername(ownerUsername);

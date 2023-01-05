@@ -3,10 +3,12 @@ package com.cherrysoft.ahorrosapp.core.models;
 import com.cherrysoft.ahorrosapp.core.PiggyBankSummary;
 import com.cherrysoft.ahorrosapp.services.exceptions.piggybank.InvalidSavingsIntervalException;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.List;
 
 import static com.cherrysoft.ahorrosapp.utils.DateUtils.today;
@@ -42,6 +44,11 @@ public class PiggyBank {
 
   @Column
   private LocalDate endSavings;
+
+  @Column(nullable = false, updatable = false)
+  @CreationTimestamp
+  @Temporal(TemporalType.TIMESTAMP)
+  private Calendar createdAt;
 
   @ManyToOne
   @JoinColumn(

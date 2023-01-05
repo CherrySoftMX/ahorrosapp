@@ -64,6 +64,10 @@ public class PiggyBank {
     return new PiggyBankSummary(this);
   }
 
+  public SavingDateRange getSavingDateRange() {
+    return new SavingDateRange(startSavings, endSavings);
+  }
+
   public void addDailySaving(DailySaving dailySaving) {
     dailySaving.setPiggyBank(this);
     dailySavings.add(dailySaving);

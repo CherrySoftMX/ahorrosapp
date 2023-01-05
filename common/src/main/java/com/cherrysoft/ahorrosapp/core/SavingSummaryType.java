@@ -1,5 +1,7 @@
 package com.cherrysoft.ahorrosapp.core;
 
+import java.util.Arrays;
+
 public enum SavingSummaryType {
   WEEKLY,
   MONTHLY,
@@ -10,6 +12,13 @@ public enum SavingSummaryType {
     }
   },
   YEARLY;
+
+  public static SavingSummaryType of(String type) {
+    return Arrays.stream(SavingSummaryType.values())
+        .filter(t -> t.toString().equalsIgnoreCase(type))
+        .findFirst()
+        .orElseThrow(() -> new IllegalArgumentException("Invalid type: " + type));
+  }
 
   @Override
   public String toString() {

@@ -3,8 +3,9 @@ package com.cherrysoft.ahorrosapp.mappers;
 import com.cherrysoft.ahorrosapp.core.models.DailySaving;
 import com.cherrysoft.ahorrosapp.dtos.DailySavingDTO;
 import org.mapstruct.Mapper;
+import org.mapstruct.NullValueCheckStrategy;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 public interface DailySavingMapper {
 
   DailySaving toDailySaving(DailySavingDTO dailySavingDTO);

@@ -2,7 +2,7 @@ package com.cherrysoft.ahorrosapp.services.dailysaving.imp;
 
 import com.cherrysoft.ahorrosapp.core.models.DailySaving;
 import com.cherrysoft.ahorrosapp.core.models.PiggyBank;
-import com.cherrysoft.ahorrosapp.core.params.DailySavingParams;
+import com.cherrysoft.ahorrosapp.core.models.specs.DailySavingSpec;
 import com.cherrysoft.ahorrosapp.repositories.DailySavingRepository;
 import com.cherrysoft.ahorrosapp.services.PiggyBankService;
 import com.cherrysoft.ahorrosapp.services.dailysaving.CreateDailySavingUseCase;
@@ -14,8 +14,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
-@Component
 @Primary
+@Component
 public class CreateDailySavingUseCaseImp extends DailySavingUseCase implements CreateDailySavingUseCase {
   private final GetDailySavingUseCase getDailySavingUseCase;
 
@@ -29,30 +29,30 @@ public class CreateDailySavingUseCaseImp extends DailySavingUseCase implements C
   }
 
   @Override
-  public DailySaving createDailySaving(DailySavingParams params, DailySaving dailySaving) {
-    setParams(params);
-    setDailySaving(dailySaving);
+  public DailySaving createDailySaving(DailySavingSpec dailySavingSpec) {
+    setDailySavingSpec(dailySavingSpec);
     ensureDailySavingDateIsWithinPbSavingsInterval();
     return createDailySaving();
   }
 
   private DailySaving createDailySaving() {
-    Optional<DailySaving> dailySavingMaybe = getDailySavingUseCase.getDailySaving(params);
+    Optional<DailySaving> dailySavingMaybe = getDailySavingUseCase.getDailySaving(getDailySavingSpec());
     return dailySavingMaybe
         .map(this::overrideSavedDailySaving)
         .orElseGet(this::addDailySavingToPiggyBank);
   }
 
   private DailySaving overrideSavedDailySaving(DailySaving savedDailySaving) {
-    BeanUtils.copyProperties(dailySaving, savedDailySaving);
+    DailySaving payload = getDailySavingSpec().getDailySaving();
+    BeanUtils.copyProperties(payload, savedDailySaving);
     return dailySavingRepository.save(savedDailySaving);
   }
 
   private DailySaving addDailySavingToPiggyBank() {
-    dailySaving.setDate(params.getDate());
     PiggyBank pb = getCorrespondingPiggyBank();
-    pb.addDailySaving(dailySaving);
-    return dailySavingRepository.save(dailySaving);
+    DailySaving payload = getDailySavingSpec().getDailySaving();
+    pb.addDailySaving(payload);
+    return dailySavingRepository.save(payload);
   }
 
 }

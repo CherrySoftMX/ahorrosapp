@@ -1,10 +1,10 @@
 package com.cherrysoft.ahorrosapp.services.dailysaving;
 
 import com.cherrysoft.ahorrosapp.core.models.DailySaving;
-import com.cherrysoft.ahorrosapp.core.params.DailySavingParams;
+import com.cherrysoft.ahorrosapp.core.models.specs.DailySavingSpec;
 
 public interface PartialUpdateDailySavingUseCase {
 
-  DailySaving partialUpdateDailySaving(DailySavingParams params, DailySaving updatedDailySaving);
+  DailySaving updateDailySaving(DailySavingSpec dailySavingSpec);
 
 }

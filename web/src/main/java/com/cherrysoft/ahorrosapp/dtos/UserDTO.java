@@ -15,11 +15,6 @@ public class UserDTO {
   @JsonProperty(access = JsonProperty.Access.READ_ONLY)
   private final Long id;
 
-  @Size(
-      min = 5,
-      max = 20,
-      message = "Username must be between {min} and {max} chars."
-  )
   @Username
   @NotBlank(groups = {OnCreate.class}, message = "A username is required.")
   private final String username;

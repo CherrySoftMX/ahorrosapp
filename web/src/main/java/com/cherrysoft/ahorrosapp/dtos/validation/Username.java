@@ -4,6 +4,7 @@ import javax.validation.Constraint;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import javax.validation.Payload;
+import javax.validation.constraints.Size;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -14,6 +15,11 @@ import static java.util.Objects.isNull;
 @Target({ElementType.FIELD, ElementType.TYPE_PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = UsernameValidator.class)
+@Size(
+    min = 5,
+    max = 20,
+    message = "Username must be between {min} and {max} chars."
+)
 public @interface Username {
   String message() default "Username can only have letters and numbers.";
 

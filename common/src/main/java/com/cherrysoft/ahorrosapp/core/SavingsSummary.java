@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 public interface SavingsSummary {
 
-  BigDecimal getSavingsTotalAmount();
+  BigDecimal getTotalAmount();
 
   BigDecimal getAverageAmount();
 

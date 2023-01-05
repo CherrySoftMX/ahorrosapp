@@ -4,7 +4,7 @@ import com.cherrysoft.ahorrosapp.core.models.PiggyBank;
 
 import java.math.BigDecimal;
 
-import static java.util.Objects.isNull;
+import static java.util.Objects.requireNonNullElse;
 
 public class PiggyBankSummary extends IntervalSavingsSummary {
   private final PiggyBank pb;
@@ -14,29 +14,28 @@ public class PiggyBankSummary extends IntervalSavingsSummary {
     this.pb = pb;
   }
 
-  public BigDecimal getPiggyBankTotalAmount() {
-    BigDecimal savingsTotalAmount = getSavingsTotalAmount();
+  @Override
+  public BigDecimal getTotalAmount() {
+    BigDecimal savingsTotalAmount = super.getTotalAmount();
     return savingsTotalAmount.add(getInitialAmount());
   }
 
   public BigDecimal getInHandAmount() {
-    return getPiggyBankTotalAmount().subtract(getBorrowedAmount());
+    return getTotalAmount().subtract(getBorrowedAmount());
   }
 
   public BigDecimal getBorrowedAmount() {
     BigDecimal borrowedAmount = pb.getBorrowedAmount();
-    if (isNull(borrowedAmount)) {
-      return BigDecimal.ZERO;
-    }
-    return borrowedAmount;
+    return requireNonNullElse(borrowedAmount, BigDecimal.ZERO);
   }
 
   public BigDecimal getInitialAmount() {
     BigDecimal initialAmount = pb.getInitialAmount();
-    if (isNull(initialAmount)) {
-      return BigDecimal.ZERO;
-    }
-    return initialAmount;
+    return requireNonNullElse(initialAmount, BigDecimal.ZERO);
+  }
+
+  public PiggyBank getPiggyBank() {
+    return pb;
   }
 
 }

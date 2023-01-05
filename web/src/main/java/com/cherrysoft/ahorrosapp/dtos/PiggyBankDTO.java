@@ -5,6 +5,9 @@ import com.cherrysoft.ahorrosapp.dtos.validation.PiggyBankName;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
 
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotBlank;
@@ -13,8 +16,10 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class PiggyBankDTO {
+@Relation(itemRelation = "piggybank", collectionRelation = "piggybanks")
+public class PiggyBankDTO extends RepresentationModel<PiggyBankDTO> {
   @Null
   @JsonProperty(access = JsonProperty.Access.READ_ONLY)
   private final Long id;
@@ -31,5 +36,4 @@ public class PiggyBankDTO {
   private final LocalDate startSavings;
 
   private final LocalDate endSavings;
-
 }

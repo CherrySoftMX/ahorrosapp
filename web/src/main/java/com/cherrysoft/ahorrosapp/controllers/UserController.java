@@ -5,10 +5,13 @@ import com.cherrysoft.ahorrosapp.dtos.UserDTO;
 import com.cherrysoft.ahorrosapp.dtos.validation.OnCreate;
 import com.cherrysoft.ahorrosapp.hateoas.assemblers.UserModelAssembler;
 import com.cherrysoft.ahorrosapp.mappers.UserMapper;
+import com.cherrysoft.ahorrosapp.security.SecurityUser;
 import com.cherrysoft.ahorrosapp.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +29,11 @@ public class UserController {
   private final UserModelAssembler userModelAssembler;
 
   @GetMapping("/{username}")
-  public UserDTO getUserByUsername(@PathVariable String username) {
+  @PreAuthorize("#loggedUser.username == #username")
+  public UserDTO getUserByUsername(
+      @AuthenticationPrincipal SecurityUser loggedUser,
+      @PathVariable String username
+  ) {
     User result = userService.getUserByUsername(username);
     return userModelAssembler.toModel(result);
   }
@@ -38,22 +45,28 @@ public class UserController {
     User providedUser = userMapper.toUser(payload);
     User result = userService.createUser(providedUser);
     return ResponseEntity
-        .created(URI.create("/users/" + result.getId()))
+        .created(URI.create(String.format("%s/%s", BASE_URL, result.getId())))
         .body(userModelAssembler.toModel(result));
   }
 
   @PatchMapping("/{username}")
+  @PreAuthorize("#loggedUser.username == #username")
   public UserDTO updateUser(
+      @AuthenticationPrincipal SecurityUser loggedUser,
       @PathVariable String username,
       @RequestBody @Valid UserDTO payload
   ) {
-    User partialUpdatedUser = userMapper.toUser(payload);
-    User result = userService.updateUser(username, partialUpdatedUser);
+    User updatedUser = userMapper.toUser(payload);
+    User result = userService.updateUser(username, updatedUser);
     return userModelAssembler.toModel(result);
   }
 
   @DeleteMapping("/{username}")
-  public ResponseEntity<UserDTO> deleteUser(@PathVariable String username) {
+  @PreAuthorize("#loggedUser.username == #username")
+  public ResponseEntity<UserDTO> deleteUser(
+      @AuthenticationPrincipal SecurityUser loggedUser,
+      @PathVariable String username
+  ) {
     User result = userService.deleteUser(username);
     return ResponseEntity.ok(userMapper.toUserDto(result));
   }

@@ -42,9 +42,9 @@ public class DailySavingModelAssembler implements RepresentationModelAssembler<D
   }
 
   public Link piggyBankLink() {
-    return linkTo(methodOn(PiggyBankController.class)
-        .getPiggyBank(owner.getUsername(), pb.getName()))
-        .withRel("piggybank");
+    return linkTo(PiggyBankController.class)
+        .slash(pb.getName())
+        .withRel("piggy_bank");
   }
 
 }

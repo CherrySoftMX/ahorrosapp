@@ -43,10 +43,9 @@ public class PiggyBankSummaryAssembler implements RepresentationModelAssembler<P
 
   private Link piggyBankLink() {
     PiggyBank pb = pbSummary.getPiggyBank();
-    User owner = pb.getOwner();
-    return linkTo(methodOn(PiggyBankController.class)
-        .getPiggyBank(owner.getUsername(), pb.getName()))
-        .withRel("piggybank");
+    return linkTo(PiggyBankController.class)
+        .slash(pb.getName())
+        .withRel("piggy_bank");
   }
 
 }

@@ -4,10 +4,11 @@ import com.cherrysoft.ahorrosapp.core.models.User;
 import com.cherrysoft.ahorrosapp.repositories.UserRepository;
 import com.cherrysoft.ahorrosapp.services.exceptions.user.UserNotFoundException;
 import com.cherrysoft.ahorrosapp.services.exceptions.user.UsernameAlreadyTakenException;
-import com.cherrysoft.ahorrosapp.utils.BeanUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import static java.util.Objects.nonNull;
 
 @Service
 @RequiredArgsConstructor
@@ -33,13 +34,12 @@ public class UserService {
     return userRepository.save(user);
   }
 
-  public User updateUser(String oldUsername, User updatedUser) {
-    String newUsername = updatedUser.getUsername();
-    if (!oldUsername.equals(newUsername)) {
-      ensureUniqueUsername(newUsername);
+  // For now, only the user's password can be updated.
+  public User updateUser(String username, User updatedUser) {
+    User user = getUserByUsername(username);
+    if (nonNull(updatedUser.getPassword())) {
+      user.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
     }
-    User user = getUserByUsername(oldUsername);
-    BeanUtils.copyProperties(updatedUser, user);
     return userRepository.save(user);
   }
 

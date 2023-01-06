@@ -1,9 +1,11 @@
 package com.cherrysoft.ahorrosapp.controllers;
 
+import com.cherrysoft.ahorrosapp.core.PiggyBankSummary;
 import com.cherrysoft.ahorrosapp.core.models.specs.SavingsSummarySpec;
 import com.cherrysoft.ahorrosapp.dtos.summaries.IntervalSavingsSummaryDTO;
 import com.cherrysoft.ahorrosapp.dtos.summaries.PiggyBankSummaryDTO;
-import com.cherrysoft.ahorrosapp.mappers.SavingsSummaryMapper;
+import com.cherrysoft.ahorrosapp.hateoas.assemblers.IntervalSavingsSummaryAssembler;
+import com.cherrysoft.ahorrosapp.hateoas.assemblers.PiggyBankSummaryAssembler;
 import com.cherrysoft.ahorrosapp.services.SavingsSummaryService;
 import com.cherrysoft.ahorrosapp.utils.ExtraMediaTypes;
 import lombok.RequiredArgsConstructor;
@@ -22,18 +24,18 @@ import java.util.Map;
 public class SavingsSummaryController {
   public static final String BASE_URL = "{ownerUsername}/{pbName}/summary";
   private final SavingsSummaryService savingsSummaryService;
-  private final SavingsSummaryMapper savingsSummaryMapper;
+  private final PiggyBankSummaryAssembler pbSummaryAssembler;
+  private final IntervalSavingsSummaryAssembler intervalSavingsSummaryAssembler;
 
-  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<IntervalSavingsSummaryDTO> getIntervalSavingsSummaryAsJson(
+  @GetMapping
+  public IntervalSavingsSummaryDTO getIntervalSavingsSummaryAsJson(
       @PathVariable String ownerUsername,
       @PathVariable String pbName,
       @RequestParam Map<String, String> summaryOptions
   ) {
     var spec = new SavingsSummarySpec(ownerUsername, pbName, summaryOptions);
-    var savingsSummary = savingsSummaryService.getIntervalSavingsSummary(spec);
-    var savingsSummaryDto = savingsSummaryMapper.toIntervalSavingsSummaryDto(savingsSummary);
-    return ResponseEntity.ok(savingsSummaryDto);
+    var result = savingsSummaryService.getIntervalSavingsSummary(spec);
+    return intervalSavingsSummaryAssembler.toModel(result);
   }
 
   @GetMapping(produces = ExtraMediaTypes.APPLICATION_EXCEL_VALUE)
@@ -44,22 +46,23 @@ public class SavingsSummaryController {
   ) {
     String fileName = "test";
     var spec = new SavingsSummarySpec(ownerUsername, pbName, summaryOptions);
+    byte[] result = savingsSummaryService.getIntervalSavingsSummaryAsXlsx(spec);
     return ResponseEntity
         .ok()
         .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + ".xls\"")
         .contentType(MediaType.parseMediaType(ExtraMediaTypes.APPLICATION_EXCEL_VALUE))
         .cacheControl(CacheControl.noCache())
-        .body(new ByteArrayResource(savingsSummaryService.getIntervalSavingsSummaryAsXlsx(spec)));
+        .body(new ByteArrayResource(result));
   }
 
   @GetMapping("/total")
-  public ResponseEntity<PiggyBankSummaryDTO> getPiggyBankSummary(
+  public PiggyBankSummaryDTO getPiggyBankSummaryAsJson(
       @PathVariable String ownerUsername,
       @PathVariable String pbName
   ) {
     var spec = new SavingsSummarySpec(ownerUsername, pbName);
-    var pbSummary = savingsSummaryService.getPiggyBankSummary(spec);
-    return ResponseEntity.ok(savingsSummaryMapper.toPiggyBankSummaryDto(pbSummary));
+    PiggyBankSummary result = savingsSummaryService.getPiggyBankSummary(spec);
+    return pbSummaryAssembler.toModel(result);
   }
 
 }

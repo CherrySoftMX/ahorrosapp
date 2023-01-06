@@ -4,6 +4,7 @@ import com.cherrysoft.ahorrosapp.core.models.DailySaving;
 import com.cherrysoft.ahorrosapp.core.models.specs.DailySavingSpec;
 import com.cherrysoft.ahorrosapp.dtos.DailySavingDTO;
 import com.cherrysoft.ahorrosapp.dtos.validation.OnCreate;
+import com.cherrysoft.ahorrosapp.hateoas.assemblers.DailySavingModelAssembler;
 import com.cherrysoft.ahorrosapp.mappers.DailySavingMapper;
 import com.cherrysoft.ahorrosapp.services.DailySavingService;
 import lombok.RequiredArgsConstructor;
@@ -25,16 +26,17 @@ public class DailySavingController {
   public static final String BASE_URL = "{ownerUsername}/{pbName}/daily";
   private final DailySavingService dailySavingService;
   private final DailySavingMapper dailySavingMapper;
+  private final DailySavingModelAssembler dailySavingModelAssembler;
 
   @GetMapping
-  public ResponseEntity<DailySavingDTO> getDailySaving(
+  public DailySavingDTO getDailySaving(
       @PathVariable String ownerUsername,
       @PathVariable String pbName,
       @RequestParam(required = false) @DateTimeFormat(pattern = DAY_MONTH_YEAR) LocalDate date
   ) {
     var spec = new DailySavingSpec(ownerUsername, pbName, date);
     DailySaving result = dailySavingService.getDailySavingOrElseThrow(spec);
-    return ResponseEntity.ok(dailySavingMapper.toDailySavingDto(result));
+    return dailySavingModelAssembler.toModel(result);
   }
 
   @PostMapping
@@ -48,11 +50,11 @@ public class DailySavingController {
     DailySaving dailySaving = dailySavingMapper.toDailySaving(payload).setDate(date);
     var spec = new DailySavingSpec(ownerUsername, pbName, dailySaving);
     DailySaving result = dailySavingService.createDailySaving(spec);
-    return ResponseEntity.ok(dailySavingMapper.toDailySavingDto(result));
+    return ResponseEntity.ok(dailySavingModelAssembler.toModel(result));
   }
 
   @PatchMapping
-  public ResponseEntity<DailySavingDTO> updateDailySaving(
+  public DailySavingDTO updateDailySaving(
       @PathVariable String ownerUsername,
       @PathVariable String pbName,
       @RequestParam(required = false) @DateTimeFormat(pattern = DAY_MONTH_YEAR) LocalDate date,
@@ -61,18 +63,18 @@ public class DailySavingController {
     DailySaving updatedDailySaving = dailySavingMapper.toDailySaving(payload).setDate(date);
     var spec = new DailySavingSpec(ownerUsername, pbName, updatedDailySaving);
     DailySaving result = dailySavingService.updateDailySaving(spec);
-    return ResponseEntity.ok(dailySavingMapper.toDailySavingDto(result));
+    return dailySavingModelAssembler.toModel(result);
   }
 
   @DeleteMapping
-  public ResponseEntity<DailySavingDTO> deleteDailySaving(
+  public DailySavingDTO deleteDailySaving(
       @PathVariable String ownerUsername,
       @PathVariable String pbName,
       @RequestParam(required = false) @DateTimeFormat(pattern = DAY_MONTH_YEAR) LocalDate date
   ) {
     var spec = new DailySavingSpec(ownerUsername, pbName, date);
     DailySaving deletedDailySaving = dailySavingService.deleteDailySaving(spec);
-    return ResponseEntity.ok(dailySavingMapper.toDailySavingDto(deletedDailySaving));
+    return dailySavingMapper.toDailySavingDto(deletedDailySaving);
   }
 
 }

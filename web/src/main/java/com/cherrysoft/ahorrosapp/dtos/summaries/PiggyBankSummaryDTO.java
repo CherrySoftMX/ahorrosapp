@@ -1,28 +1,17 @@
 package com.cherrysoft.ahorrosapp.dtos.summaries;
 
-import com.cherrysoft.ahorrosapp.dtos.DailySavingDTO;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.math.BigDecimal;
-import java.util.List;
 
-@Getter
-@Setter
+@Data
 @EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
-@NoArgsConstructor
-@AllArgsConstructor
-public class PiggyBankSummaryDTO extends IntervalSavingsSummaryDTO {
-  private BigDecimal initialAmount;
-  private BigDecimal piggyBankTotalAmount;
-  private BigDecimal inHandAmount;
-  private BigDecimal borrowedAmount;
-
-  @Override
-  @JsonIgnore
-  public List<DailySavingDTO> getSavings() {
-    return super.getSavings();
-  }
-
+public class PiggyBankSummaryDTO extends RepresentationModel<PiggyBankSummaryDTO> {
+  private final BigDecimal initialAmount;
+  private final BigDecimal totalAmount;
+  private final BigDecimal averageAmount;
+  private final BigDecimal inHandAmount;
+  private final BigDecimal borrowedAmount;
 }

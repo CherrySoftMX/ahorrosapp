@@ -5,15 +5,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <parent>
-    <artifactId>ahorrosapp</artifactId>
     <groupId>com.cherrysoft.ahorrosapp</groupId>
+    <artifactId>parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
 
   <name>web</name>
   <artifactId>web</artifactId>
   <modelVersion>4.0.0</modelVersion>
-  <url>http://www.example.com</url>
+  <url>http://www.cherrysoft.com</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -41,7 +41,7 @@
       <artifactId>spring-boot-starter-validation</artifactId>
     </dependency>
 
-    <!--Utils-->
+    <!-- Utils -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-devtools</artifactId>
@@ -64,7 +64,7 @@
       <scope>provided</scope>
     </dependency>
 
-    <!--Testing-->
+    <!-- Testing -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>

@@ -6,12 +6,14 @@ import com.cherrysoft.ahorrosapp.services.exceptions.user.UserNotFoundException;
 import com.cherrysoft.ahorrosapp.services.exceptions.user.UsernameAlreadyTakenException;
 import com.cherrysoft.ahorrosapp.utils.BeanUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
   private final UserRepository userRepository;
+  private final PasswordEncoder passwordEncoder;
 
   public User getUserByUsername(String username) {
     return userRepository
@@ -19,8 +21,15 @@ public class UserService {
         .orElseThrow(() -> new UserNotFoundException(username));
   }
 
+  public void ensureUserExistByUsername(String username) {
+    if (!userRepository.existsByUsername(username)) {
+      throw new UserNotFoundException(username);
+    }
+  }
+
   public User createUser(User user) {
     ensureUniqueUsername(user.getUsername());
+    user.setPassword(passwordEncoder.encode(user.getPassword()));
     return userRepository.save(user);
   }
 

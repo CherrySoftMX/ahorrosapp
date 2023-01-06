@@ -1,4 +1,5 @@
 # Default ignored files
+access-refresh-token-keys/
 **/.idea/
 **/shelf/
 **/workspace.xml

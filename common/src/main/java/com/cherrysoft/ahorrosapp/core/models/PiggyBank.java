@@ -4,6 +4,8 @@ import com.cherrysoft.ahorrosapp.core.PiggyBankSummary;
 import com.cherrysoft.ahorrosapp.services.exceptions.piggybank.InvalidSavingsIntervalException;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -21,6 +23,7 @@ import static java.util.Objects.isNull;
 @NoArgsConstructor
 @Getter
 @Setter
+@Audited
 public class PiggyBank {
   @Id
   @GeneratedValue
@@ -64,6 +67,7 @@ public class PiggyBank {
       cascade = CascadeType.ALL,
       orphanRemoval = true
   )
+  @NotAudited
   @ToString.Exclude
   private List<DailySaving> dailySavings;
 

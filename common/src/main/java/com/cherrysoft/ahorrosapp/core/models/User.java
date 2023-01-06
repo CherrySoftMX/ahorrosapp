@@ -2,6 +2,8 @@ package com.cherrysoft.ahorrosapp.core.models;
 
 import lombok.*;
 import org.hibernate.Hibernate;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -14,6 +16,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
+@Audited
 public class User {
   @Id
   @GeneratedValue
@@ -25,6 +28,7 @@ public class User {
   private String username;
 
   @Column(nullable = false)
+  @NotAudited
   private String password;
 
   @OneToMany(
@@ -33,6 +37,7 @@ public class User {
       cascade = CascadeType.ALL,
       orphanRemoval = true
   )
+  @NotAudited
   @ToString.Exclude
   private List<PiggyBank> piggyBanks;
 

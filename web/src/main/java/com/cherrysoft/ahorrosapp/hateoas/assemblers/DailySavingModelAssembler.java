@@ -4,7 +4,6 @@ import com.cherrysoft.ahorrosapp.controllers.DailySavingController;
 import com.cherrysoft.ahorrosapp.controllers.PiggyBankController;
 import com.cherrysoft.ahorrosapp.core.models.DailySaving;
 import com.cherrysoft.ahorrosapp.core.models.PiggyBank;
-import com.cherrysoft.ahorrosapp.core.models.User;
 import com.cherrysoft.ahorrosapp.dtos.DailySavingDTO;
 import com.cherrysoft.ahorrosapp.mappers.DailySavingMapper;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +20,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RequiredArgsConstructor
 public class DailySavingModelAssembler implements RepresentationModelAssembler<DailySaving, DailySavingDTO> {
   private final DailySavingMapper dailySavingMapper;
-  private User owner;
   private PiggyBank pb;
   private DailySaving dailySaving;
 
@@ -29,7 +27,6 @@ public class DailySavingModelAssembler implements RepresentationModelAssembler<D
   public DailySavingDTO toModel(DailySaving dailySaving) {
     this.dailySaving = dailySaving;
     this.pb = dailySaving.getPiggyBank();
-    this.owner = pb.getOwner();
     DailySavingDTO dailySavingModel = dailySavingMapper.toDailySavingDto(dailySaving);
     dailySavingModel.add(List.of(selfLink(), piggyBankLink()));
     return dailySavingModel;
@@ -37,14 +34,14 @@ public class DailySavingModelAssembler implements RepresentationModelAssembler<D
 
   public Link selfLink() {
     return linkTo(methodOn(DailySavingController.class)
-        .getDailySaving(owner.getUsername(), pb.getName(), dailySaving.getDate()))
+        .getDailySaving(null, pb.getName(), dailySaving.getDate()))
         .withSelfRel();
   }
 
   public Link piggyBankLink() {
-    return linkTo(methodOn(PiggyBankController.class)
-        .getPiggyBank(owner.getUsername(), pb.getName()))
-        .withRel("piggybank");
+    return linkTo(PiggyBankController.class)
+        .slash(pb.getName())
+        .withRel("piggy_bank");
   }
 
 }

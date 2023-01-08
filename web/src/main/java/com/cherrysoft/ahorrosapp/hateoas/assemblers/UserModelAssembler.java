@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Component
 @RequiredArgsConstructor
@@ -36,9 +35,7 @@ public class UserModelAssembler implements RepresentationModelAssembler<User, Us
   }
 
   private Link piggyBanksLink() {
-    return linkTo(methodOn(PiggyBankController.class)
-        .getPiggyBanks(user.getUsername(), null))
-        .withRel("piggybanks");
+    return linkTo(PiggyBankController.class).withRel("piggy_banks");
   }
 
 }

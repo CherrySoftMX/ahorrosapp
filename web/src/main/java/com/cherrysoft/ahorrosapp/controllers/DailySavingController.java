@@ -3,11 +3,18 @@ package com.cherrysoft.ahorrosapp.controllers;
 import com.cherrysoft.ahorrosapp.core.models.DailySaving;
 import com.cherrysoft.ahorrosapp.core.models.specs.DailySavingSpec;
 import com.cherrysoft.ahorrosapp.dtos.DailySavingDTO;
+import com.cherrysoft.ahorrosapp.dtos.UserDTO;
 import com.cherrysoft.ahorrosapp.dtos.validation.OnCreate;
 import com.cherrysoft.ahorrosapp.hateoas.assemblers.DailySavingModelAssembler;
 import com.cherrysoft.ahorrosapp.mappers.DailySavingMapper;
 import com.cherrysoft.ahorrosapp.security.SecurityUser;
 import com.cherrysoft.ahorrosapp.services.DailySavingService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -19,17 +26,31 @@ import javax.validation.Valid;
 import java.time.LocalDate;
 
 import static com.cherrysoft.ahorrosapp.core.models.DailySaving.DAY_MONTH_YEAR;
+import static com.cherrysoft.ahorrosapp.utils.ApiDocsConstants.*;
 
 @RestController
 @RequestMapping(DailySavingController.BASE_URL)
 @Validated
 @RequiredArgsConstructor
+@Tag(name = "Daily savings", description = "API to manage daily savings")
+@ApiResponses({
+    @ApiResponse(ref = BAD_REQUEST_RESPONSE_REF, responseCode = "400"),
+    @ApiResponse(ref = UNAUTHORIZED_RESPONSE_REF, responseCode = "401"),
+    @ApiResponse(ref = INTERNAL_SERVER_ERROR_RESPONSE_REF, responseCode = "500")
+})
 public class DailySavingController {
   public static final String BASE_URL = "/{pbName}/daily";
   private final DailySavingService dailySavingService;
   private final DailySavingMapper dailySavingMapper;
   private final DailySavingModelAssembler dailySavingModelAssembler;
 
+  @Operation(summary = "Returns the saving with the given date or today's saving if not date provided.")
+  @ApiResponses({
+      @ApiResponse(responseCode = "200", description = "Saving found", content = {
+          @Content(schema = @Schema(implementation = UserDTO.class))
+      }),
+      @ApiResponse(ref = NOT_FOUND_RESPONSE_REF, responseCode = "404")
+  })
   @GetMapping
   public DailySavingDTO getDailySaving(
       @AuthenticationPrincipal SecurityUser loggedUser,
@@ -42,6 +63,10 @@ public class DailySavingController {
     return dailySavingModelAssembler.toModel(result);
   }
 
+  @Operation(summary = "Creates a saving in the given date or today's date if no date is provided. If a saving already exists on the specified date, the saving will be overwritten")
+  @ApiResponse(responseCode = "200", description = "Saving updated", content = {
+      @Content(schema = @Schema(implementation = UserDTO.class))
+  })
   @PostMapping
   @Validated(OnCreate.class)
   public ResponseEntity<DailySavingDTO> createDailySaving(
@@ -57,6 +82,13 @@ public class DailySavingController {
     return ResponseEntity.ok(dailySavingModelAssembler.toModel(result));
   }
 
+  @Operation(summary = "Partially updates the saving with the given date or today's savings if no date is provided.")
+  @ApiResponses({
+      @ApiResponse(responseCode = "200", description = "Saving updated", content = {
+          @Content(schema = @Schema(implementation = UserDTO.class))
+      }),
+      @ApiResponse(ref = NOT_FOUND_RESPONSE_REF, responseCode = "404")
+  })
   @PatchMapping
   public DailySavingDTO updateDailySaving(
       @AuthenticationPrincipal SecurityUser loggedUser,
@@ -71,6 +103,13 @@ public class DailySavingController {
     return dailySavingModelAssembler.toModel(result);
   }
 
+  @Operation(summary = "Deletes the saving with the given date or today's savings if no date is provided.")
+  @ApiResponses({
+      @ApiResponse(responseCode = "200", description = "Saving deleted", content = {
+          @Content(schema = @Schema(implementation = UserDTO.class))
+      }),
+      @ApiResponse(ref = NOT_FOUND_RESPONSE_REF, responseCode = "404")
+  })
   @DeleteMapping
   public DailySavingDTO deleteDailySaving(
       @AuthenticationPrincipal SecurityUser loggedUser,

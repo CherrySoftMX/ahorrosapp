@@ -8,6 +8,12 @@ import com.cherrysoft.ahorrosapp.mappers.UserMapper;
 import com.cherrysoft.ahorrosapp.security.SecurityUser;
 import com.cherrysoft.ahorrosapp.security.TokenGenerator;
 import com.cherrysoft.ahorrosapp.services.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -21,7 +27,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
+import static com.cherrysoft.ahorrosapp.utils.ApiDocsConstants.*;
+
 @RestController
+@Tag(name = "Login and registration", description = "Login and registration for users")
+@ApiResponses({
+    @ApiResponse(ref = BAD_REQUEST_RESPONSE_REF, responseCode = "400"),
+    @ApiResponse(ref = NOT_FOUND_RESPONSE_REF, responseCode = "404"),
+    @ApiResponse(ref = INTERNAL_SERVER_ERROR_RESPONSE_REF, responseCode = "500")
+})
 public class LoginAndRegistrationController {
   private final UserService userService;
   private final UserMapper userMapper;
@@ -43,6 +57,10 @@ public class LoginAndRegistrationController {
     this.refreshTokenAuthProvider = refreshTokenAuthProvider;
   }
 
+  @Operation(summary = "Login for registered user")
+  @ApiResponse(responseCode = "200", description = "User Logged In", content = {
+      @Content(schema = @Schema(implementation = TokenDTO.class))
+  })
   @PostMapping("/login")
   public TokenDTO login(@RequestBody @Valid LoginDTO payload) {
     var token = UsernamePasswordAuthenticationToken.unauthenticated(payload.getUsername(), payload.getPassword());
@@ -50,6 +68,10 @@ public class LoginAndRegistrationController {
     return tokenGenerator.issueToken(authentication);
   }
 
+  @Operation(summary = "Registration of new user")
+  @ApiResponse(responseCode = "200", description = "User Registered", content = {
+      @Content(schema = @Schema(implementation = TokenDTO.class))
+  })
   @PostMapping("/register")
   public TokenDTO register(@RequestBody @Valid UserDTO payload) {
     User newUser = userMapper.toUser(payload);
@@ -59,6 +81,10 @@ public class LoginAndRegistrationController {
     return tokenGenerator.issueToken(authentication);
   }
 
+  @Operation(summary = "Issues a new access token with the provided refresh token")
+  @ApiResponse(responseCode = "200", description = "OK", content = {
+      @Content(schema = @Schema(implementation = TokenDTO.class))
+  })
   @PostMapping("/refresh-token")
   public TokenDTO refreshToken(@RequestBody TokenDTO payload) {
     Authentication authentication = refreshTokenAuthProvider.authenticate(new BearerTokenAuthenticationToken(payload.getRefreshToken()));

@@ -8,6 +8,13 @@ import com.cherrysoft.ahorrosapp.hateoas.assemblers.PiggyBankModelAssembler;
 import com.cherrysoft.ahorrosapp.mappers.PiggyBankMapper;
 import com.cherrysoft.ahorrosapp.security.SecurityUser;
 import com.cherrysoft.ahorrosapp.services.PiggyBankService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,15 +32,27 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 
+import static com.cherrysoft.ahorrosapp.utils.ApiDocsConstants.*;
+
 @RestController
 @Validated
 @RequiredArgsConstructor
+@Tag(name = "Piggy banks", description = "API to manage piggy banks")
+@ApiResponses({
+    @ApiResponse(ref = BAD_REQUEST_RESPONSE_REF, responseCode = "400"),
+    @ApiResponse(ref = UNAUTHORIZED_RESPONSE_REF, responseCode = "401"),
+    @ApiResponse(ref = INTERNAL_SERVER_ERROR_RESPONSE_REF, responseCode = "500")
+})
 public class PiggyBankController {
   private final PiggyBankMapper pbMapper;
   private final PiggyBankService pbService;
   private final PiggyBankModelAssembler pbModelAssembler;
   private final PagedResourcesAssembler<PiggyBank> pbPagedResourcesAssembler;
 
+  @Operation(summary = "Returns the piggy banks associated with the logged user")
+  @ApiResponse(responseCode = "200", description = "OK", content = {
+      @Content(array = @ArraySchema(schema = @Schema(implementation = PiggyBankDTO.class)))
+  })
   @GetMapping
   public PagedModel<PiggyBankDTO> getPiggyBanks(
       @AuthenticationPrincipal SecurityUser loggedUser,
@@ -44,6 +63,13 @@ public class PiggyBankController {
     return pbPagedResourcesAssembler.toModel(result, pbModelAssembler);
   }
 
+  @Operation(summary = "Returns the piggy bank with the given name")
+  @ApiResponses({
+      @ApiResponse(responseCode = "200", description = "Piggy bank found", content = {
+          @Content(schema = @Schema(implementation = PiggyBankDTO.class))
+      }),
+      @ApiResponse(ref = NOT_FOUND_RESPONSE_REF, responseCode = "404")
+  })
   @GetMapping("/{pbName}")
   public PiggyBankDTO getPiggyBank(
       @AuthenticationPrincipal SecurityUser loggedUser,
@@ -54,6 +80,10 @@ public class PiggyBankController {
     return pbModelAssembler.toModel(result);
   }
 
+  @Operation(summary = "Creates and adds the given piggy bank to the logged user")
+  @ApiResponse(responseCode = "201", description = "Piggy bank created", content = {
+      @Content(schema = @Schema(implementation = PiggyBankDTO.class))
+  })
   @PostMapping("/piggybank")
   @ResponseStatus(HttpStatus.CREATED)
   @Validated(OnCreate.class)
@@ -69,6 +99,13 @@ public class PiggyBankController {
         .body(pbModelAssembler.toModel(result));
   }
 
+  @Operation(summary = "Partially updates the piggy bank with the given payload")
+  @ApiResponses({
+      @ApiResponse(responseCode = "200", description = "Piggy bank updated", content = {
+          @Content(schema = @Schema(implementation = PiggyBankDTO.class))
+      }),
+      @ApiResponse(ref = NOT_FOUND_RESPONSE_REF, responseCode = "404")
+  })
   @PatchMapping("/{pbName}")
   public PiggyBankDTO updatePiggyBank(
       @AuthenticationPrincipal SecurityUser loggedUser,
@@ -82,6 +119,13 @@ public class PiggyBankController {
     return pbModelAssembler.toModel(result);
   }
 
+  @Operation(summary = "Deletes a piggy bank with the given name")
+  @ApiResponses({
+      @ApiResponse(responseCode = "200", description = "Piggy bank deleted", content = {
+          @Content(schema = @Schema(implementation = PiggyBankDTO.class))
+      }),
+      @ApiResponse(ref = NOT_FOUND_RESPONSE_REF, responseCode = "404")
+  })
   @DeleteMapping("/{pbName}")
   public PiggyBankDTO deletePiggyBank(
       @AuthenticationPrincipal SecurityUser loggedUser,

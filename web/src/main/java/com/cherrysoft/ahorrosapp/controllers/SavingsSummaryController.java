@@ -9,6 +9,9 @@ import com.cherrysoft.ahorrosapp.hateoas.assemblers.PiggyBankSummaryAssembler;
 import com.cherrysoft.ahorrosapp.security.SecurityUser;
 import com.cherrysoft.ahorrosapp.services.SavingsSummaryService;
 import com.cherrysoft.ahorrosapp.utils.ExtraMediaTypes;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.CacheControl;
@@ -20,9 +23,18 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
+import static com.cherrysoft.ahorrosapp.utils.ApiDocsConstants.*;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(SavingsSummaryController.BASE_URL)
+@Tag(name = "Daily savings", description = "API to get savings summaries")
+@ApiResponses({
+    @ApiResponse(ref = BAD_REQUEST_RESPONSE_REF, responseCode = "400"),
+    @ApiResponse(ref = UNAUTHORIZED_RESPONSE_REF, responseCode = "401"),
+    @ApiResponse(ref = NOT_FOUND_RESPONSE_REF, responseCode = "404"),
+    @ApiResponse(ref = INTERNAL_SERVER_ERROR_RESPONSE_REF, responseCode = "500")
+})
 public class SavingsSummaryController {
   public static final String BASE_URL = "/{pbName}/summary";
   private final SavingsSummaryService savingsSummaryService;

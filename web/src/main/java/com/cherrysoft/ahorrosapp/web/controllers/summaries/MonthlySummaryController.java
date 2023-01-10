@@ -53,7 +53,7 @@ public class MonthlySummaryController {
   ) {
     String ownerUsername = loggedUser.getUsername();
     var spec = new SavingsSummarySpec(ownerUsername, pbName, Map.of("month", month, "type", "monthly"));
-    IntervalSavingsSummary result = savingsSummaryService.getIntervalSavingsSummary(spec);
+    IntervalSavingsSummary result = savingsSummaryService.getMonthlySavingsSummary(spec);
     return intervalSavingsSummaryAssembler.toModel(result);
   }
 
@@ -68,7 +68,7 @@ public class MonthlySummaryController {
   ) {
     String ownerUsername = loggedUser.getUsername();
     var spec = new SavingsSummarySpec(ownerUsername, pbName, Map.of("month", month, "type", "monthly"));
-    byte[] result = savingsSummaryService.getIntervalSavingsSummaryAsXlsx(spec);
+    byte[] result = savingsSummaryService.getMonthlySavingsSummaryAsXlsx(spec);
     return ExcelDocumentResponseBuilder.from(result);
   }
 

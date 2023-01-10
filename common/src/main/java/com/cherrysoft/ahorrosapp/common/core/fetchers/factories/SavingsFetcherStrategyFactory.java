@@ -5,6 +5,8 @@ import com.cherrysoft.ahorrosapp.common.core.models.specs.SavingsSummarySpec;
 
 public interface SavingsFetcherStrategyFactory {
 
-  SavingsFetcherStrategy createFetcherStrategy(SavingsSummarySpec params);
+  SavingsFetcherStrategy createMonthlyFetcherStrategy(SavingsSummarySpec spec);
+
+  SavingsFetcherStrategy createIntervalMonthFetcherStrategy(SavingsSummarySpec spec);
 
 }

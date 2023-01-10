@@ -1,7 +1,8 @@
 package com.cherrysoft.ahorrosapp.web.controllers;
 
-import com.cherrysoft.ahorrosapp.core.models.User;
-import com.cherrysoft.ahorrosapp.services.UserService;
+import com.cherrysoft.ahorrosapp.common.core.models.User;
+import com.cherrysoft.ahorrosapp.common.services.UserService;
+import com.cherrysoft.ahorrosapp.web.controllers.utils.JsonUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -10,7 +11,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static com.cherrysoft.ahorrosapp.web.controllers.utils.JsonUtils.asJsonString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -35,7 +35,7 @@ class UserControllerTest {
         .perform(
             post(UserController.BASE_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(providedUser))
+                .content(JsonUtils.asJsonString(providedUser))
         )
         .andDo(print())
         .andExpect(status().isCreated())
@@ -51,7 +51,7 @@ class UserControllerTest {
         .perform(
             post(UserController.BASE_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(providedUser))
+                .content(JsonUtils.asJsonString(providedUser))
         )
         .andDo(print())
         .andExpect(status().isBadRequest());

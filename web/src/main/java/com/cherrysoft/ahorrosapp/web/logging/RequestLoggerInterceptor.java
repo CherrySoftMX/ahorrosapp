@@ -1,5 +1,6 @@
 package com.cherrysoft.ahorrosapp.web.logging;
 
+import com.cherrysoft.ahorrosapp.web.utils.ToStringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -10,7 +11,6 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static com.cherrysoft.ahorrosapp.web.utils.ToStringUtils.toJsonString;
 import static java.util.Objects.requireNonNullElse;
 
 @Slf4j
@@ -23,7 +23,7 @@ public class RequestLoggerInterceptor implements HandlerInterceptor {
     String queryString = requireNonNullElse(request.getQueryString(), "");
     Map<String, String> headers = extractHeaders(request);
     var entriesToLog = Map.of("uri", uri, "httpVerb", httpVerb, "queryString", queryString, "headers", headers);
-    log.info(toJsonString(entriesToLog));
+    log.info(ToStringUtils.toJsonString(entriesToLog));
     return true;
   }
 

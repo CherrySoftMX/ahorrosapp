@@ -1,7 +1,7 @@
 package com.cherrysoft.ahorrosapp.web.security.service;
 
-import com.cherrysoft.ahorrosapp.core.models.User;
-import com.cherrysoft.ahorrosapp.services.UserService;
+import com.cherrysoft.ahorrosapp.common.core.models.User;
+import com.cherrysoft.ahorrosapp.common.services.UserService;
 import com.cherrysoft.ahorrosapp.web.security.SecurityUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;

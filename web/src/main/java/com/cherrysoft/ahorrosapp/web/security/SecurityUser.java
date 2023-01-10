@@ -1,6 +1,6 @@
 package com.cherrysoft.ahorrosapp.web.security;
 
-import com.cherrysoft.ahorrosapp.core.models.User;
+import com.cherrysoft.ahorrosapp.common.core.models.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

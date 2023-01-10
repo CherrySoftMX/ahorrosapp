@@ -1,7 +1,7 @@
 package com.cherrysoft.ahorrosapp.web.security;
 
-import com.cherrysoft.ahorrosapp.core.models.User;
-import com.cherrysoft.ahorrosapp.services.UserService;
+import com.cherrysoft.ahorrosapp.common.core.models.User;
+import com.cherrysoft.ahorrosapp.common.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

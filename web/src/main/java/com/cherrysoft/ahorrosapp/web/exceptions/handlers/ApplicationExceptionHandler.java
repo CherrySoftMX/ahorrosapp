@@ -1,12 +1,12 @@
 package com.cherrysoft.ahorrosapp.web.exceptions.handlers;
 
-import com.cherrysoft.ahorrosapp.services.exceptions.piggybank.InvalidSavingsIntervalException;
-import com.cherrysoft.ahorrosapp.services.exceptions.piggybank.PiggyBankNameNotAvailableException;
-import com.cherrysoft.ahorrosapp.services.exceptions.piggybank.PiggyBankNotFoundException;
-import com.cherrysoft.ahorrosapp.services.exceptions.saving.SavingNotFoundException;
-import com.cherrysoft.ahorrosapp.services.exceptions.saving.SavingOutOfDateRangeException;
-import com.cherrysoft.ahorrosapp.services.exceptions.user.UserNotFoundException;
-import com.cherrysoft.ahorrosapp.services.exceptions.user.UsernameAlreadyTakenException;
+import com.cherrysoft.ahorrosapp.common.services.exceptions.piggybank.InvalidSavingsIntervalException;
+import com.cherrysoft.ahorrosapp.common.services.exceptions.piggybank.PiggyBankNameNotAvailableException;
+import com.cherrysoft.ahorrosapp.common.services.exceptions.piggybank.PiggyBankNotFoundException;
+import com.cherrysoft.ahorrosapp.common.services.exceptions.saving.SavingNotFoundException;
+import com.cherrysoft.ahorrosapp.common.services.exceptions.saving.SavingOutOfDateRangeException;
+import com.cherrysoft.ahorrosapp.common.services.exceptions.user.UserNotFoundException;
+import com.cherrysoft.ahorrosapp.common.services.exceptions.user.UsernameAlreadyTakenException;
 import com.cherrysoft.ahorrosapp.web.exceptions.ApplicationException;
 import com.cherrysoft.ahorrosapp.web.exceptions.ErrorResponse;
 import org.springframework.core.Ordered;

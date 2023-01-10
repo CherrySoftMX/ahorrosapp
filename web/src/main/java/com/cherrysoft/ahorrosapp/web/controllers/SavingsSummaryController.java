@@ -1,12 +1,12 @@
 package com.cherrysoft.ahorrosapp.web.controllers;
 
-import com.cherrysoft.ahorrosapp.core.PiggyBankSummary;
-import com.cherrysoft.ahorrosapp.core.models.specs.SavingsSummarySpec;
-import com.cherrysoft.ahorrosapp.services.SavingsSummaryService;
+import com.cherrysoft.ahorrosapp.common.core.PiggyBankSummary;
+import com.cherrysoft.ahorrosapp.common.core.models.specs.SavingsSummarySpec;
+import com.cherrysoft.ahorrosapp.common.services.SavingsSummaryService;
+import com.cherrysoft.ahorrosapp.web.assemblers.IntervalSavingsSummaryAssembler;
+import com.cherrysoft.ahorrosapp.web.assemblers.PiggyBankSummaryAssembler;
 import com.cherrysoft.ahorrosapp.web.dtos.summaries.IntervalSavingsSummaryDTO;
 import com.cherrysoft.ahorrosapp.web.dtos.summaries.PiggyBankSummaryDTO;
-import com.cherrysoft.ahorrosapp.web.hateoas.assemblers.IntervalSavingsSummaryAssembler;
-import com.cherrysoft.ahorrosapp.web.hateoas.assemblers.PiggyBankSummaryAssembler;
 import com.cherrysoft.ahorrosapp.web.security.SecurityUser;
 import com.cherrysoft.ahorrosapp.web.utils.ExtraMediaTypes;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

@@ -12,7 +12,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.TimeZone;
 
-import static com.cherrysoft.ahorrosapp.core.models.DailySaving.DAY_MONTH_YEAR;
+import static com.cherrysoft.ahorrosapp.common.core.models.DailySaving.DAY_MONTH_YEAR;
 
 @Configuration
 public class JacksonConfig {

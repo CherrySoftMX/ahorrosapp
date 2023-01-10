@@ -3,7 +3,7 @@ package com.cherrysoft.ahorrosapp.web.controllers;
 import com.cherrysoft.ahorrosapp.common.core.models.PiggyBank;
 import com.cherrysoft.ahorrosapp.common.core.models.specs.piggybank.UpdatePiggyBankSpec;
 import com.cherrysoft.ahorrosapp.common.services.PiggyBankService;
-import com.cherrysoft.ahorrosapp.web.assemblers.PiggyBankModelAssembler;
+import com.cherrysoft.ahorrosapp.web.hateoas.assemblers.PiggyBankModelAssembler;
 import com.cherrysoft.ahorrosapp.web.dtos.PiggyBankDTO;
 import com.cherrysoft.ahorrosapp.web.dtos.validation.OnCreate;
 import com.cherrysoft.ahorrosapp.web.mappers.PiggyBankMapper;

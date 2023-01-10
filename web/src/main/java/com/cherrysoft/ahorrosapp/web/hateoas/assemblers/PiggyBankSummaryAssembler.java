@@ -3,7 +3,7 @@ package com.cherrysoft.ahorrosapp.web.hateoas.assemblers;
 import com.cherrysoft.ahorrosapp.common.core.PiggyBankSummary;
 import com.cherrysoft.ahorrosapp.common.core.models.PiggyBank;
 import com.cherrysoft.ahorrosapp.web.controllers.PiggyBankController;
-import com.cherrysoft.ahorrosapp.web.controllers.SavingsSummaryController;
+import com.cherrysoft.ahorrosapp.web.controllers.summaries.PiggyBankSummaryController;
 import com.cherrysoft.ahorrosapp.web.dtos.summaries.PiggyBankSummaryDTO;
 import com.cherrysoft.ahorrosapp.web.mappers.SavingsSummaryMapper;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +31,7 @@ public class PiggyBankSummaryAssembler implements RepresentationModelAssembler<P
   }
 
   private Link selfLink() {
-    return linkTo(methodOn(SavingsSummaryController.class)
+    return linkTo(methodOn(PiggyBankSummaryController.class)
         .getPiggyBankSummaryAsJson(null, pb.getName()))
         .withSelfRel();
   }

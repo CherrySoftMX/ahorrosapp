@@ -3,7 +3,7 @@ package com.cherrysoft.ahorrosapp.web.controllers;
 import com.cherrysoft.ahorrosapp.common.core.models.DailySaving;
 import com.cherrysoft.ahorrosapp.common.core.models.specs.DailySavingSpec;
 import com.cherrysoft.ahorrosapp.common.services.DailySavingService;
-import com.cherrysoft.ahorrosapp.web.assemblers.DailySavingModelAssembler;
+import com.cherrysoft.ahorrosapp.web.hateoas.assemblers.DailySavingModelAssembler;
 import com.cherrysoft.ahorrosapp.web.dtos.DailySavingDTO;
 import com.cherrysoft.ahorrosapp.web.dtos.UserDTO;
 import com.cherrysoft.ahorrosapp.web.dtos.validation.OnCreate;

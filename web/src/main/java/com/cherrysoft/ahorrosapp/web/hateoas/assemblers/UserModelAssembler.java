@@ -1,4 +1,4 @@
-package com.cherrysoft.ahorrosapp.web.assemblers;
+package com.cherrysoft.ahorrosapp.web.hateoas.assemblers;
 
 import com.cherrysoft.ahorrosapp.common.core.models.User;
 import com.cherrysoft.ahorrosapp.web.controllers.PiggyBankController;

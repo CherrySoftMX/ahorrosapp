@@ -2,7 +2,7 @@ package com.cherrysoft.ahorrosapp.web.controllers;
 
 import com.cherrysoft.ahorrosapp.common.core.models.User;
 import com.cherrysoft.ahorrosapp.common.services.UserService;
-import com.cherrysoft.ahorrosapp.web.assemblers.UserModelAssembler;
+import com.cherrysoft.ahorrosapp.web.hateoas.assemblers.UserModelAssembler;
 import com.cherrysoft.ahorrosapp.web.dtos.UserDTO;
 import com.cherrysoft.ahorrosapp.web.dtos.validation.OnCreate;
 import com.cherrysoft.ahorrosapp.web.mappers.UserMapper;

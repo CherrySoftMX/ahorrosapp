@@ -6,6 +6,7 @@ import com.cherrysoft.ahorrosapp.common.core.PiggyBankSummary;
 import com.cherrysoft.ahorrosapp.common.core.collectors.MonthlySavingsCollector;
 import com.cherrysoft.ahorrosapp.common.core.fetchers.SavingsFetcherStrategy;
 import com.cherrysoft.ahorrosapp.common.core.fetchers.factories.SavingsFetcherStrategyFactory;
+import com.cherrysoft.ahorrosapp.common.core.models.ExcelReportResult;
 import com.cherrysoft.ahorrosapp.common.core.models.PiggyBank;
 import com.cherrysoft.ahorrosapp.common.core.models.specs.SavingsSummarySpec;
 import com.cherrysoft.ahorrosapp.common.core.reports.excel.ExcelReportGenerator;
@@ -23,7 +24,7 @@ public class SavingsSummaryService {
     return new IntervalSavingsSummary(monthlyFetcher.fetchSavings());
   }
 
-  public byte[] getMonthlySavingsSummaryAsXlsx(SavingsSummarySpec spec) {
+  public ExcelReportResult getMonthlySavingsSummaryAsXlsx(SavingsSummarySpec spec) {
     var fetcher = fetcherStrategyFactory.createMonthlyFetcherStrategy(spec);
     return generateExcelReport(fetcher);
   }
@@ -33,12 +34,12 @@ public class SavingsSummaryService {
     return new IntervalSavingsSummary(intervalMonthFetcher.fetchSavings());
   }
 
-  public byte[] getIntervalSavingsSummaryAsXlsx(SavingsSummarySpec spec) {
+  public ExcelReportResult getIntervalSavingsSummaryAsXlsx(SavingsSummarySpec spec) {
     var fetcher = fetcherStrategyFactory.createIntervalMonthFetcherStrategy(spec);
     return generateExcelReport(fetcher);
   }
 
-  private byte[] generateExcelReport(SavingsFetcherStrategy fetcher) {
+  private ExcelReportResult generateExcelReport(SavingsFetcherStrategy fetcher) {
     var gapFiller = new IntervalSavingsGapFiller(fetcher.fetchSavings(), fetcher.startDay(), fetcher.endDay());
     var monthlySavingsCollector = new MonthlySavingsCollector(gapFiller.fillGaps());
     return new ExcelReportGenerator(monthlySavingsCollector.collect()).generateReport();

@@ -1,6 +1,7 @@
 package com.cherrysoft.ahorrosapp.web.controllers.summaries;
 
 import com.cherrysoft.ahorrosapp.common.core.IntervalSavingsSummary;
+import com.cherrysoft.ahorrosapp.common.core.models.ExcelReportResult;
 import com.cherrysoft.ahorrosapp.common.core.models.specs.SavingsSummarySpec;
 import com.cherrysoft.ahorrosapp.common.services.SavingsSummaryService;
 import com.cherrysoft.ahorrosapp.web.controllers.summaries.utils.ExcelDocumentResponseBuilder;
@@ -68,7 +69,7 @@ public class MonthlySummaryController {
   ) {
     String ownerUsername = loggedUser.getUsername();
     var spec = new SavingsSummarySpec(ownerUsername, pbName, Map.of("month", month, "type", "monthly"));
-    byte[] result = savingsSummaryService.getMonthlySavingsSummaryAsXlsx(spec);
+    ExcelReportResult result = savingsSummaryService.getMonthlySavingsSummaryAsXlsx(spec);
     return ExcelDocumentResponseBuilder.from(result);
   }
 

@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.cherrysoft.ahorrosapp.web.utils.ToStringUtils.toJsonString;
+import static java.util.Objects.isNull;
 
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -51,7 +52,7 @@ public class LoggingUtils {
     for (int i = 0; i < args.length; i++) {
       String paramName = paramNames[i];
       Object arg = args[i];
-      result.put(paramName, arg.toString());
+      result.put(paramName, isNull(arg) ? "null" : arg.toString());
     }
     return result;
   }

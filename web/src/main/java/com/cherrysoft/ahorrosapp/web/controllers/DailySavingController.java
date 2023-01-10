@@ -3,10 +3,10 @@ package com.cherrysoft.ahorrosapp.web.controllers;
 import com.cherrysoft.ahorrosapp.common.core.models.DailySaving;
 import com.cherrysoft.ahorrosapp.common.core.models.specs.DailySavingSpec;
 import com.cherrysoft.ahorrosapp.common.services.DailySavingService;
-import com.cherrysoft.ahorrosapp.web.hateoas.assemblers.DailySavingModelAssembler;
 import com.cherrysoft.ahorrosapp.web.dtos.DailySavingDTO;
 import com.cherrysoft.ahorrosapp.web.dtos.UserDTO;
 import com.cherrysoft.ahorrosapp.web.dtos.validation.OnCreate;
+import com.cherrysoft.ahorrosapp.web.hateoas.assemblers.DailySavingModelAssembler;
 import com.cherrysoft.ahorrosapp.web.mappers.DailySavingMapper;
 import com.cherrysoft.ahorrosapp.web.security.SecurityUser;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.time.LocalDate;
 
+import static com.cherrysoft.ahorrosapp.common.utils.DateUtils.DAY_MONTH_YEAR_PATTERN;
 import static com.cherrysoft.ahorrosapp.web.utils.ApiDocsConstants.*;
 
 @RestController
@@ -54,7 +55,7 @@ public class DailySavingController {
   public DailySavingDTO getDailySaving(
       @AuthenticationPrincipal SecurityUser loggedUser,
       @PathVariable String pbName,
-      @RequestParam(required = false) @DateTimeFormat(pattern = DailySaving.DAY_MONTH_YEAR) LocalDate date
+      @RequestParam(required = false) @DateTimeFormat(pattern = DAY_MONTH_YEAR_PATTERN) LocalDate date
   ) {
     String ownerUsername = loggedUser.getUsername();
     var spec = new DailySavingSpec(ownerUsername, pbName, date);
@@ -71,7 +72,7 @@ public class DailySavingController {
   public ResponseEntity<DailySavingDTO> createDailySaving(
       @AuthenticationPrincipal SecurityUser loggedUser,
       @PathVariable String pbName,
-      @RequestParam(required = false) @DateTimeFormat(pattern = DailySaving.DAY_MONTH_YEAR) LocalDate date,
+      @RequestParam(required = false) @DateTimeFormat(pattern = DAY_MONTH_YEAR_PATTERN) LocalDate date,
       @RequestBody @Valid DailySavingDTO payload
   ) {
     String ownerUsername = loggedUser.getUsername();
@@ -92,7 +93,7 @@ public class DailySavingController {
   public DailySavingDTO updateDailySaving(
       @AuthenticationPrincipal SecurityUser loggedUser,
       @PathVariable String pbName,
-      @RequestParam(required = false) @DateTimeFormat(pattern = DailySaving.DAY_MONTH_YEAR) LocalDate date,
+      @RequestParam(required = false) @DateTimeFormat(pattern = DAY_MONTH_YEAR_PATTERN) LocalDate date,
       @RequestBody @Valid DailySavingDTO payload
   ) {
     String ownerUsername = loggedUser.getUsername();
@@ -113,7 +114,7 @@ public class DailySavingController {
   public DailySavingDTO deleteDailySaving(
       @AuthenticationPrincipal SecurityUser loggedUser,
       @PathVariable String pbName,
-      @RequestParam(required = false) @DateTimeFormat(pattern = DailySaving.DAY_MONTH_YEAR) LocalDate date
+      @RequestParam(required = false) @DateTimeFormat(pattern = DAY_MONTH_YEAR_PATTERN) LocalDate date
   ) {
     String ownerUsername = loggedUser.getUsername();
     var spec = new DailySavingSpec(ownerUsername, pbName, date);

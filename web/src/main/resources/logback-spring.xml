@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <!-- Use Spring default values -->
+  <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+  <property name="LOG_PATH" value="./logs"/>
+
+  <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+    <layout class="ch.qos.logback.classic.PatternLayout">
+      <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+    </layout>
+  </appender>
+
+  <appender name="RollingFile-Spring"
+            class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+      <pattern>${FILE_LOG_PATTERN}</pattern>
+      <charset>${FILE_LOG_CHARSET}</charset>
+    </encoder>
+    <file>${LOG_PATH}/spring-boot-logger.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>
+        ${LOG_PATH}/archived/spring/spring-boot-logger-%d{yyyy-MM-dd}.%i.log
+      </fileNamePattern>
+      <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+        <maxFileSize>50MB</maxFileSize>
+      </timeBasedFileNamingAndTriggeringPolicy>
+    </rollingPolicy>
+  </appender>
+
+  <appender name="RollingFile-App"
+            class="ch.qos.logback.core.rolling.RollingFileAppender">
+    >
+    <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+      <jsonGeneratorDecorator class="net.logstash.logback.mask.MaskingJsonGeneratorDecorator">
+        <pathMask>
+          <path>message/headers/authorization</path>
+          <mask>Bearer [masked]</mask>
+        </pathMask>
+      </jsonGeneratorDecorator>
+      <providers>
+        <timestamp/>
+        <version/> <!-- Logstash json format version, the @version field in the output-->
+        <context/> <!--Outputs entries from logback's context -->
+        <logLevel/>
+        <pattern> <!-- we can add some custom fields to be sent with all the log entries. make filtering easier in Logstash-->
+          <pattern>
+            {
+            "appName": "rest-manics",
+            "message": "#tryJson{%m}"
+            }
+          </pattern>
+        </pattern>
+        <threadName/>
+        <stackTrace>
+          <throwableConverter class="net.logstash.logback.stacktrace.ShortenedThrowableConverter">
+            <maxDepthPerThrowable>30</maxDepthPerThrowable>
+            <maxLength>2048</maxLength>
+            <shortenedClassNameLength>20</shortenedClassNameLength>
+            <rootCauseFirst>true</rootCauseFirst>
+          </throwableConverter>
+        </stackTrace>
+      </providers>
+    </encoder>
+
+    <file>${LOG_PATH}/app-logs.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>
+        ${LOG_PATH}/archived/app-logs-%d{yyyy-MM-dd}.%i.log
+      </fileNamePattern>
+      <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+        <maxFileSize>10MB</maxFileSize>
+      </timeBasedFileNamingAndTriggeringPolicy>
+    </rollingPolicy>
+
+  </appender>
+
+  <!-- LOG everything to the console at INFO level -->
+  <root level="info">
+    <appender-ref ref="Console"/>
+  </root>
+
+  <!-- LOG "com.cherrysoft.ahorrosapp*" at TRACE level -->
+  <logger name="com.cherrysoft.ahorrosapp" level="trace" additivity="false">
+    <appender-ref ref="RollingFile-App"/>
+    <appender-ref ref="Console"/>
+  </logger>
+
+  <!-- LOG "org.springframework*" at INFO level -->
+  <logger name="org.springframework" level="info" additivity="false">
+    <appender-ref ref="RollingFile-Spring"/>
+    <appender-ref ref="Console"/>
+  </logger>
+
+  <!-- LOG transactions -->
+  <logger name="org.springframework.transaction"
+          level="info"
+          additivity="false">
+    <appender-ref ref="RollingFile-App"/>
+    <appender-ref ref="Console"/>
+  </logger>
+
+  <!-- LOG Hibernate queries -->
+  <logger name="org.hibernate.SQL" level="debug" additivity="false">
+    <appender-ref ref="RollingFile-App"/>
+    <appender-ref ref="Console"/>
+  </logger>
+
+  <!--
+  <logger name="org.hibernate.type.descriptor.sql"
+          level="trace"
+          additivity="false">
+    <appender-ref ref="RollingFile-App"/>
+    <appender-ref ref="Console"/>
+  </logger>
+  -->
+
+  <logger name="org.hibernate.stat" level="debug" additivity="false">
+    <appender-ref ref="RollingFile-App"/>
+    <appender-ref ref="Console"/>
+  </logger>
+  <logger name="org.hibernate.SQL_SLOW" level="info" additivity="false">
+    <appender-ref ref="RollingFile-App"/>
+    <appender-ref ref="Console"/>
+  </logger>
+  <logger name="org.hibernate.cache" level="debug" additivity="false">
+    <appender-ref ref="RollingFile-App"/>
+    <appender-ref ref="Console"/>
+  </logger>
+
+</configuration>

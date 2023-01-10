@@ -21,6 +21,7 @@
     <maven.compiler.target>11</maven.compiler.target>
     <org.mapstruct.version>1.5.2.Final</org.mapstruct.version>
     <springdoc-openapi-ui.version>1.6.14</springdoc-openapi-ui.version>
+    <logstash-logback-encoder.version>7.2</logstash-logback-encoder.version>
   </properties>
 
   <dependencies>
@@ -58,6 +59,13 @@
       <groupId>org.springdoc</groupId>
       <artifactId>springdoc-openapi-hateoas</artifactId>
       <version>${springdoc-openapi-ui.version}</version>
+    </dependency>
+
+    <!-- Logging -->
+    <dependency>
+      <groupId>net.logstash.logback</groupId>
+      <artifactId>logstash-logback-encoder</artifactId>
+      <version>${logstash-logback-encoder.version}</version>
     </dependency>
 
     <!-- Security -->

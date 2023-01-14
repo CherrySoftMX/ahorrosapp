@@ -1,7 +1,5 @@
 package com.cherrysoft.ahorrosapp.web.security;
 
-import com.cherrysoft.ahorrosapp.web.security.logging.BearerTokenAccessDeniedLoggingHandler;
-import com.cherrysoft.ahorrosapp.web.security.logging.BearerTokenAuthenticationLoggingEntryPoint;
 import com.cherrysoft.ahorrosapp.web.security.service.SecurityUserDetailsService;
 import com.cherrysoft.ahorrosapp.web.security.support.KeyPairProvider;
 import com.nimbusds.jose.jwk.JWK;
@@ -12,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -26,11 +25,13 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationProvider;
 import org.springframework.security.web.SecurityFilterChain;
+import org.zalando.problem.spring.web.advice.security.SecurityProblemSupport;
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor
+@Import(SecurityProblemSupport.class)
 public class SecurityConfig {
   private static final String[] AUTH_WHITELIST = {
       "/login",
@@ -43,6 +44,7 @@ public class SecurityConfig {
   private final JwtToSecurityUserConverter jwtToUserConverter;
   private final KeyPairProvider keyPairProvider;
   private final PasswordEncoder passwordEncoder;
+  private final SecurityProblemSupport securityProblemSupport;
 
   @Bean
   @Qualifier("jwtRefreshTokenAuthProvider")
@@ -73,8 +75,8 @@ public class SecurityConfig {
             oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtToUserConverter))
         )
         .exceptionHandling((exceptions) -> exceptions
-            .authenticationEntryPoint(new BearerTokenAuthenticationLoggingEntryPoint())
-            .accessDeniedHandler(new BearerTokenAccessDeniedLoggingHandler())
+            .authenticationEntryPoint(securityProblemSupport)
+            .accessDeniedHandler(securityProblemSupport)
         )
         .build();
   }

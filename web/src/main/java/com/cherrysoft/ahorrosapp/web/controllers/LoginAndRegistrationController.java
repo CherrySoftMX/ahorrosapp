@@ -5,6 +5,7 @@ import com.cherrysoft.ahorrosapp.common.services.UserService;
 import com.cherrysoft.ahorrosapp.web.dtos.UserDTO;
 import com.cherrysoft.ahorrosapp.web.dtos.auth.LoginDTO;
 import com.cherrysoft.ahorrosapp.web.dtos.auth.TokenDTO;
+import com.cherrysoft.ahorrosapp.web.dtos.validation.OnCreate;
 import com.cherrysoft.ahorrosapp.web.mappers.UserMapper;
 import com.cherrysoft.ahorrosapp.web.security.SecurityUser;
 import com.cherrysoft.ahorrosapp.web.security.TokenGenerator;
@@ -21,6 +22,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.BearerTokenAuthenticationToken;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationProvider;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,6 +32,7 @@ import javax.validation.Valid;
 import static com.cherrysoft.ahorrosapp.web.utils.ApiDocsConstants.*;
 
 @RestController
+@Validated
 @Tag(name = "Login and registration", description = "Login and registration for users")
 @ApiResponses({
     @ApiResponse(ref = BAD_REQUEST_RESPONSE_REF, responseCode = "400"),
@@ -73,6 +76,7 @@ public class LoginAndRegistrationController {
       @Content(schema = @Schema(implementation = TokenDTO.class))
   })
   @PostMapping("/register")
+  @Validated(OnCreate.class)
   public TokenDTO register(@RequestBody @Valid UserDTO payload) {
     User newUser = userMapper.toUser(payload);
     User result = userService.createUser(newUser);

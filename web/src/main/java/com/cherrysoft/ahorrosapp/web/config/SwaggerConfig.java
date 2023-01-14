@@ -1,6 +1,5 @@
 package com.cherrysoft.ahorrosapp.web.config;
 
-import com.cherrysoft.ahorrosapp.web.exceptions.ErrorResponse;
 import io.swagger.v3.core.converter.AnnotatedType;
 import io.swagger.v3.core.converter.ModelConverters;
 import io.swagger.v3.oas.models.Components;
@@ -16,6 +15,7 @@ import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.zalando.problem.DefaultProblem;
 
 import static com.cherrysoft.ahorrosapp.web.utils.ApiDocsConstants.*;
 
@@ -61,7 +61,7 @@ public class SwaggerConfig {
 
   private ApiResponse errorResponse(String description) {
     Schema errorResponseSchema = ModelConverters.getInstance()
-        .resolveAsResolvedSchema(new AnnotatedType(ErrorResponse.class)).schema;
+        .resolveAsResolvedSchema(new AnnotatedType(DefaultProblem.class)).schema;
 
     return new ApiResponse().content(
             new Content()

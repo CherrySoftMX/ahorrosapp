@@ -10,4 +10,16 @@ public class DateUtils {
     return LocalDate.now();
   }
 
+  public static LocalDate tomorrow() {
+    return today().plusDays(1);
+  }
+
+  public static LocalDate aWeekInTheFuture() {
+    return today().plusDays(7);
+  }
+
+  public static LocalDate yesterday() {
+    return today().minusDays(1);
+  }
+
 }

@@ -1,12 +1,11 @@
 package com.cherrysoft.ahorrosapp.common.services;
 
-import com.cherrysoft.ahorrosapp.common.repositories.PiggyBankRepository;
 import com.cherrysoft.ahorrosapp.common.core.models.PiggyBank;
 import com.cherrysoft.ahorrosapp.common.core.models.User;
 import com.cherrysoft.ahorrosapp.common.core.models.specs.piggybank.UpdatePiggyBankSpec;
+import com.cherrysoft.ahorrosapp.common.repositories.PiggyBankRepository;
 import com.cherrysoft.ahorrosapp.common.services.exceptions.piggybank.PiggyBankNameNotAvailableException;
 import com.cherrysoft.ahorrosapp.common.services.exceptions.piggybank.PiggyBankNotFoundException;
-import com.cherrysoft.ahorrosapp.common.utils.BeanUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,7 +18,7 @@ public class PiggyBankService {
   private final PiggyBankRepository pbRepository;
 
   public Page<PiggyBank> getPiggyBanks(String ownerUsername, Pageable pageable) {
-    return pbRepository.getPiggyBanksByOwner_Username(ownerUsername, pageable);
+    return pbRepository.findAllByOwnerUsername(ownerUsername, pageable);
   }
 
   public PiggyBank getPiggyBankByName(String ownerUsername, String pbName) {
@@ -35,9 +34,11 @@ public class PiggyBankService {
 
   public PiggyBank addPiggyBankTo(String ownerUsername, PiggyBank pb) {
     User owner = userService.getUserByUsername(ownerUsername);
+
     ensureUniquePiggyBankNameForOwner(owner, pb.getName());
-    pb.setStartSavingsToTodayIfEmpty();
+    pb.setStartSavingsToTodayIfNull();
     pb.ensureSavingsIntervalIntegrity();
+
     owner.addPiggyBank(pb);
     return pbRepository.saveAndFlush(pb);
   }
@@ -45,10 +46,18 @@ public class PiggyBankService {
   public PiggyBank partialUpdatePiggyBank(UpdatePiggyBankSpec params) {
     User owner = userService.getUserByUsername(params.getOwnerUsername());
     PiggyBank pb = getPiggyBankByName(owner, params.getOldPbName());
+
     if (!params.getOldPbName().equals(params.getUpdatedPb().getName())) {
       ensureUniquePiggyBankNameForOwner(owner, params.getUpdatedPb().getName());
     }
-    BeanUtils.copyProperties(params.getUpdatedPb(), pb);
+
+    PiggyBank updatedPb = params.getUpdatedPb();
+    pb.setName(updatedPb.getName());
+    pb.setInitialAmount(updatedPb.getInitialAmount());
+    pb.setBorrowedAmount(updatedPb.getBorrowedAmount());
+    pb.setStartSavings(updatedPb.getStartSavings());
+    pb.setEndSavings(updatedPb.getEndSavings());
+
     pb.ensureSavingsIntervalIntegrity();
     return pbRepository.save(pb);
   }

@@ -94,7 +94,7 @@ public class LoginAndRegistrationController {
     Authentication authentication = refreshTokenAuthProvider.authenticate(new BearerTokenAuthenticationToken(payload.getRefreshToken()));
     Jwt jwt = (Jwt) authentication.getCredentials();
     String username = jwt.getSubject();
-    userService.ensureUserExistByUsername(username);
+    userService.getUserByUsername(username);
     return tokenGenerator.issueToken(authentication);
   }
 

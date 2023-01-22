@@ -22,12 +22,6 @@ public class UserService {
         .orElseThrow(() -> new UserNotFoundException(username));
   }
 
-  public void ensureUserExistByUsername(String username) {
-    if (!userRepository.existsByUsername(username)) {
-      throw new UserNotFoundException(username);
-    }
-  }
-
   public User createUser(User user) {
     ensureUniqueUsername(user.getUsername());
     user.setPassword(passwordEncoder.encode(user.getPassword()));

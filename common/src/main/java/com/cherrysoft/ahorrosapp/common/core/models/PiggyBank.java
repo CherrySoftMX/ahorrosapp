@@ -1,6 +1,5 @@
 package com.cherrysoft.ahorrosapp.common.core.models;
 
-import com.cherrysoft.ahorrosapp.common.services.exceptions.piggybank.InvalidSavingsIntervalException;
 import com.cherrysoft.ahorrosapp.common.core.PiggyBankSummary;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -13,8 +12,7 @@ import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.List;
 
-import static com.cherrysoft.ahorrosapp.common.utils.DateUtils.today;
-import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 
 @Entity
 @Table(name = "piggy_banks")
@@ -34,19 +32,15 @@ public class PiggyBank {
   @Column
   private String name;
 
-  @Column(nullable = false)
-  @Builder.Default
+  @Column
   private BigDecimal initialAmount = BigDecimal.ZERO;
 
-  @Column(nullable = false)
-  @Builder.Default
+  @Column
   private BigDecimal borrowedAmount = BigDecimal.ZERO;
 
-  @Column
-  private LocalDate startSavings;
-
-  @Column
-  private LocalDate endSavings;
+  @Embedded
+  @Builder.Default
+  private SavingsDateRange savingsDateRange = new SavingsDateRange();
 
   @Column(nullable = false, updatable = false)
   @CreationTimestamp
@@ -71,60 +65,63 @@ public class PiggyBank {
   @ToString.Exclude
   private List<DailySaving> dailySavings;
 
-  public PiggyBankSummary getPiggyBankSummary() {
-    return new PiggyBankSummary(this);
-  }
-
-  public SavingDateRange getSavingDateRange() {
-    return new SavingDateRange(startSavings, endSavings);
-  }
-
   public void addDailySaving(DailySaving dailySaving) {
     dailySaving.setPiggyBank(this);
     dailySavings.add(dailySaving);
   }
 
-  public boolean containedWithinSavingsInterval(LocalDate date) {
-    if (date.isBefore(startSavings)) {
-      return false;
+  public PiggyBankSummary getPiggyBankSummary() {
+    return new PiggyBankSummary(this);
+  }
+
+  public void setStartSavingsToTodayIfNull() {
+    savingsDateRange.setStartSavingsToTodayIfNull();
+  }
+
+  public void setName(String name) {
+    if (nonNull(name)) {
+      this.name = name;
     }
-    boolean isAfterEndDate = hasEndSavingsDate() && date.isAfter(endSavings);
-    return !isAfterEndDate;
+  }
+
+  public void setInitialAmount(BigDecimal initialAmount) {
+    if (nonNull(initialAmount)) {
+      this.initialAmount = initialAmount;
+    }
+  }
+
+  public void setBorrowedAmount(BigDecimal borrowedAmount) {
+    if (nonNull(borrowedAmount)) {
+      this.borrowedAmount = borrowedAmount;
+    }
+  }
+
+  public void setStartSavings(LocalDate startSavings) {
+    if (nonNull(startSavings)) {
+      savingsDateRange.setStartSavings(startSavings);
+    }
+  }
+
+  public void setEndSavings(LocalDate endSavings) {
+    if (nonNull(endSavings)) {
+      savingsDateRange.setEndSavings(endSavings);
+    }
+  }
+
+  public boolean containedWithinSavingsInterval(LocalDate date) {
+    return savingsDateRange.containedWithinSavingsRange(date);
   }
 
   public void ensureSavingsIntervalIntegrity() {
-    ensureEndDateIsPresentOrFutureIfNotStartDate();
-    ensureStartDateIsBeforeEndDate();
+    savingsDateRange.ensureSavingsDateRangeIntegrity();
   }
 
-  public void ensureEndDateIsPresentOrFutureIfNotStartDate() {
-    if (isNull(startSavings) && endSavings.isBefore(today())) {
-      throw new InvalidSavingsIntervalException("End date must be present or future.");
-    }
+  public LocalDate getEndSavings() {
+    return savingsDateRange.getEndSavings();
   }
 
-  public void ensureStartDateIsBeforeEndDate() {
-    if (hasEndSavingsDate()) {
-      boolean startDateIsEqualOrAfterEndDate = !startSavings.isBefore(endSavings);
-      if (startDateIsEqualOrAfterEndDate) {
-        throw new InvalidSavingsIntervalException("Start date must be before end date.");
-      }
-    }
-  }
-
-  public void setStartSavingsToTodayIfEmpty() {
-    if (isNull(startSavings)) {
-      ensureEndDateIsPresentOrFutureIfNotStartDate();
-      setStartSavings(today());
-    }
-  }
-
-  public boolean hasStartSavingsDate() {
-    return !isNull(startSavings);
-  }
-
-  public boolean hasEndSavingsDate() {
-    return !isNull(endSavings);
+  public LocalDate getStartSavings() {
+    return savingsDateRange.getStartSavings();
   }
 
 }

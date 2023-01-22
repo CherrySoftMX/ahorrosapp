@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static java.util.Objects.isNull;
+
 @Entity
 @Table(name = "users")
 @NoArgsConstructor
@@ -58,11 +60,17 @@ public class User {
   }
 
   public void addPiggyBank(PiggyBank pb) {
+    if (isNull(piggyBanks)) {
+      piggyBanks = new ArrayList<>();
+    }
     piggyBanks.add(pb);
     pb.setOwner(this);
   }
 
   public void removePiggyBank(PiggyBank pb) {
+    if (isNull(piggyBanks)) {
+      return;
+    }
     piggyBanks.remove(pb);
     pb.setOwner(null);
   }

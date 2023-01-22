@@ -13,14 +13,23 @@ import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.responses.ApiResponse;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
+import org.springdoc.core.customizers.OpenApiCustomiser;
+import org.springdoc.core.customizers.OperationCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.zalando.problem.DefaultProblem;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.zalando.problem.AbstractThrowableProblem;
+import org.zalando.problem.StatusType;
+import org.zalando.problem.ThrowableProblem;
+
+import java.util.Optional;
 
 import static com.cherrysoft.ahorrosapp.web.utils.ApiDocsConstants.*;
+import static java.util.Objects.nonNull;
 
 @Configuration
 public class SwaggerConfig {
+  private static final String APPLICATION_JSON_VALUE = org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
   @Bean
   public OpenAPI openAPI() {
@@ -60,29 +69,67 @@ public class SwaggerConfig {
   }
 
   private ApiResponse errorResponse(String description) {
-    Schema errorResponseSchema = ModelConverters.getInstance()
-        .resolveAsResolvedSchema(new AnnotatedType(DefaultProblem.class)).schema;
-
     return new ApiResponse().content(
             new Content()
-                .addMediaType("application/json", new MediaType().schema(errorResponseSchema)))
+                .addMediaType(APPLICATION_JSON_VALUE, new MediaType().schema(problemSchema())))
         .description(description);
   }
 
   private ApiResponse unauthorizedResponse() {
     return new ApiResponse().content(new Content()
-            .addMediaType("application/json", new MediaType()))
+            .addMediaType(APPLICATION_JSON_VALUE, new MediaType().schema(problemSchema())))
         .description("Authorization information is missing or invalid");
   }
 
   private ApiResponse forbiddenResponse() {
     return new ApiResponse().content(new Content()
-            .addMediaType("application/json", new MediaType()))
+            .addMediaType(APPLICATION_JSON_VALUE, new MediaType().schema(problemSchema())))
         .description("The user doesn't have permission to access this resource");
   }
 
   private ApiResponse internalServerErrorResponse() {
     return new ApiResponse().content(new Content()).description("Internal server error");
+  }
+
+  private Schema problemSchema() {
+    return ModelConverters.getInstance()
+        .resolveAsResolvedSchema(new AnnotatedType(AbstractThrowableProblem.class)).schema;
+  }
+
+  @Bean
+  public OperationCustomizer operationCustomizer() {
+    return (operation, handlerMethod) -> {
+      Optional<PreAuthorize> preAuthorizeAnnotation = Optional.ofNullable(handlerMethod.getMethodAnnotation(PreAuthorize.class));
+      StringBuilder sb = new StringBuilder();
+      if (preAuthorizeAnnotation.isPresent()) {
+        sb.append("This api requires **")
+            .append((preAuthorizeAnnotation.get()).value().replaceAll("hasRole|\\(|\\)|\\'", ""))
+            .append("** permission.");
+      } else {
+        sb.append("This api is **public**");
+      }
+      sb.append("<br /><br />");
+      if (nonNull(operation.getDescription())) {
+        sb.append(operation.getDescription());
+      }
+      operation.setDescription(sb.toString());
+      return operation;
+    };
+  }
+
+  @Bean
+  public OpenApiCustomiser additionalSchemas() {
+    return openApi -> {
+      var statusTypeSchema = ModelConverters.getInstance()
+          .resolveAsResolvedSchema(new AnnotatedType(StatusType.class)).schema.name("StatusType");
+
+      var throwableProblemSchema = ModelConverters.getInstance()
+          .resolveAsResolvedSchema(new AnnotatedType(ThrowableProblem.class)).schema.name("ThrowableProblem");
+
+      var schemas = openApi.getComponents().getSchemas();
+      schemas.put(statusTypeSchema.getName(), statusTypeSchema);
+      schemas.put(throwableProblemSchema.getName(), throwableProblemSchema);
+    };
   }
 
 }

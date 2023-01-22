@@ -24,7 +24,7 @@ import static java.util.Objects.nonNull;
 @Audited
 public class PiggyBank {
   @Id
-  @GeneratedValue
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "piggy_bank_id")
   @Setter(AccessLevel.NONE)
   private Long id;

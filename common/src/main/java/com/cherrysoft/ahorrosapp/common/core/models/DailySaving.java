@@ -23,7 +23,7 @@ import static java.util.Objects.nonNull;
 @NoArgsConstructor
 public class DailySaving {
   @Id
-  @GeneratedValue
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "daily_saving_id")
   private Long id;
 

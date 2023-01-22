@@ -14,13 +14,18 @@ import io.swagger.v3.oas.models.responses.ApiResponse;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springdoc.core.customizers.OpenApiCustomiser;
+import org.springdoc.core.customizers.OperationCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.zalando.problem.AbstractThrowableProblem;
 import org.zalando.problem.StatusType;
 import org.zalando.problem.ThrowableProblem;
 
+import java.util.Optional;
+
 import static com.cherrysoft.ahorrosapp.web.utils.ApiDocsConstants.*;
+import static java.util.Objects.nonNull;
 
 @Configuration
 public class SwaggerConfig {
@@ -89,6 +94,27 @@ public class SwaggerConfig {
   private Schema problemSchema() {
     return ModelConverters.getInstance()
         .resolveAsResolvedSchema(new AnnotatedType(AbstractThrowableProblem.class)).schema;
+  }
+
+  @Bean
+  public OperationCustomizer operationCustomizer() {
+    return (operation, handlerMethod) -> {
+      Optional<PreAuthorize> preAuthorizeAnnotation = Optional.ofNullable(handlerMethod.getMethodAnnotation(PreAuthorize.class));
+      StringBuilder sb = new StringBuilder();
+      if (preAuthorizeAnnotation.isPresent()) {
+        sb.append("This api requires **")
+            .append((preAuthorizeAnnotation.get()).value().replaceAll("hasRole|\\(|\\)|\\'", ""))
+            .append("** permission.");
+      } else {
+        sb.append("This api is **public**");
+      }
+      sb.append("<br /><br />");
+      if (nonNull(operation.getDescription())) {
+        sb.append(operation.getDescription());
+      }
+      operation.setDescription(sb.toString());
+      return operation;
+    };
   }
 
   @Bean

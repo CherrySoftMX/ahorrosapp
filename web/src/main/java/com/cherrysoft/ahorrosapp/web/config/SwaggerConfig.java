@@ -13,14 +13,18 @@ import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.responses.ApiResponse;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
+import org.springdoc.core.customizers.OpenApiCustomiser;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.zalando.problem.DefaultProblem;
+import org.zalando.problem.AbstractThrowableProblem;
+import org.zalando.problem.StatusType;
+import org.zalando.problem.ThrowableProblem;
 
 import static com.cherrysoft.ahorrosapp.web.utils.ApiDocsConstants.*;
 
 @Configuration
 public class SwaggerConfig {
+  private static final String APPLICATION_JSON_VALUE = org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
   @Bean
   public OpenAPI openAPI() {
@@ -60,29 +64,46 @@ public class SwaggerConfig {
   }
 
   private ApiResponse errorResponse(String description) {
-    Schema errorResponseSchema = ModelConverters.getInstance()
-        .resolveAsResolvedSchema(new AnnotatedType(DefaultProblem.class)).schema;
-
     return new ApiResponse().content(
             new Content()
-                .addMediaType("application/json", new MediaType().schema(errorResponseSchema)))
+                .addMediaType(APPLICATION_JSON_VALUE, new MediaType().schema(problemSchema())))
         .description(description);
   }
 
   private ApiResponse unauthorizedResponse() {
     return new ApiResponse().content(new Content()
-            .addMediaType("application/json", new MediaType()))
+            .addMediaType(APPLICATION_JSON_VALUE, new MediaType().schema(problemSchema())))
         .description("Authorization information is missing or invalid");
   }
 
   private ApiResponse forbiddenResponse() {
     return new ApiResponse().content(new Content()
-            .addMediaType("application/json", new MediaType()))
+            .addMediaType(APPLICATION_JSON_VALUE, new MediaType().schema(problemSchema())))
         .description("The user doesn't have permission to access this resource");
   }
 
   private ApiResponse internalServerErrorResponse() {
     return new ApiResponse().content(new Content()).description("Internal server error");
+  }
+
+  private Schema problemSchema() {
+    return ModelConverters.getInstance()
+        .resolveAsResolvedSchema(new AnnotatedType(AbstractThrowableProblem.class)).schema;
+  }
+
+  @Bean
+  public OpenApiCustomiser additionalSchemas() {
+    return openApi -> {
+      var statusTypeSchema = ModelConverters.getInstance()
+          .resolveAsResolvedSchema(new AnnotatedType(StatusType.class)).schema.name("StatusType");
+
+      var throwableProblemSchema = ModelConverters.getInstance()
+          .resolveAsResolvedSchema(new AnnotatedType(ThrowableProblem.class)).schema.name("ThrowableProblem");
+
+      var schemas = openApi.getComponents().getSchemas();
+      schemas.put(statusTypeSchema.getName(), statusTypeSchema);
+      schemas.put(throwableProblemSchema.getName(), throwableProblemSchema);
+    };
   }
 
 }

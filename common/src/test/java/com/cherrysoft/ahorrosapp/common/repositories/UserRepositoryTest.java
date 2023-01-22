@@ -3,14 +3,12 @@ package com.cherrysoft.ahorrosapp.common.repositories;
 import com.cherrysoft.ahorrosapp.common.config.RepositoryTestingConfig;
 import com.cherrysoft.ahorrosapp.common.core.models.User;
 import com.github.javafaker.Faker;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ContextConfiguration;
 
-import java.util.List;
 import java.util.Optional;
 
 import static com.cherrysoft.ahorrosapp.common.config.FakerConfig.FAKER_INSTANCE;
@@ -18,52 +16,66 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataJpaTest
-@ContextConfiguration(classes = {UserRepository.class})
-@Import({RepositoryTestingConfig.class})
+@ContextConfiguration(classes = UserRepository.class)
+@Import(RepositoryTestingConfig.class)
 class UserRepositoryTest {
   private final Faker faker = FAKER_INSTANCE;
   @Autowired private UserRepository userRepository;
 
   @BeforeEach
   void setup() {
-    userRepository.saveAll(
-        List.of(
-            new User(1L, "chito", faker.internet().password()),
-            new User(2L, "nicolas", faker.internet().password())
-        )
-    );
+    User user = User.builder()
+        .username("test-username")
+        .password(faker.internet().password())
+        .build();
+    userRepository.save(user);
   }
 
-  @Test
-  void givenAnExistentUsername_thenReturnsCorrespondingUser() {
-    String username = "chito";
-
-    Optional<User> shouldBePresent = userRepository.findByUsername(username);
-
-    assertTrue(shouldBePresent.isPresent());
+  @AfterEach
+  void deleteAll() {
+    userRepository.deleteAll();
   }
 
-  @Test
-  void givenANonExistentUsername_thenReturnsEmptyUser() {
-    String username = "hiking";
+  @Nested
+  @DisplayName("Find by username method")
+  class FindByUsername {
 
-    Optional<User> shouldBeEmpty = userRepository.findByUsername(username);
+    @Test
+    void shouldReturnUser_whenUsernameExists() {
+      Optional<User> shouldBePresent = userRepository.findByUsername("test-username");
 
-    assertTrue(shouldBeEmpty.isEmpty());
+      assertTrue(shouldBePresent.isPresent());
+    }
+
+    @Test
+    void shouldReturnEmptyOptional_whenUsernameNotFound() {
+      String username = "invalid-username";
+
+      Optional<User> shouldBeEmpty = userRepository.findByUsername(username);
+
+      assertTrue(shouldBeEmpty.isEmpty());
+    }
+
   }
 
-  @Test
-  void testExistsByUsername() {
-    String existentUsername = "nicolas";
-    String nonExistentUsername = "javier";
+  @Nested
+  @DisplayName("Exists by username method")
+  class ExistsByUsername {
 
-    boolean shouldBeTrue = userRepository.existsByUsername(existentUsername);
+    @Test
+    void shouldReturnTrue_whenUsernameExists() {
+      boolean shouldBeTrue = userRepository.existsByUsername("test-username");
 
-    assertTrue(shouldBeTrue);
+      assertTrue(shouldBeTrue);
+    }
 
-    boolean shouldBeFalse = userRepository.existsByUsername(nonExistentUsername);
+    @Test
+    void shouldReturnFalse_whenUsernameNoExists() {
+      boolean shouldBeFalse = userRepository.existsByUsername("invalid-username");
 
-    assertFalse(shouldBeFalse);
+      assertFalse(shouldBeFalse);
+    }
+
   }
 
 }

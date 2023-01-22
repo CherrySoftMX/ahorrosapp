@@ -2,10 +2,10 @@ package com.cherrysoft.ahorrosapp.web.mappers;
 
 import com.cherrysoft.ahorrosapp.common.core.models.PiggyBank;
 import com.cherrysoft.ahorrosapp.web.dtos.PiggyBankDTO;
+import org.mapstruct.Builder;
 import org.mapstruct.Mapper;
-import org.mapstruct.NullValueCheckStrategy;
 
-@Mapper(componentModel = "spring", nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
+@Mapper(componentModel = "spring", builder = @Builder(disableBuilder = true))
 public interface PiggyBankMapper {
 
   PiggyBank toPiggyBank(PiggyBankDTO pbDto);

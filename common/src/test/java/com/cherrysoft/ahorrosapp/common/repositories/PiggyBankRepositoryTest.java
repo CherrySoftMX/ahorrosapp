@@ -1,74 +1,141 @@
 package com.cherrysoft.ahorrosapp.common.repositories;
 
-import com.cherrysoft.ahorrosapp.common.core.models.PiggyBank;
 import com.cherrysoft.ahorrosapp.common.config.RepositoryTestingConfig;
+import com.cherrysoft.ahorrosapp.common.core.models.PiggyBank;
+import com.cherrysoft.ahorrosapp.common.core.models.SavingsDateRange;
 import com.cherrysoft.ahorrosapp.common.core.models.User;
-import com.cherrysoft.ahorrosapp.common.utils.TestUtils;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import com.github.javafaker.Faker;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ContextConfiguration;
 
-import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static com.cherrysoft.ahorrosapp.common.config.FakerConfig.FAKER_INSTANCE;
+import static com.cherrysoft.ahorrosapp.common.utils.DateUtils.today;
+import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @ContextConfiguration(classes = {PiggyBankRepository.class, UserRepository.class})
-@Import({RepositoryTestingConfig.class})
+@Import(RepositoryTestingConfig.class)
 class PiggyBankRepositoryTest {
-  @Autowired private PiggyBankRepository piggyBankRepository;
+  private final Faker faker = FAKER_INSTANCE;
   @Autowired private UserRepository userRepository;
+  @Autowired private PiggyBankRepository pbRepository;
 
   @BeforeEach
   void setUp() {
-    List<User> users = TestUtils.Users.newUsers();
-    userRepository.saveAll(users);
-    User owner = userRepository.findAll().get(0);
+    PiggyBank pb = PiggyBank.builder()
+        .name("test-piggy")
+        .savingsDateRange(new SavingsDateRange(today(), today().plusDays(7)))
+        .build();
 
-    PiggyBank piggyBank = TestUtils.PiggyBanks.newPiggyBank();
-    piggyBank.setOwner(owner);
-    piggyBankRepository.save(piggyBank);
+    User user = User.builder()
+        .username("test-username")
+        .password(faker.internet().password())
+        .build();
+
+    user.addPiggyBank(pb);
+    userRepository.saveAndFlush(user);
   }
 
-  @Test
-  void whenPiggyBankAndOwnerExist_thenPiggyBankExistsAndIsPresent() {
-    String piggyBankName = "piggy";
-    User owner = userRepository.findByUsername("javier").get();
-
-    boolean shouldBeTrue = piggyBankRepository.existsByNameAndOwner(piggyBankName, owner);
-    Optional<PiggyBank> shouldBePresent = piggyBankRepository.findByNameAndOwner(piggyBankName, owner);
-
-    assertTrue(shouldBeTrue);
-    assertTrue(shouldBePresent.isPresent());
+  @AfterEach
+  void deleteAll() {
+    pbRepository.deleteAll();
+    userRepository.deleteAll();
   }
 
-  @Test
-  void whenPiggyBankNameDoesNotExist_thenPiggyBankDoesNotExistsAndIsNotPresent() {
-    String piggyBankName = "my piggy";
-    User owner = userRepository.findByUsername("javier").get();
+  @Nested
+  @DisplayName("Find by owner's username method")
+  class FindByOwnerUsername {
 
-    boolean shouldBeFalse = piggyBankRepository.existsByNameAndOwner(piggyBankName, owner);
-    Optional<PiggyBank> shouldBeEmpty = piggyBankRepository.findByNameAndOwner(piggyBankName, owner);
+    @Test
+    void shouldReturnOnePiggyBank() {
+      Page<PiggyBank> pbs = pbRepository.findAllByOwnerUsername("test-username", Pageable.ofSize(10));
 
-    assertFalse(shouldBeFalse);
-    assertTrue(shouldBeEmpty.isEmpty());
+      assertEquals(1, pbs.getContent().size());
+    }
+
+    @Test
+    void shouldReturnOneTotalPage() {
+      Page<PiggyBank> pbs = pbRepository.findAllByOwnerUsername("test-username", Pageable.ofSize(10));
+
+      assertEquals(1, pbs.getTotalPages());
+    }
+
+    @Test
+    void shouldReturnZeroPiggyBanks_whenOwnerUsernameNotFound() {
+      Page<PiggyBank> pbs = pbRepository.findAllByOwnerUsername("invalid-username", Pageable.ofSize(10));
+
+      assertEquals(0, pbs.getContent().size());
+    }
+
   }
 
-  @Test
-  void whenOwnerDoesNotHavePiggyBank_thenPiggyBankDoesNotExistsAndIsNotPresent() {
-    String piggyBankName = "piggy";
-    User owner = userRepository.findByUsername("nicolas").get();
+  @Nested
+  @DisplayName("Find by piggy bank name and owner method")
+  class FindByNameAndOwner {
 
-    boolean shouldBeFalse = piggyBankRepository.existsByNameAndOwner(piggyBankName, owner);
-    Optional<PiggyBank> shouldBeEmpty = piggyBankRepository.findByNameAndOwner(piggyBankName, owner);
+    @Test
+    void shouldReturnPiggyBank() {
+      User owner = userRepository.findByUsername("test-username").orElseThrow();
+      Optional<PiggyBank> maybePb = pbRepository.findByNameAndOwner("test-piggy", owner);
 
-    assertFalse(shouldBeFalse);
-    assertTrue(shouldBeEmpty.isEmpty());
+      assertTrue(maybePb.isPresent());
+    }
+
+    @Test
+    void shouldReturnEmptyOptionalPiggyBank_whenOwnerDoesNotHaveAnyPiggyBanks() {
+      User anotherUser = User.builder()
+          .username("another-username")
+          .password(faker.internet().password())
+          .build();
+      anotherUser = userRepository.save(anotherUser);
+
+      Optional<PiggyBank> maybePb = pbRepository.findByNameAndOwner("test-piggy", anotherUser);
+
+      assertTrue(maybePb.isEmpty());
+    }
+
+  }
+
+  @Nested
+  @DisplayName("Exists by piggy bank name and owner")
+  class ExistsByNameAndOwner {
+
+    @Test
+    void shouldReturnTrue_whenPiggyBankExistsAndOwnerOwnsThePiggyBank() {
+      User owner = userRepository.findByUsername("test-username").orElseThrow();
+      boolean shouldBeTrue = pbRepository.existsByNameAndOwner("test-piggy", owner);
+
+      assertTrue(shouldBeTrue);
+    }
+
+    @Test
+    void shouldReturnFalse_whenOwnerDoesNotHaveAnyPiggyBank() {
+      User userWithoutPbs = User.builder()
+          .username("another-username")
+          .password(faker.internet().password())
+          .build();
+      userWithoutPbs = userRepository.save(userWithoutPbs);
+
+      boolean shouldBeFalse = pbRepository.existsByNameAndOwner("test-piggy", userWithoutPbs);
+
+      assertFalse(shouldBeFalse);
+    }
+
+    @Test
+    void shouldReturnFalse_whenPiggyBankDoesNotExists() {
+      User owner = userRepository.findByUsername("test-username").orElseThrow();
+      boolean shouldBeFalse = pbRepository.existsByNameAndOwner("invalid-piggy", owner);
+
+      assertFalse(shouldBeFalse);
+    }
+
   }
 
 }

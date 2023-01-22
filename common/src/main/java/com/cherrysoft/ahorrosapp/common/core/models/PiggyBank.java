@@ -32,10 +32,10 @@ public class PiggyBank {
   @Column
   private String name;
 
-  @Column(nullable = false)
+  @Column
   private BigDecimal initialAmount = BigDecimal.ZERO;
 
-  @Column(nullable = false)
+  @Column
   private BigDecimal borrowedAmount = BigDecimal.ZERO;
 
   @Embedded

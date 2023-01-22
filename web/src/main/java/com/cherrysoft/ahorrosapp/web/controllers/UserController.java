@@ -2,9 +2,9 @@ package com.cherrysoft.ahorrosapp.web.controllers;
 
 import com.cherrysoft.ahorrosapp.common.core.models.User;
 import com.cherrysoft.ahorrosapp.common.services.UserService;
-import com.cherrysoft.ahorrosapp.web.hateoas.assemblers.UserModelAssembler;
 import com.cherrysoft.ahorrosapp.web.dtos.UserDTO;
 import com.cherrysoft.ahorrosapp.web.dtos.validation.OnCreate;
+import com.cherrysoft.ahorrosapp.web.hateoas.assemblers.UserModelAssembler;
 import com.cherrysoft.ahorrosapp.web.mappers.UserMapper;
 import com.cherrysoft.ahorrosapp.web.security.SecurityUser;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -101,7 +102,7 @@ public class UserController {
       }),
       @ApiResponse(ref = NOT_FOUND_RESPONSE_REF, responseCode = "404")
   })
-  @DeleteMapping("/{username}")
+  @DeleteMapping(value = "/{username}", produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("#loggedUser.username == #username")
   public ResponseEntity<UserDTO> deleteUser(
       @AuthenticationPrincipal SecurityUser loggedUser,

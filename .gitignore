@@ -2,6 +2,7 @@
 access-refresh-token-keys/
 logs/
 **/.idea/
+**/.jpb/
 **/shelf/
 **/workspace.xml
 **/target/

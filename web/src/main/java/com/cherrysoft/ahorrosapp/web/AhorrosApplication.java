@@ -7,11 +7,11 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.hateoas.config.EnableHypermediaSupport;
 
-@SpringBootApplication(scanBasePackages = {"com.cherrysoft.ahorrosapp"})
+@SpringBootApplication(scanBasePackages = "com.cherrysoft.ahorrosapp")
 @EntityScan(basePackages = "com.cherrysoft.ahorrosapp")
 @EnableJpaRepositories(basePackages = "com.cherrysoft.ahorrosapp")
 @EnableAspectJAutoProxy(proxyTargetClass = true)
-@EnableHypermediaSupport(type = {EnableHypermediaSupport.HypermediaType.HAL})
+@EnableHypermediaSupport(type = EnableHypermediaSupport.HypermediaType.HAL)
 public class AhorrosApplication {
 
   public static void main(String[] args) {

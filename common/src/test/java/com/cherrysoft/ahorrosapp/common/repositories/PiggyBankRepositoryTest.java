@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 
 import java.util.Optional;
@@ -22,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @DataJpaTest
 @ContextConfiguration(classes = {PiggyBankRepository.class, UserRepository.class})
 @Import(RepositoryTestingConfig.class)
+@ActiveProfiles("test")
 class PiggyBankRepositoryTest {
   private final Faker faker = FAKER_INSTANCE;
   @Autowired private UserRepository userRepository;

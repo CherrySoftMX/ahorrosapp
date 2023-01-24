@@ -22,6 +22,7 @@
     <mysql-connector-java.version>8.0.30</mysql-connector-java.version>
     <hibernate.version>5.6.10.Final</hibernate.version>
     <poi.version>5.2.2</poi.version>
+    <flyway-maven-plugin.version>9.12.0</flyway-maven-plugin.version>
   </properties>
 
   <dependencies>
@@ -97,6 +98,47 @@
     </dependency>
   </dependencies>
 
+  <profiles>
+    <profile>
+      <id>schema-generation</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>com.devskiller.jpa2ddl</groupId>
+            <artifactId>jpa2ddl-maven-plugin</artifactId>
+            <version>0.10.0</version>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>generate</goal>
+                </goals>
+              </execution>
+            </executions>
+            <extensions>true</extensions> <!-- required to run automatically -->
+            <configuration>
+              <outputPath>
+                ${basedir}/src/main/resources/db/migration/V1__db_init.sql
+              </outputPath>
+              <packages>
+                <package>com.cherrysoft.ahorrosapp.common.core.models</package>
+              </packages>
+              <jpaProperties>
+                <property>
+                  <name>hibernate.dialect</name>
+                  <value>org.hibernate.dialect.MySQL8Dialect</value>
+                </property>
+              </jpaProperties>
+              <formatOutput>true</formatOutput>
+              <skipSequences>true</skipSequences>
+              <delimiter>;</delimiter>
+              <action>DROP_AND_CREATE</action>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
   <build>
     <plugins>
       <plugin>
@@ -111,30 +153,6 @@
           <locations>
             filesystem:src/main/resources/db/migration
           </locations>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>com.devskiller.jpa2ddl</groupId>
-        <artifactId>jpa2ddl-maven-plugin</artifactId>
-        <version>0.10.0</version>
-        <extensions>true</extensions> <!-- required to run automatically -->
-        <configuration>
-          <outputPath>
-            ${basedir}/src/main/resources/db/migration/V1__db_init.sql
-          </outputPath>
-          <packages>
-            <package>com.cherrysoft.ahorrosapp.common.core.models</package>
-          </packages>
-          <jpaProperties>
-            <property>
-              <name>hibernate.dialect</name>
-              <value>org.hibernate.dialect.MySQL8Dialect</value>
-            </property>
-          </jpaProperties>
-          <formatOutput>true</formatOutput>
-          <skipSequences>true</skipSequences>
-          <delimiter>;</delimiter>
-          <action>DROP_AND_CREATE</action>
         </configuration>
       </plugin>
     </plugins>

@@ -2,10 +2,10 @@ package com.cherrysoft.ahorrosapp.common.services;
 
 import com.cherrysoft.ahorrosapp.common.core.models.DailySaving;
 import com.cherrysoft.ahorrosapp.common.core.models.specs.DailySavingSpec;
-import com.cherrysoft.ahorrosapp.common.services.dailysaving.CreateDailySavingUseCase;
-import com.cherrysoft.ahorrosapp.common.services.dailysaving.DeleteDailySavingUseCase;
-import com.cherrysoft.ahorrosapp.common.services.dailysaving.GetDailySavingUseCase;
-import com.cherrysoft.ahorrosapp.common.services.dailysaving.PartialUpdateDailySavingUseCase;
+import com.cherrysoft.ahorrosapp.common.services.dailysaving.CreateDailySavingUC;
+import com.cherrysoft.ahorrosapp.common.services.dailysaving.DeleteDailySavingUC;
+import com.cherrysoft.ahorrosapp.common.services.dailysaving.GetDailySavingUC;
+import com.cherrysoft.ahorrosapp.common.services.dailysaving.UpdateDailySavingUC;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,35 +14,35 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class DailySavingService
-    implements GetDailySavingUseCase, CreateDailySavingUseCase, PartialUpdateDailySavingUseCase, DeleteDailySavingUseCase {
-  private final GetDailySavingUseCase getDailySavingUseCase;
-  private final CreateDailySavingUseCase createDailySavingUseCase;
-  private final PartialUpdateDailySavingUseCase partialUpdateDailySavingUseCase;
-  private final DeleteDailySavingUseCase deleteDailySavingUseCase;
+    implements GetDailySavingUC, CreateDailySavingUC, UpdateDailySavingUC, DeleteDailySavingUC {
+  private final GetDailySavingUC getDailySavingUC;
+  private final CreateDailySavingUC createDailySavingUC;
+  private final UpdateDailySavingUC updateDailySavingUC;
+  private final DeleteDailySavingUC deleteDailySavingUC;
 
   @Override
   public Optional<DailySaving> getDailySaving(DailySavingSpec dailySavingSpec) {
-    return getDailySavingUseCase.getDailySaving(dailySavingSpec);
+    return getDailySavingUC.getDailySaving(dailySavingSpec);
   }
 
   @Override
   public DailySaving getDailySavingOrElseThrow(DailySavingSpec dailySavingSpec) {
-    return getDailySavingUseCase.getDailySavingOrElseThrow(dailySavingSpec);
+    return getDailySavingUC.getDailySavingOrElseThrow(dailySavingSpec);
   }
 
   @Override
   public DailySaving createDailySaving(DailySavingSpec dailySavingSpec) {
-    return createDailySavingUseCase.createDailySaving(dailySavingSpec);
+    return createDailySavingUC.createDailySaving(dailySavingSpec);
   }
 
   @Override
   public DailySaving updateDailySaving(DailySavingSpec dailySavingSpec) {
-    return partialUpdateDailySavingUseCase.updateDailySaving(dailySavingSpec);
+    return updateDailySavingUC.updateDailySaving(dailySavingSpec);
   }
 
   @Override
   public DailySaving deleteDailySaving(DailySavingSpec dailySavingSpec) {
-    return deleteDailySavingUseCase.deleteDailySaving(dailySavingSpec);
+    return deleteDailySavingUC.deleteDailySaving(dailySavingSpec);
   }
 
 }

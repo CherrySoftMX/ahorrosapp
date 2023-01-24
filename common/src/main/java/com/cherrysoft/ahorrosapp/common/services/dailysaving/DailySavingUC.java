@@ -14,20 +14,19 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @RequiredArgsConstructor
-public abstract class DailySavingUseCase {
+public abstract class DailySavingUC {
   protected final PiggyBankService pbService;
   protected final DailySavingRepository dailySavingRepository;
   protected DailySavingSpec dailySavingSpec;
 
-  protected void ensureDailySavingDateIsWithinPbSavingsInterval() {
-    PiggyBank correspondingPb = getCorrespondingPiggyBank();
-    LocalDate savingDate = dailySavingSpec.getSavingDate();
-    if (!correspondingPb.containedWithinSavingsInterval(savingDate)) {
-      throw new SavingOutOfDateRangeException(savingDate, correspondingPb.getSavingsDateRange());
+  protected void ensureDailySavingDateIsWithinPbSavingsInterval(LocalDate date) {
+    PiggyBank correspondingPb = getPiggyBank();
+    if (!correspondingPb.containedWithinSavingsInterval(date)) {
+      throw new SavingOutOfDateRangeException(date, correspondingPb.getSavingsDateRange());
     }
   }
 
-  protected final PiggyBank getCorrespondingPiggyBank() {
+  protected final PiggyBank getPiggyBank() {
     return pbService.getPiggyBankByName(dailySavingSpec.getOwnerUsername(), dailySavingSpec.getPbName());
   }
 

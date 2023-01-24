@@ -76,7 +76,7 @@ public class DailySavingController {
       @RequestBody @Valid DailySavingDTO payload
   ) {
     String ownerUsername = loggedUser.getUsername();
-    DailySaving dailySaving = dailySavingMapper.toDailySaving(payload).setDate(date);
+    DailySaving dailySaving = dailySavingMapper.toDailySaving(payload).withDateOrToday(date);
     var spec = new DailySavingSpec(ownerUsername, pbName, dailySaving);
     DailySaving result = dailySavingService.createDailySaving(spec);
     return ResponseEntity.ok(dailySavingModelAssembler.toModel(result));
@@ -97,7 +97,7 @@ public class DailySavingController {
       @RequestBody @Valid DailySavingDTO payload
   ) {
     String ownerUsername = loggedUser.getUsername();
-    DailySaving updatedDailySaving = dailySavingMapper.toDailySaving(payload).setDate(date);
+    DailySaving updatedDailySaving = dailySavingMapper.toDailySaving(payload).withDateOrToday(date);
     var spec = new DailySavingSpec(ownerUsername, pbName, updatedDailySaving);
     DailySaving result = dailySavingService.updateDailySaving(spec);
     return dailySavingModelAssembler.toModel(result);

@@ -5,7 +5,7 @@ import com.cherrysoft.ahorrosapp.common.core.models.specs.DailySavingSpec;
 
 import java.util.Optional;
 
-public interface GetDailySavingUseCase {
+public interface GetDailySavingUC {
 
   Optional<DailySaving> getDailySaving(DailySavingSpec dailySavingSpec);
 

@@ -31,7 +31,7 @@ public class CreateDailySavingUCImpl extends DailySavingUC implements CreateDail
   @Override
   public DailySaving createDailySaving(DailySavingSpec dailySavingSpec) {
     setDailySavingSpec(dailySavingSpec);
-    ensureDailySavingDateIsWithinPbSavingsInterval(dailySavingSpec.getSavingDate());
+    ensureDailySavingDateIsWithinPbSavingsInterval();
     return createDailySaving();
   }
 

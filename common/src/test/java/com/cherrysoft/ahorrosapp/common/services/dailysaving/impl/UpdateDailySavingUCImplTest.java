@@ -23,6 +23,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class UpdateDailySavingUCImplTest {
@@ -68,6 +70,7 @@ class UpdateDailySavingUCImplTest {
         .date(today())
         .amount(BigDecimal.TEN)
         .build();
+    given(pbService.getPiggyBankByName("test-username", "test-piggy")).willReturn(pb);
     given(dailySavingRepository.findByPiggyBankAndDate(any(), any())).willReturn(Optional.empty());
 
     assertThrows(SavingNotFoundException.class, () -> {
@@ -80,16 +83,12 @@ class UpdateDailySavingUCImplTest {
     DailySaving updatedDailySaving = DailySaving.builder()
         .date(yesterday())
         .build();
-    DailySaving savedDailySaving = DailySaving.builder()
-        .date(today())
-        .build();
     given(pbService.getPiggyBankByName("test-username", "test-piggy")).willReturn(pb);
-    given(dailySavingRepository.findByPiggyBankAndDate(any(), any())).willReturn(Optional.of(savedDailySaving));
-    given(dailySavingRepository.save(savedDailySaving)).willAnswer(invocation -> invocation.getArgument(0));
 
     assertThrows(SavingOutOfDateRangeException.class, () -> {
       updateDailySavingUC.updateDailySaving(new DailySavingSpec("test-username", "test-piggy", updatedDailySaving));
     });
+    verify(dailySavingRepository, never()).save(any());
   }
 
   @Test
@@ -97,16 +96,12 @@ class UpdateDailySavingUCImplTest {
     DailySaving updatedDailySaving = DailySaving.builder()
         .date(aWeekInTheFuture().plusDays(1))
         .build();
-    DailySaving savedDailySaving = DailySaving.builder()
-        .date(today())
-        .build();
     given(pbService.getPiggyBankByName("test-username", "test-piggy")).willReturn(pb);
-    given(dailySavingRepository.findByPiggyBankAndDate(any(), any())).willReturn(Optional.of(savedDailySaving));
-    given(dailySavingRepository.save(savedDailySaving)).willAnswer(invocation -> invocation.getArgument(0));
 
     assertThrows(SavingOutOfDateRangeException.class, () -> {
       updateDailySavingUC.updateDailySaving(new DailySavingSpec("test-username", "test-piggy", updatedDailySaving));
     });
+    verify(dailySavingRepository, never()).save(any());
   }
 
 }

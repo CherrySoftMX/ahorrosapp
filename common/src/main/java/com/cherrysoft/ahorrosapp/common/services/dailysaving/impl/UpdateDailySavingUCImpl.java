@@ -27,9 +27,8 @@ public class UpdateDailySavingUCImpl extends DailySavingUC implements UpdateDail
   @Override
   public DailySaving updateDailySaving(DailySavingSpec dailySavingSpec) {
     setDailySavingSpec(dailySavingSpec);
-    DailySaving updatedDailySaving = partialUpdateDailySaving();
-    ensureDailySavingDateIsWithinPbSavingsInterval(updatedDailySaving.getDate());
-    return updatedDailySaving;
+    ensureDailySavingDateIsWithinPbSavingsInterval();
+    return partialUpdateDailySaving();
   }
 
   private DailySaving partialUpdateDailySaving() {

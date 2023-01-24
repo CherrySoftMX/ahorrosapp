@@ -3,8 +3,8 @@ package com.cherrysoft.ahorrosapp.common.services.dailysaving;
 import com.cherrysoft.ahorrosapp.common.core.models.DailySaving;
 import com.cherrysoft.ahorrosapp.common.core.models.specs.DailySavingSpec;
 
-public interface CreateDailySavingUseCase {
+public interface UpdateDailySavingUC {
 
-  DailySaving createDailySaving(DailySavingSpec dailySavingSpec);
+  DailySaving updateDailySaving(DailySavingSpec dailySavingSpec);
 
 }

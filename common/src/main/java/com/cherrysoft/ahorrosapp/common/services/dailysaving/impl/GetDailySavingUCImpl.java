@@ -1,13 +1,13 @@
-package com.cherrysoft.ahorrosapp.common.services.dailysaving.imp;
+package com.cherrysoft.ahorrosapp.common.services.dailysaving.impl;
 
+import com.cherrysoft.ahorrosapp.common.core.models.DailySaving;
 import com.cherrysoft.ahorrosapp.common.core.models.PiggyBank;
 import com.cherrysoft.ahorrosapp.common.core.models.specs.DailySavingSpec;
 import com.cherrysoft.ahorrosapp.common.repositories.DailySavingRepository;
 import com.cherrysoft.ahorrosapp.common.services.PiggyBankService;
-import com.cherrysoft.ahorrosapp.common.services.dailysaving.DailySavingUseCase;
-import com.cherrysoft.ahorrosapp.common.services.dailysaving.GetDailySavingUseCase;
+import com.cherrysoft.ahorrosapp.common.services.dailysaving.DailySavingUC;
+import com.cherrysoft.ahorrosapp.common.services.dailysaving.GetDailySavingUC;
 import com.cherrysoft.ahorrosapp.common.services.exceptions.saving.SavingNotFoundException;
-import com.cherrysoft.ahorrosapp.common.core.models.DailySaving;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
@@ -15,9 +15,9 @@ import java.util.Optional;
 
 @Primary
 @Component
-public class GetDailySavingUseCaseImp extends DailySavingUseCase implements GetDailySavingUseCase {
+public class GetDailySavingUCImpl extends DailySavingUC implements GetDailySavingUC {
 
-  public GetDailySavingUseCaseImp(
+  public GetDailySavingUCImpl(
       PiggyBankService pbService,
       DailySavingRepository dailySavingRepository
   ) {

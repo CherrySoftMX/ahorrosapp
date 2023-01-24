@@ -1,27 +1,28 @@
-package com.cherrysoft.ahorrosapp.common.services.dailysaving.imp;
+package com.cherrysoft.ahorrosapp.common.services.dailysaving.impl;
 
 import com.cherrysoft.ahorrosapp.common.core.models.DailySaving;
+import com.cherrysoft.ahorrosapp.common.core.models.PiggyBank;
 import com.cherrysoft.ahorrosapp.common.core.models.specs.DailySavingSpec;
 import com.cherrysoft.ahorrosapp.common.repositories.DailySavingRepository;
 import com.cherrysoft.ahorrosapp.common.services.PiggyBankService;
-import com.cherrysoft.ahorrosapp.common.services.dailysaving.DailySavingUseCase;
-import com.cherrysoft.ahorrosapp.common.services.dailysaving.DeleteDailySavingUseCase;
-import com.cherrysoft.ahorrosapp.common.services.dailysaving.GetDailySavingUseCase;
+import com.cherrysoft.ahorrosapp.common.services.dailysaving.DailySavingUC;
+import com.cherrysoft.ahorrosapp.common.services.dailysaving.DeleteDailySavingUC;
+import com.cherrysoft.ahorrosapp.common.services.dailysaving.GetDailySavingUC;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 @Primary
 @Component
-public class DeleteDailySavingUseCaseImp extends DailySavingUseCase implements DeleteDailySavingUseCase {
-  private final GetDailySavingUseCase getDailySavingUseCase;
+public class DeleteDailySavingUCImpl extends DailySavingUC implements DeleteDailySavingUC {
+  private final GetDailySavingUC getDailySavingUC;
 
-  public DeleteDailySavingUseCaseImp(
+  public DeleteDailySavingUCImpl(
       PiggyBankService pbService,
       DailySavingRepository dailySavingRepository,
-      GetDailySavingUseCase getDailySavingUseCase
+      GetDailySavingUC getDailySavingUC
   ) {
     super(pbService, dailySavingRepository);
-    this.getDailySavingUseCase = getDailySavingUseCase;
+    this.getDailySavingUC = getDailySavingUC;
   }
 
   @Override

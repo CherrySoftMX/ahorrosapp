@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @RequiredArgsConstructor
-public abstract class DailySavingUseCase {
+public abstract class DailySavingUC {
   protected final PiggyBankService pbService;
   protected final DailySavingRepository dailySavingRepository;
   protected DailySavingSpec dailySavingSpec;

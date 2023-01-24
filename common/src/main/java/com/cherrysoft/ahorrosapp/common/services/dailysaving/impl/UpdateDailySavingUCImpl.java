@@ -1,28 +1,27 @@
-package com.cherrysoft.ahorrosapp.common.services.dailysaving.imp;
+package com.cherrysoft.ahorrosapp.common.services.dailysaving.impl;
 
 import com.cherrysoft.ahorrosapp.common.core.models.DailySaving;
 import com.cherrysoft.ahorrosapp.common.core.models.specs.DailySavingSpec;
 import com.cherrysoft.ahorrosapp.common.repositories.DailySavingRepository;
 import com.cherrysoft.ahorrosapp.common.services.PiggyBankService;
-import com.cherrysoft.ahorrosapp.common.services.dailysaving.DailySavingUseCase;
-import com.cherrysoft.ahorrosapp.common.services.dailysaving.GetDailySavingUseCase;
-import com.cherrysoft.ahorrosapp.common.services.dailysaving.PartialUpdateDailySavingUseCase;
-import com.cherrysoft.ahorrosapp.common.utils.BeanUtils;
+import com.cherrysoft.ahorrosapp.common.services.dailysaving.DailySavingUC;
+import com.cherrysoft.ahorrosapp.common.services.dailysaving.GetDailySavingUC;
+import com.cherrysoft.ahorrosapp.common.services.dailysaving.UpdateDailySavingUC;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 @Primary
 @Component
-public class PartialUpdateDailySavingUseCaseImp extends DailySavingUseCase implements PartialUpdateDailySavingUseCase {
-  private final GetDailySavingUseCase getDailySavingUseCase;
+public class UpdateDailySavingUCImpl extends DailySavingUC implements UpdateDailySavingUC {
+  private final GetDailySavingUC getDailySavingUC;
 
-  public PartialUpdateDailySavingUseCaseImp(
+  public UpdateDailySavingUCImpl(
       PiggyBankService pbService,
       DailySavingRepository dailySavingRepository,
-      GetDailySavingUseCase getDailySavingUseCase
+      GetDailySavingUC getDailySavingUC
   ) {
     super(pbService, dailySavingRepository);
-    this.getDailySavingUseCase = getDailySavingUseCase;
+    this.getDailySavingUC = getDailySavingUC;
   }
 
   @Override
@@ -33,7 +32,7 @@ public class PartialUpdateDailySavingUseCaseImp extends DailySavingUseCase imple
   }
 
   private DailySaving partialUpdateDailySaving() {
-    DailySaving savedDailySaving = getDailySavingUseCase.getDailySavingOrElseThrow(getDailySavingSpec());
+    DailySaving savedDailySaving = getDailySavingUC.getDailySavingOrElseThrow(getDailySavingSpec());
     DailySaving payload = getDailySavingSpec().getDailySaving();
     BeanUtils.copyProperties(payload, savedDailySaving);
     return dailySavingRepository.save(savedDailySaving);

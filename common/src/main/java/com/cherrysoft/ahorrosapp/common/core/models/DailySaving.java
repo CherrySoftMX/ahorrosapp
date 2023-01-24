@@ -1,6 +1,5 @@
 package com.cherrysoft.ahorrosapp.common.core.models;
 
-import com.cherrysoft.ahorrosapp.common.utils.DateUtils;
 import lombok.*;
 import org.hibernate.Hibernate;
 
@@ -10,6 +9,7 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.Objects;
 
+import static com.cherrysoft.ahorrosapp.common.utils.DateUtils.today;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
@@ -55,7 +55,7 @@ public class DailySaving {
 
   public DailySaving withDateOrToday(LocalDate date) {
     if (isNull(date)) {
-      this.date = DateUtils.today();
+      this.date = today();
     } else {
       this.date = date;
     }
@@ -78,6 +78,13 @@ public class DailySaving {
     if (nonNull(description)) {
       this.description = description;
     }
+  }
+
+  public LocalDate getDate() {
+    if (isNull(date)) {
+      date = today();
+    }
+    return date;
   }
 
   @Override

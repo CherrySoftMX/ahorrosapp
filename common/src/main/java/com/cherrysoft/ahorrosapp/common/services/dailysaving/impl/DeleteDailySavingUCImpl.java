@@ -27,7 +27,10 @@ public class DeleteDailySavingUCImpl extends DailySavingUC implements DeleteDail
 
   @Override
   public DailySaving deleteDailySaving(DailySavingSpec dailySavingSpec) {
-    DailySaving dailySaving = getDailySavingUseCase.getDailySavingOrElseThrow(dailySavingSpec);
+    setDailySavingSpec(dailySavingSpec);
+    DailySaving dailySaving = getDailySavingUC.getDailySavingOrElseThrow(dailySavingSpec);
+    PiggyBank pb = getPiggyBank();
+    pb.removeDailySaving(dailySaving);
     dailySavingRepository.delete(dailySaving);
     return dailySaving;
   }

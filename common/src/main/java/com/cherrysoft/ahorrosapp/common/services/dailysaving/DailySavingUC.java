@@ -19,10 +19,11 @@ public abstract class DailySavingUC {
   protected final DailySavingRepository dailySavingRepository;
   protected DailySavingSpec dailySavingSpec;
 
-  protected void ensureDailySavingDateIsWithinPbSavingsInterval(LocalDate date) {
-    PiggyBank correspondingPb = getPiggyBank();
-    if (!correspondingPb.containedWithinSavingsInterval(date)) {
-      throw new SavingOutOfDateRangeException(date, correspondingPb.getSavingsDateRange());
+  protected void ensureDailySavingDateIsWithinPbSavingsInterval() {
+    PiggyBank pb = getPiggyBank();
+    LocalDate dailySavingDate = dailySavingSpec.getSavingDate();
+    if (!pb.containedWithinSavingsInterval(dailySavingDate)) {
+      throw new SavingOutOfDateRangeException(dailySavingDate, pb.getSavingsDateRange());
     }
   }
 

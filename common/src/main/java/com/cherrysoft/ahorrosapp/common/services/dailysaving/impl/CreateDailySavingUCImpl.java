@@ -1,15 +1,14 @@
 package com.cherrysoft.ahorrosapp.common.services.dailysaving.impl;
 
+import com.cherrysoft.ahorrosapp.common.core.models.DailySaving;
 import com.cherrysoft.ahorrosapp.common.core.models.PiggyBank;
+import com.cherrysoft.ahorrosapp.common.core.models.specs.DailySavingSpec;
 import com.cherrysoft.ahorrosapp.common.repositories.DailySavingRepository;
 import com.cherrysoft.ahorrosapp.common.services.PiggyBankService;
 import com.cherrysoft.ahorrosapp.common.services.dailysaving.CreateDailySavingUC;
 import com.cherrysoft.ahorrosapp.common.services.dailysaving.DailySavingUC;
 import com.cherrysoft.ahorrosapp.common.services.dailysaving.GetDailySavingUC;
 import com.cherrysoft.ahorrosapp.common.utils.BeanUtils;
-import com.cherrysoft.ahorrosapp.common.core.models.DailySaving;
-import com.cherrysoft.ahorrosapp.common.core.models.specs.DailySavingSpec;
-import com.cherrysoft.ahorrosapp.common.services.dailysaving.GetDailySavingUseCase;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
@@ -32,7 +31,7 @@ public class CreateDailySavingUCImpl extends DailySavingUC implements CreateDail
   @Override
   public DailySaving createDailySaving(DailySavingSpec dailySavingSpec) {
     setDailySavingSpec(dailySavingSpec);
-    ensureDailySavingDateIsWithinPbSavingsInterval();
+    ensureDailySavingDateIsWithinPbSavingsInterval(dailySavingSpec.getSavingDate());
     return createDailySaving();
   }
 
@@ -50,7 +49,7 @@ public class CreateDailySavingUCImpl extends DailySavingUC implements CreateDail
   }
 
   private DailySaving addDailySavingToPiggyBank() {
-    PiggyBank pb = getCorrespondingPiggyBank();
+    PiggyBank pb = getPiggyBank();
     DailySaving payload = getDailySavingSpec().getDailySaving();
     pb.addDailySaving(payload);
     return dailySavingRepository.save(payload);

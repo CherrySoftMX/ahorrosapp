@@ -1,10 +1,7 @@
 package com.cherrysoft.ahorrosapp.common.core.models;
 
 import com.cherrysoft.ahorrosapp.common.utils.DateUtils;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
@@ -13,14 +10,17 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.Objects;
 
+import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 @Entity
 @Table(name = "daily_savings")
+@Builder
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
+@AllArgsConstructor
 public class DailySaving {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,7 +28,7 @@ public class DailySaving {
   private Long id;
 
   @Column
-  private LocalDate date = DateUtils.today();
+  private LocalDate date;
 
   @Column
   private BigDecimal amount;
@@ -53,6 +53,33 @@ public class DailySaving {
     return YearMonth.from(getDate());
   }
 
+  public DailySaving withDateOrToday(LocalDate date) {
+    if (isNull(date)) {
+      this.date = DateUtils.today();
+    } else {
+      this.date = date;
+    }
+    return this;
+  }
+
+  public void setDate(LocalDate date) {
+    if (nonNull(date)) {
+      this.date = date;
+    }
+  }
+
+  public void setAmount(BigDecimal amount) {
+    if (nonNull(amount)) {
+      this.amount = amount;
+    }
+  }
+
+  public void setDescription(String description) {
+    if (nonNull(description)) {
+      this.description = description;
+    }
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -68,13 +95,6 @@ public class DailySaving {
   @Override
   public int hashCode() {
     return getClass().hashCode();
-  }
-
-  public DailySaving setDate(LocalDate date) {
-    if (nonNull(date)) {
-      this.date = date;
-    }
-    return this;
   }
 
 }

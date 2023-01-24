@@ -27,7 +27,7 @@ public class GetDailySavingUCImpl extends DailySavingUC implements GetDailySavin
   @Override
   public Optional<DailySaving> getDailySaving(DailySavingSpec dailySavingSpec) {
     setDailySavingSpec(dailySavingSpec);
-    PiggyBank pb = getCorrespondingPiggyBank();
+    PiggyBank pb = getPiggyBank();
     return dailySavingRepository.findByPiggyBankAndDate(pb, dailySavingSpec.getSavingDate());
   }
 

@@ -9,9 +9,11 @@ import org.hibernate.envers.NotAudited;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 @Entity
@@ -66,8 +68,19 @@ public class PiggyBank {
   private List<DailySaving> dailySavings;
 
   public void addDailySaving(DailySaving dailySaving) {
+    if (isNull(dailySavings)) {
+      dailySavings = new ArrayList<>();
+    }
     dailySaving.setPiggyBank(this);
     dailySavings.add(dailySaving);
+  }
+
+  public void removeDailySaving(DailySaving dailySaving) {
+    if (isNull(dailySavings)) {
+      dailySavings = new ArrayList<>();
+    }
+    dailySaving.setPiggyBank(null);
+    dailySavings.remove(dailySaving);
   }
 
   public PiggyBankSummary getPiggyBankSummary() {

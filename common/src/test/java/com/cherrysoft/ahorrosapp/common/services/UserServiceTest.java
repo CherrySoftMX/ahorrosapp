@@ -42,7 +42,7 @@ class UserServiceTest {
   class GetUser {
 
     @Test
-    void shouldThrowAnException_whenUserNotFound() {
+    void shouldThrowException_whenUserNotFound() {
       given(userRepository.findByUsername(anyString())).willReturn(Optional.empty());
 
       assertThrows(UserNotFoundException.class, () -> {
@@ -71,7 +71,7 @@ class UserServiceTest {
     }
 
     @Test
-    void shouldThrowAnException_whenUsernameAlreadyTaken() {
+    void shouldThrowException_whenUsernameAlreadyTaken() {
       User providedUser = User.builder()
           .username(faker.name().username())
           .password(faker.internet().password())
@@ -138,7 +138,7 @@ class UserServiceTest {
     }
 
     @Test
-    void shouldThrowAnException_whenUserToDeleteNotFound() {
+    void shouldThrowException_whenUserToDeleteNotFound() {
       given(userRepository.findByUsername(anyString())).willReturn(Optional.empty());
 
       assertThrows(UserNotFoundException.class, () -> {

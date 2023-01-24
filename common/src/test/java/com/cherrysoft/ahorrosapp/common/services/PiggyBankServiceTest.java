@@ -164,7 +164,7 @@ class PiggyBankServiceTest {
     }
 
     @Test
-    void shouldThrowException_whenUpdatedStartDateIfAfterEndDate() {
+    void shouldThrowException_whenUpdatedStartDateIsAfterEndDate() {
       PiggyBank providedPb = PiggyBank.builder()
           .savingsDateRange(new SavingsDateRange(aWeekInTheFuture(), null))
           .build();

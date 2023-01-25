@@ -67,6 +67,10 @@ public class PiggyBank {
   @ToString.Exclude
   private List<DailySaving> dailySavings;
 
+  public void addDailySavings(List<DailySaving> dailySavings) {
+    dailySavings.forEach(this::addDailySaving);
+  }
+
   public void addDailySaving(DailySaving dailySaving) {
     if (isNull(dailySavings)) {
       dailySavings = new ArrayList<>();

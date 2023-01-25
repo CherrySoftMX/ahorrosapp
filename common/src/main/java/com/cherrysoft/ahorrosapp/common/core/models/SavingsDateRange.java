@@ -1,5 +1,6 @@
 package com.cherrysoft.ahorrosapp.common.core.models;
 
+import com.cherrysoft.ahorrosapp.common.core.utils.MonthParser;
 import com.cherrysoft.ahorrosapp.common.services.exceptions.piggybank.InvalidSavingsIntervalException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,6 +27,11 @@ public class SavingsDateRange {
 
   @Column
   private LocalDate endSavings;
+
+  public static SavingsDateRange forMonth(String month) {
+    MonthParser monthParser = new MonthParser(month);
+    return new SavingsDateRange(monthParser.startOfMonth(), monthParser.endOfMonth());
+  }
 
   public boolean containedWithinSavingsRange(LocalDate date) {
     if (date.isBefore(startSavings)) {

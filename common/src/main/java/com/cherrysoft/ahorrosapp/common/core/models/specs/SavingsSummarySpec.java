@@ -1,5 +1,6 @@
 package com.cherrysoft.ahorrosapp.common.core.models.specs;
 
+import com.cherrysoft.ahorrosapp.common.core.models.specs.piggybank.GetPiggyBankSpec;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
@@ -27,6 +28,10 @@ public class SavingsSummarySpec {
 
   public String getEndMonth() {
     return summaryOptions.get("end");
+  }
+
+  public GetPiggyBankSpec asGetPiggyBankSpec() {
+    return new GetPiggyBankSpec(ownerUsername, pbName);
   }
 
 }

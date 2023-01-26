@@ -1,6 +1,5 @@
-package com.cherrysoft.ahorrosapp.common.core.fetchers;
+package com.cherrysoft.ahorrosapp.common.core.interval;
 
-import com.cherrysoft.ahorrosapp.common.core.interval.MonthInterval;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;

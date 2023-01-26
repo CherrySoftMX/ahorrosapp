@@ -14,7 +14,7 @@ public class IntervalSavingsGapFiller {
   private final LocalDate startDay;
   private final LocalDate endDay;
 
-  public List<DailySaving> fillGaps() {
+  public List<DailySaving> fillDateGaps() {
     LocalDate currentDay = startDay;
     List<DailySaving> filledGaps = new ArrayList<>();
     while (!currentDay.isAfter(endDay)) {

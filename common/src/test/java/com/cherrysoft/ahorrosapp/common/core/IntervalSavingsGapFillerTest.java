@@ -25,7 +25,7 @@ class IntervalSavingsGapFillerTest {
     monthParser.setMMYYYYString("07-2022");
     gapFiller = new IntervalSavingsGapFiller(List.of(), monthParser.startOfMonth(), monthParser.endOfMonth());
 
-    var result = gapFiller.fillGaps();
+    var result = gapFiller.fillDateGaps();
 
     assertEquals(31, countEmptySavings(result));
   }
@@ -39,7 +39,7 @@ class IntervalSavingsGapFillerTest {
     );
     gapFiller = new IntervalSavingsGapFiller(savings, monthParser.startOfMonth(), monthParser.endOfMonth());
 
-    var result = gapFiller.fillGaps();
+    var result = gapFiller.fillDateGaps();
 
     assertEquals(29, countEmptySavings(result));
   }
@@ -50,7 +50,7 @@ class IntervalSavingsGapFillerTest {
     LocalDate endDay = monthParser.setMMYYYYString("09-2022").endOfMonth();
     gapFiller = new IntervalSavingsGapFiller(List.of(), startDay, endDay);
 
-    var result = gapFiller.fillGaps();
+    var result = gapFiller.fillDateGaps();
 
     assertEquals(31 + 31 + 30, countEmptySavings(result));
   }

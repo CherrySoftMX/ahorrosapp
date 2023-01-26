@@ -48,7 +48,7 @@ public class SavingsSummaryService {
   private ExcelReportResult generateExcelReport(GetPiggyBankSpec getPiggyBankSpec, DatesInterval datesInterval) {
     List<DailySaving> dailySavings = getSavingsForInterval(getPiggyBankSpec, datesInterval);
     var gapFiller = new IntervalSavingsGapFiller(dailySavings, datesInterval.startDay(), datesInterval.endDay());
-    var monthlySavingsCollector = new MonthlySavingsCollector(gapFiller.fillGaps());
+    var monthlySavingsCollector = new MonthlySavingsCollector(gapFiller.fillDateGaps());
     return new ExcelReportGenerator(monthlySavingsCollector.groupByMonth()).generateReport();
   }
 

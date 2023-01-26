@@ -20,7 +20,7 @@ class MonthlySavingsCollectorTest {
     List<DailySaving> savings = TestUtils.Savings.generateSavingsForMonth("07-2022", 100);
     collector = new MonthlySavingsCollector(savings);
 
-    var result = collector.collect();
+    var result = collector.groupByMonth();
 
     assertEquals(1, result.size());
     assertSavingsGroup(result.get(0), "07-2022", 31);
@@ -32,7 +32,7 @@ class MonthlySavingsCollectorTest {
     savings.addAll(TestUtils.Savings.generateSavingsForMonth("08-2022", 100));
     collector = new MonthlySavingsCollector(savings);
 
-    var result = collector.collect();
+    var result = collector.groupByMonth();
 
     assertEquals(2, result.size());
     assertSavingsGroup(result.get(0), "07-2022", 31);
@@ -47,7 +47,7 @@ class MonthlySavingsCollectorTest {
     savings.addAll(TestUtils.Savings.generateSavingsForMonth("07-2022", 100));
     collector = new MonthlySavingsCollector(savings);
 
-    var result = collector.collect();
+    var result = collector.groupByMonth();
 
     // July
     assertSavingsGroup(result.get(0), "07-2022", 31);

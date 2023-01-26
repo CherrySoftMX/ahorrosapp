@@ -4,6 +4,6 @@ import java.util.List;
 
 public interface SavingsCollector {
 
-  List<SavingsGroup> collect();
+  List<SavingsGroup> groupByMonth();
 
 }

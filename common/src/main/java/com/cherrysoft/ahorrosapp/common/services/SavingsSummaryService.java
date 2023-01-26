@@ -4,45 +4,56 @@ import com.cherrysoft.ahorrosapp.common.core.IntervalSavingsGapFiller;
 import com.cherrysoft.ahorrosapp.common.core.IntervalSavingsSummary;
 import com.cherrysoft.ahorrosapp.common.core.PiggyBankSummary;
 import com.cherrysoft.ahorrosapp.common.core.collectors.MonthlySavingsCollector;
-import com.cherrysoft.ahorrosapp.common.core.fetchers.SavingsFetcherStrategy;
-import com.cherrysoft.ahorrosapp.common.core.fetchers.factories.SavingsFetcherStrategyFactory;
+import com.cherrysoft.ahorrosapp.common.core.interval.DatesInterval;
+import com.cherrysoft.ahorrosapp.common.core.interval.MonthInterval;
+import com.cherrysoft.ahorrosapp.common.core.interval.MonthsInterval;
+import com.cherrysoft.ahorrosapp.common.core.models.DailySaving;
 import com.cherrysoft.ahorrosapp.common.core.models.ExcelReportResult;
 import com.cherrysoft.ahorrosapp.common.core.models.PiggyBank;
 import com.cherrysoft.ahorrosapp.common.core.models.specs.SavingsSummarySpec;
+import com.cherrysoft.ahorrosapp.common.core.models.specs.piggybank.GetPiggyBankSpec;
 import com.cherrysoft.ahorrosapp.common.core.reports.excel.ExcelReportGenerator;
+import com.cherrysoft.ahorrosapp.common.services.dailysaving.GetDailySavingUC;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class SavingsSummaryService {
-  private final SavingsFetcherStrategyFactory fetcherStrategyFactory;
+  private final GetDailySavingUC getDailySavingUC;
   private final PiggyBankService pbService;
 
   public IntervalSavingsSummary getMonthlySavingsSummary(SavingsSummarySpec spec) {
-    var monthlyFetcher = fetcherStrategyFactory.createMonthlyFetcherStrategy(spec);
-    return new IntervalSavingsSummary(monthlyFetcher.fetchSavings());
+    var monthlyInterval = new MonthInterval(spec.getMonth());
+    return new IntervalSavingsSummary(getSavingsForInterval(spec.asGetPiggyBankSpec(), monthlyInterval));
   }
 
   public ExcelReportResult getMonthlySavingsSummaryAsXlsx(SavingsSummarySpec spec) {
-    var fetcher = fetcherStrategyFactory.createMonthlyFetcherStrategy(spec);
-    return generateExcelReport(fetcher);
+    var monthlyInterval = new MonthInterval(spec.getMonth());
+    return generateExcelReport(spec.asGetPiggyBankSpec(), monthlyInterval);
   }
 
   public IntervalSavingsSummary getIntervalSavingsSummary(SavingsSummarySpec spec) {
-    var intervalMonthFetcher = fetcherStrategyFactory.createIntervalMonthFetcherStrategy(spec);
-    return new IntervalSavingsSummary(intervalMonthFetcher.fetchSavings());
+    var monthsInterval = new MonthsInterval(spec.getStartMonth(), spec.getEndMonth());
+    return new IntervalSavingsSummary(getSavingsForInterval(spec.asGetPiggyBankSpec(), monthsInterval));
   }
 
   public ExcelReportResult getIntervalSavingsSummaryAsXlsx(SavingsSummarySpec spec) {
-    var fetcher = fetcherStrategyFactory.createIntervalMonthFetcherStrategy(spec);
-    return generateExcelReport(fetcher);
+    var monthsInterval = new MonthsInterval(spec.getStartMonth(), spec.getEndMonth());
+    return generateExcelReport(spec.asGetPiggyBankSpec(), monthsInterval);
   }
 
-  private ExcelReportResult generateExcelReport(SavingsFetcherStrategy fetcher) {
-    var gapFiller = new IntervalSavingsGapFiller(fetcher.fetchSavings(), fetcher.startDay(), fetcher.endDay());
-    var monthlySavingsCollector = new MonthlySavingsCollector(gapFiller.fillGaps());
-    return new ExcelReportGenerator(monthlySavingsCollector.collect()).generateReport();
+  private ExcelReportResult generateExcelReport(GetPiggyBankSpec getPiggyBankSpec, DatesInterval datesInterval) {
+    List<DailySaving> dailySavings = getSavingsForInterval(getPiggyBankSpec, datesInterval);
+    var gapFiller = new IntervalSavingsGapFiller(dailySavings, datesInterval.startDay(), datesInterval.endDay());
+    var monthlySavingsCollector = new MonthlySavingsCollector(gapFiller.fillDateGaps());
+    return new ExcelReportGenerator(monthlySavingsCollector.groupByMonth()).generateReport();
+  }
+
+  private List<DailySaving> getSavingsForInterval(GetPiggyBankSpec spec, DatesInterval datesInterval) {
+    return getDailySavingUC.getSavingsForInterval(spec, datesInterval);
   }
 
   public PiggyBankSummary getPiggyBankSummary(SavingsSummarySpec spec) {

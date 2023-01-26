@@ -16,7 +16,7 @@ public class MonthlySavingsCollector implements SavingsCollector {
   private final List<DailySaving> dailySavings;
 
   @Override
-  public List<SavingsGroup> collect() {
+  public List<SavingsGroup> groupByMonth() {
     return dailySavings.stream()
         .collect(groupingBy(DailySaving::getYearMonthDate, TreeMap::new, toList())) // to order asc by month
         .entrySet().stream()

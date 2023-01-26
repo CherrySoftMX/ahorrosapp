@@ -8,23 +8,32 @@ import java.time.Month;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class MonthParserTest {
   private MonthParser monthParser;
 
   @BeforeEach
   void init() {
-    monthParser = new MonthParser();
+    this.monthParser = new MonthParser();
   }
 
   @Test
-  void givenValidMMYYYYString_thenReturnStartAndEndOfMonth() {
-    monthParser.setMMYYYYString("07-2022");
+  void shouldReturnStartAndEndOfMonth_whenValidMMYYYYString() {
+    String july2022 = "07-2022";
+    monthParser.setMMYYYYString(july2022);
 
     LocalDate result = monthParser.startOfMonth();
 
     assertThat(result.getMonth(), is(Month.JULY));
     assertThat(result.getYear(), is(2022));
+  }
+
+  @Test
+  void shouldThrowException_whenMonthIsNull() {
+    assertThrows(IllegalArgumentException.class, () -> {
+      monthParser.startOfMonth();
+    });
   }
 
 }

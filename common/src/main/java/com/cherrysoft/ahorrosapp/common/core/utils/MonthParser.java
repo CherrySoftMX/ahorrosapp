@@ -9,6 +9,7 @@ import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 
 import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 
 @Data
 public class MonthParser {
@@ -25,21 +26,29 @@ public class MonthParser {
   }
 
   public MonthParser(String mmyyyyString) {
-    this(MM_YYYY_FORMATTER, mmyyyyString);
+    this(mmyyyyString, MM_YYYY_FORMATTER);
   }
 
-  public MonthParser(DateTimeFormatter formatter, String mmyyyyString) {
+  public MonthParser(String mmyyyyString, DateTimeFormatter formatter) {
     this.mmyyyyString = mmyyyyString;
     this.formatter = formatter;
     parseMonth();
   }
 
   public LocalDate startOfMonth() {
+    ensureParseResultIsNotNull();
     return parseResult.atDay(1);
   }
 
   public LocalDate endOfMonth() {
+    ensureParseResultIsNotNull();
     return parseResult.atEndOfMonth();
+  }
+
+  private void ensureParseResultIsNotNull() {
+    if (isNull(parseResult)) {
+      throw new IllegalArgumentException("Month cannot be null!");
+    }
   }
 
   public MonthParser setMMYYYYString(String mmyyyyString) {
@@ -49,7 +58,7 @@ public class MonthParser {
   }
 
   private void parseMonth() {
-    if (!isNull(mmyyyyString)) {
+    if (nonNull(mmyyyyString)) {
       this.parseResult = YearMonth.parse(mmyyyyString, formatter);
     }
   }

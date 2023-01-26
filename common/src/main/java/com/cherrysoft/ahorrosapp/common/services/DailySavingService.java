@@ -1,7 +1,9 @@
 package com.cherrysoft.ahorrosapp.common.services;
 
+import com.cherrysoft.ahorrosapp.common.core.interval.DatesInterval;
 import com.cherrysoft.ahorrosapp.common.core.models.DailySaving;
 import com.cherrysoft.ahorrosapp.common.core.models.specs.DailySavingSpec;
+import com.cherrysoft.ahorrosapp.common.core.models.specs.piggybank.GetPiggyBankSpec;
 import com.cherrysoft.ahorrosapp.common.services.dailysaving.CreateDailySavingUC;
 import com.cherrysoft.ahorrosapp.common.services.dailysaving.DeleteDailySavingUC;
 import com.cherrysoft.ahorrosapp.common.services.dailysaving.GetDailySavingUC;
@@ -9,6 +11,7 @@ import com.cherrysoft.ahorrosapp.common.services.dailysaving.UpdateDailySavingUC
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -23,6 +26,11 @@ public class DailySavingService
   @Override
   public Optional<DailySaving> getDailySaving(DailySavingSpec dailySavingSpec) {
     return getDailySavingUC.getDailySaving(dailySavingSpec);
+  }
+
+  @Override
+  public List<DailySaving> getSavingsForInterval(GetPiggyBankSpec getPiggyBankSpec, DatesInterval intervalDate) {
+    return getDailySavingUC.getSavingsForInterval(getPiggyBankSpec, intervalDate);
   }
 
   @Override

@@ -7,6 +7,8 @@ import java.time.Clock;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import static java.util.Objects.requireNonNullElse;
+
 @Component
 public class DateUtils {
   public static final String DAY_MONTH_YEAR_PATTERN = "dd-MM-yyyy";
@@ -14,7 +16,7 @@ public class DateUtils {
   private static Clock clock;
 
   public static LocalDate today() {
-    return LocalDate.now(clock);
+    return LocalDate.now(requireNonNullElse(clock, Clock.systemDefaultZone()));
   }
 
   public static LocalDate tomorrow() {

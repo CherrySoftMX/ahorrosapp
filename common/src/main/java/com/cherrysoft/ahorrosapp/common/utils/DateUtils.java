@@ -1,13 +1,20 @@
 package com.cherrysoft.ahorrosapp.common.utils;
 
-import java.time.LocalDate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import java.time.Clock;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
+@Component
 public class DateUtils {
   public static final String DAY_MONTH_YEAR_PATTERN = "dd-MM-yyyy";
   public static final String MONTH_YEAR_PATTERN = "MM-yyyy";
+  private static Clock clock;
 
   public static LocalDate today() {
-    return LocalDate.now();
+    return LocalDate.now(clock);
   }
 
   public static LocalDate tomorrow() {
@@ -20,6 +27,15 @@ public class DateUtils {
 
   public static LocalDate yesterday() {
     return today().minusDays(1);
+  }
+
+  public static String formatDate(LocalDate date) {
+    return date.format(DateTimeFormatter.ofPattern(DAY_MONTH_YEAR_PATTERN));
+  }
+
+  @Autowired
+  public void setClock(Clock clock) {
+    DateUtils.clock = clock;
   }
 
 }

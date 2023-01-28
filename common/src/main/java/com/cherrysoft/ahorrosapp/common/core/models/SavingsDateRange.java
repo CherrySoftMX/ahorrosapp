@@ -13,6 +13,7 @@ import javax.persistence.Embeddable;
 import java.time.LocalDate;
 import java.util.Objects;
 
+import static com.cherrysoft.ahorrosapp.common.utils.DateUtils.formatDate;
 import static com.cherrysoft.ahorrosapp.common.utils.DateUtils.today;
 import static java.util.Objects.*;
 
@@ -95,7 +96,7 @@ public class SavingsDateRange {
 
   @Override
   public String toString() {
-    return String.format("(%s - %s)", startSavings, endSavings);
+    return String.format("(%s - %s)", formatDate(startSavings), formatDate(endSavings));
   }
 
 }

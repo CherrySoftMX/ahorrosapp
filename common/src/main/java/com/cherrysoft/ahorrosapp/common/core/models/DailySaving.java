@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.Objects;
 
+import static com.cherrysoft.ahorrosapp.common.utils.DateUtils.formatDate;
 import static com.cherrysoft.ahorrosapp.common.utils.DateUtils.today;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -36,12 +37,13 @@ public class DailySaving {
   @Column
   private String description;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
       name = "piggy_bank_id",
       referencedColumnName = "piggy_bank_id",
       foreignKey = @ForeignKey(name = "fk_piggy_bank_id")
   )
+  @ToString.Exclude
   private PiggyBank piggyBank;
 
   public DailySaving(LocalDate date, BigDecimal amount) {
@@ -85,6 +87,10 @@ public class DailySaving {
       date = today();
     }
     return date;
+  }
+
+  public String getDateString() {
+    return formatDate(date);
   }
 
   @Override

@@ -3,19 +3,14 @@ package com.cherrysoft.ahorrosapp.web.controllers;
 import com.cherrysoft.ahorrosapp.common.core.models.User;
 import com.cherrysoft.ahorrosapp.common.repositories.UserRepository;
 import com.cherrysoft.ahorrosapp.common.services.UserService;
+import com.cherrysoft.ahorrosapp.web.AbstractControllerIT;
 import com.cherrysoft.ahorrosapp.web.utils.JsonUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.servlet.MockMvc;
-
-import java.util.Map;
 
 import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
@@ -24,46 +19,18 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@AutoConfigureMockMvc
-@ActiveProfiles("test")
-class UserControllerIT {
-  @Autowired private MockMvc mockMvc;
-  @Autowired private UserRepository userRepository;
+class UserControllerIT extends AbstractControllerIT {
   @Autowired private UserService userService;
-  private User user;
-  private String accessToken;
+  @Autowired private UserRepository userRepository;
 
   @BeforeEach
-  void setup() {
-    user = User.builder()
-        .username("hikingcarrot7")
-        .password("password12345")
-        .build();
-    String unencryptedPassword = user.getPassword();
-    userService.createUser(user);
-    user.setPassword(unencryptedPassword);
+  void registerUser() {
+    userService.createUser(getUserForLogin());
   }
 
   @AfterEach
   void deleteUsers() {
     userRepository.deleteAll();
-  }
-
-  void doLogin() throws Exception {
-    var body = Map.of("username", user.getUsername(), "password", user.getPassword());
-
-    String response = mockMvc.perform(
-            post("/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtils.asJsonString(body))
-        )
-        .andDo(print())
-        .andReturn()
-        .getResponse()
-        .getContentAsString();
-
-    accessToken = JsonUtils.readValueFromJsonString(response, "accessToken");
   }
 
   @Test

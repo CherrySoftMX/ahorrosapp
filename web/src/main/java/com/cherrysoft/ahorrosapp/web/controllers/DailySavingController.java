@@ -17,12 +17,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.net.URI;
 import java.time.LocalDate;
 
 import static com.cherrysoft.ahorrosapp.common.utils.DateUtils.DAY_MONTH_YEAR_PATTERN;
@@ -79,7 +81,9 @@ public class DailySavingController {
     DailySaving dailySaving = dailySavingMapper.toDailySaving(payload).withDateOrToday(date);
     var spec = new DailySavingSpec(ownerUsername, pbName, dailySaving);
     DailySaving result = dailySavingService.createDailySaving(spec);
-    return ResponseEntity.ok(dailySavingModelAssembler.toModel(result));
+    return ResponseEntity.created(
+            URI.create(String.format("%s/daily?date=%s", pbName, result.getDateString())))
+        .body(dailySavingModelAssembler.toModel(result));
   }
 
   @Operation(summary = "Partially updates the saving with the given date or today's savings if no date is provided.")
@@ -110,7 +114,7 @@ public class DailySavingController {
       }),
       @ApiResponse(ref = NOT_FOUND_RESPONSE_REF, responseCode = "404")
   })
-  @DeleteMapping
+  @DeleteMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public DailySavingDTO deleteDailySaving(
       @AuthenticationPrincipal SecurityUser loggedUser,
       @PathVariable String pbName,

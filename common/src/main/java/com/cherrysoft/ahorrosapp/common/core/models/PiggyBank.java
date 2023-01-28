@@ -23,6 +23,7 @@ import static java.util.Objects.nonNull;
 @NoArgsConstructor
 @Getter
 @Setter
+@ToString
 @Audited
 public class PiggyBank {
   @Id
@@ -49,12 +50,13 @@ public class PiggyBank {
   @Temporal(TemporalType.TIMESTAMP)
   private Calendar createdAt;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
       name = "owner_user_id",
       referencedColumnName = "user_id",
       foreignKey = @ForeignKey(name = "fk_user_id")
   )
+  @ToString.Exclude
   private User owner;
 
   @OneToMany(

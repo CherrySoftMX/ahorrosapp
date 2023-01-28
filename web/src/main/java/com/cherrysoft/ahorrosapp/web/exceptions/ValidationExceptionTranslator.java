@@ -5,9 +5,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.NativeWebRequest;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.zalando.problem.Problem;
+import org.zalando.problem.Status;
 import org.zalando.problem.spring.web.advice.validation.ConstraintViolationAdviceTrait;
 import org.zalando.problem.spring.web.advice.validation.MethodArgumentNotValidAdviceTrait;
 
@@ -19,6 +22,8 @@ import java.util.List;
 import java.util.Map;
 
 import static com.cherrysoft.ahorrosapp.web.utils.ToStringUtils.toJsonString;
+import static java.util.Objects.nonNull;
+import static java.util.Objects.requireNonNullElse;
 import static java.util.stream.Collectors.toList;
 
 @Slf4j
@@ -52,7 +57,7 @@ public class ValidationExceptionTranslator implements ConstraintViolationAdviceT
         .withStatus(defaultConstraintViolationStatus())
         .with(FIELD_ERRORS_KEY, validationErrors)
         .build();
-    logMethodArgumentNotValid(validationErrors, request);
+    logMethodArgumentNotValidErrors(validationErrors, request);
     return create(ex, problem, request);
   }
 
@@ -64,11 +69,27 @@ public class ValidationExceptionTranslator implements ConstraintViolationAdviceT
     return result;
   }
 
-  private void logMethodArgumentNotValid(Map<String, String> validationErrors, NativeWebRequest request) {
+  private void logMethodArgumentNotValidErrors(Map<String, String> validationErrors, NativeWebRequest request) {
     HttpServletRequest nativeRequest = request.getNativeRequest(HttpServletRequest.class);
     String uri = nativeRequest.getRequestURI();
     String httpVerb = nativeRequest.getMethod();
     var entriesToLog = Map.of("uri", uri, "httpVerb", httpVerb, "validationErrors", validationErrors);
+    log.warn(toJsonString(entriesToLog));
+  }
+
+  @ExceptionHandler
+  public ResponseEntity<Problem> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex, NativeWebRequest request) {
+    logMethodArgumentTypeMismatchErrors(ex, request);
+    return create(Status.BAD_REQUEST, ex, request);
+  }
+
+  private void logMethodArgumentTypeMismatchErrors(MethodArgumentTypeMismatchException ex, NativeWebRequest request) {
+    HttpServletRequest nativeRequest = request.getNativeRequest(HttpServletRequest.class);
+    String details = requireNonNullElse(ex.getMessage(), "null");
+    String providedValue = nonNull(ex.getValue()) ? ex.getValue().toString() : "null";
+    String uri = nativeRequest.getRequestURI();
+    String httpVerb = nativeRequest.getMethod();
+    var entriesToLog = Map.of("uri", uri, "httpVerb", httpVerb, "details", details, "providedValue", providedValue);
     log.warn(toJsonString(entriesToLog));
   }
 

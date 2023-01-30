@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ContextConfiguration(classes = UserRepository.class)
 @Import(RepositoryTestingConfig.class)
 @ActiveProfiles("test")
-class UserRepositoryTest {
+class UserRepositoryIT {
   private final Faker faker = FAKER_INSTANCE;
   @Autowired private UserRepository userRepository;
 

@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ContextConfiguration(classes = {DailySavingRepository.class, PiggyBankRepository.class})
 @Import(RepositoryTestingConfig.class)
 @ActiveProfiles("test")
-class DailySavingRepositoryTest {
+class DailySavingRepositoryIT {
   @Autowired private DailySavingRepository dailySavingRepository;
   @Autowired private PiggyBankRepository pbRepository;
   private PiggyBank pb;

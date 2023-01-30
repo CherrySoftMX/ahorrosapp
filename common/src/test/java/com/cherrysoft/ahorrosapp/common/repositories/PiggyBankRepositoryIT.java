@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @ContextConfiguration(classes = {PiggyBankRepository.class, UserRepository.class})
 @Import(RepositoryTestingConfig.class)
 @ActiveProfiles("test")
-class PiggyBankRepositoryTest {
+class PiggyBankRepositoryIT {
   private final Faker faker = FAKER_INSTANCE;
   @Autowired private UserRepository userRepository;
   @Autowired private PiggyBankRepository pbRepository;

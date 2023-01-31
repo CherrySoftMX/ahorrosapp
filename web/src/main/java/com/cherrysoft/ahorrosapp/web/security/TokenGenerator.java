@@ -24,8 +24,11 @@ public class TokenGenerator {
   private final JwtEncoder refreshTokenEncoder;
   private final Clock clock;
 
-  @Value("${token-expiration-time-hours}")
-  private int tokenExpirationTimeHours;
+  @Value("${access-token.expiration-time-hours}")
+  private int accessTokenExpirationTimeHours;
+
+  @Value("${refresh-token.expiration-time-hours}")
+  private int refreshTokenExpirationTimeHours;
 
   public TokenGenerator(
       JwtEncoder encoder,
@@ -87,7 +90,7 @@ public class TokenGenerator {
     JwtClaimsSet claims = JwtClaimsSet.builder()
         .issuer("manics")
         .issuedAt(now)
-        .expiresAt(now.plus(30, ChronoUnit.DAYS))
+        .expiresAt(now.plus(refreshTokenExpirationTimeHours, ChronoUnit.HOURS))
         .subject(authentication.getName())
         .claim("scope", extractScopes(authentication))
         .build();

@@ -16,6 +16,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.Authentication;
@@ -25,6 +26,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -72,11 +74,12 @@ public class LoginAndRegistrationController {
   }
 
   @Operation(summary = "Registration of new user")
-  @ApiResponse(responseCode = "200", description = "User Registered", content = {
+  @ApiResponse(responseCode = "201", description = "User Registered", content = {
       @Content(schema = @Schema(implementation = TokenDTO.class))
   })
   @PostMapping("/register")
   @Validated(OnCreate.class)
+  @ResponseStatus(HttpStatus.CREATED)
   public TokenDTO register(@RequestBody @Valid UserDTO payload) {
     User newUser = userMapper.toUser(payload);
     User result = userService.createUser(newUser);

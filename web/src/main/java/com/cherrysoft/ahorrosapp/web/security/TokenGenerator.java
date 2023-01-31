@@ -11,6 +11,7 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Component;
 
+import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -21,16 +22,20 @@ import static java.util.stream.Collectors.joining;
 public class TokenGenerator {
   private final JwtEncoder encoder;
   private final JwtEncoder refreshTokenEncoder;
+  private final Clock clock;
 
   @Value("${token-expiration-time-hours}")
   private int tokenExpirationTimeHours;
 
   public TokenGenerator(
       JwtEncoder encoder,
-      @Qualifier("jwtRefreshTokenEncoder") JwtEncoder refreshTokenEncoder
+      @Qualifier("jwtRefreshTokenEncoder") JwtEncoder refreshTokenEncoder,
+      @Qualifier("tokenEncoderClock") Clock clock
+
   ) {
     this.encoder = encoder;
     this.refreshTokenEncoder = refreshTokenEncoder;
+    this.clock = clock;
   }
 
   public TokenDTO issueToken(Authentication authentication) {
@@ -57,7 +62,7 @@ public class TokenGenerator {
   }
 
   private boolean lessThan1WeekBeforeExpiration(Jwt jwt) {
-    Instant now = Instant.now();
+    Instant now = Instant.now(clock);
     Instant expiresAt = jwt.getExpiresAt();
     Duration duration = Duration.between(now, expiresAt);
     long daysUntilExpired = duration.toDays();
@@ -65,11 +70,11 @@ public class TokenGenerator {
   }
 
   private String generateAccessToken(Authentication authentication) {
-    Instant now = Instant.now();
+    Instant now = Instant.now(clock);
     JwtClaimsSet claims = JwtClaimsSet.builder()
         .issuer("manics")
         .issuedAt(now)
-        .expiresAt(now.plus(tokenExpirationTimeHours, ChronoUnit.HOURS))
+        .expiresAt(now.plus(accessTokenExpirationTimeHours, ChronoUnit.HOURS))
         .subject(authentication.getName())
         .claim("scope", extractScopes(authentication))
         .build();
@@ -78,7 +83,7 @@ public class TokenGenerator {
   }
 
   private String generateRefreshToken(Authentication authentication) {
-    Instant now = Instant.now();
+    Instant now = Instant.now(clock);
     JwtClaimsSet claims = JwtClaimsSet.builder()
         .issuer("manics")
         .issuedAt(now)

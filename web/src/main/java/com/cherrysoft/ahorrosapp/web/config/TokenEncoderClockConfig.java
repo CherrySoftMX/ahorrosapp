@@ -1,4 +1,4 @@
-package com.cherrysoft.ahorrosapp.common.config;
+package com.cherrysoft.ahorrosapp.web.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -6,10 +6,10 @@ import org.springframework.context.annotation.Configuration;
 import java.time.Clock;
 
 @Configuration
-public class ClockConfig {
+public class TokenEncoderClockConfig {
 
   @Bean
-  public Clock clock() {
+  public Clock tokenEncoderClock() {
     return Clock.systemDefaultZone();
   }
 

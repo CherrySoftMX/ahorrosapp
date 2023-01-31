@@ -23,9 +23,10 @@ public class UserService {
   }
 
   public User createUser(User user) {
-    ensureUniqueUsername(user.getUsername());
-    user.setPassword(passwordEncoder.encode(user.getPassword()));
-    return userRepository.save(user);
+    User userToSave = new User(user.getUsername(), user.getPassword());
+    ensureUniqueUsername(userToSave.getUsername());
+    userToSave.setPassword(passwordEncoder.encode(userToSave.getPassword()));
+    return userRepository.save(userToSave);
   }
 
   // For now, only the user's password can be updated.

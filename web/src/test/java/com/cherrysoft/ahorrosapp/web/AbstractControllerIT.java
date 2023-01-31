@@ -3,6 +3,7 @@ package com.cherrysoft.ahorrosapp.web;
 
 import com.cherrysoft.ahorrosapp.common.core.models.User;
 import com.cherrysoft.ahorrosapp.web.utils.JsonUtils;
+import com.jayway.jsonpath.JsonPath;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,6 +22,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 public abstract class AbstractControllerIT {
   @Autowired protected MockMvc mockMvc;
   protected String accessToken;
+  protected String refreshToken;
 
   protected void doLogin() throws Exception {
     User registeredUser = getUserForLogin();
@@ -32,10 +34,10 @@ public abstract class AbstractControllerIT {
                 .content(JsonUtils.asJsonString(body))
         )
         .andReturn()
-        .getResponse()
-        .getContentAsString();
+        .getResponse().getContentAsString();
 
-    accessToken = JsonUtils.readValueFromJsonString(response, "accessToken");
+    accessToken = JsonPath.read(response, "$.accessToken");
+    refreshToken = JsonPath.read(response, "$.refreshToken");
   }
 
   protected User getUserForLogin() {

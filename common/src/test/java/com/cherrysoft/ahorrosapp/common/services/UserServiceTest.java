@@ -20,6 +20,7 @@ import java.util.Optional;
 
 import static com.cherrysoft.ahorrosapp.common.config.FakerConfig.FAKER_INSTANCE;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -63,7 +64,7 @@ class UserServiceTest {
           .password("password123")
           .build();
       given(userRepository.existsByUsername(anyString())).willReturn(false);
-      given(userRepository.save(providedUser)).willAnswer(invocation -> invocation.getArgument(0));
+      given(userRepository.save(any())).willAnswer(invocation -> invocation.getArgument(0));
 
       User newUser = userService.createUser(providedUser);
 

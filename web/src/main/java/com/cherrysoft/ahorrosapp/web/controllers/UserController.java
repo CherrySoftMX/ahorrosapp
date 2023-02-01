@@ -3,7 +3,6 @@ package com.cherrysoft.ahorrosapp.web.controllers;
 import com.cherrysoft.ahorrosapp.common.core.models.User;
 import com.cherrysoft.ahorrosapp.common.services.UserService;
 import com.cherrysoft.ahorrosapp.web.dtos.UserDTO;
-import com.cherrysoft.ahorrosapp.web.dtos.validation.OnCreate;
 import com.cherrysoft.ahorrosapp.web.hateoas.assemblers.UserModelAssembler;
 import com.cherrysoft.ahorrosapp.web.mappers.UserMapper;
 import com.cherrysoft.ahorrosapp.web.security.SecurityUser;
@@ -14,7 +13,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,7 +21,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.net.URI;
 
 import static com.cherrysoft.ahorrosapp.web.utils.ApiDocsConstants.*;
 
@@ -59,21 +56,6 @@ public class UserController {
   ) {
     User result = userService.getUserByUsername(username);
     return userModelAssembler.toModel(result);
-  }
-
-  @Operation(summary = "Creates a user with the given payload")
-  @ApiResponse(responseCode = "201", description = "User created", content = {
-      @Content(schema = @Schema(implementation = UserDTO.class))
-  })
-  @PostMapping
-  @ResponseStatus(HttpStatus.CREATED)
-  @Validated(OnCreate.class)
-  public ResponseEntity<UserDTO> createUser(@RequestBody @Valid UserDTO payload) {
-    User providedUser = userMapper.toUser(payload);
-    User result = userService.createUser(providedUser);
-    return ResponseEntity
-        .created(URI.create(String.format("%s/%s", BASE_URL, result.getId())))
-        .body(userModelAssembler.toModel(result));
   }
 
   @Operation(summary = "Partially updates a user with the given payload")

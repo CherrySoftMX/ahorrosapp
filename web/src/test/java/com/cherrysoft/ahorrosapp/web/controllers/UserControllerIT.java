@@ -1,22 +1,21 @@
 package com.cherrysoft.ahorrosapp.web.controllers;
 
-import com.cherrysoft.ahorrosapp.common.core.models.User;
 import com.cherrysoft.ahorrosapp.common.repositories.UserRepository;
 import com.cherrysoft.ahorrosapp.common.services.UserService;
 import com.cherrysoft.ahorrosapp.web.AbstractControllerIT;
 import com.cherrysoft.ahorrosapp.web.utils.JsonUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.MediaType;
 
-import static org.hamcrest.Matchers.notNullValue;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import java.util.Map;
+
+import static org.hamcrest.Matchers.is;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 class UserControllerIT extends AbstractControllerIT {
@@ -33,58 +32,117 @@ class UserControllerIT extends AbstractControllerIT {
     userRepository.deleteAll();
   }
 
-  @Test
-  void whenUserIsValid_thenIsAddedToDatabase_and201StatusIsReturned() throws Exception {
-    User providedUser = User.builder()
-        .username("testUsername")
-        .password("secure-password")
-        .build();
+  @Nested
+  class GetUser {
 
-    mockMvc
-        .perform(
-            post(UserController.BASE_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtils.asJsonString(providedUser))
-                .with(jwt())
-        )
-        .andDo(print())
-        .andExpect(status().isCreated())
-        .andExpect(jsonPath("$.id").exists())
-        .andExpect(header().string("Location", notNullValue()))
-        .andExpect(content().contentType(MediaTypes.HAL_JSON_VALUE));
+    @Test
+    void shouldGetUserByUsername() throws Exception {
+      doLogin();
+
+      mockMvc.perform(
+              get("/users/hikingcarrot7")
+                  .headers(authHeader())
+          )
+          .andExpect(status().isOk())
+          .andExpect(jsonPath("$.id").exists())
+          .andExpect(jsonPath("$.username").value("hikingcarrot7"))
+          .andExpect(content().contentType(MediaTypes.HAL_JSON_VALUE))
+          .andExpect(jsonPath("$._links.self.href", is("http://localhost/users/hikingcarrot7")))
+          .andExpect(jsonPath("$._links.piggy_banks.href", is("http://localhost")));
+    }
+
+    @Test
+    void shouldReturn403_whenUsernameDifferentFromLoggedUser() throws Exception {
+      doLogin();
+
+      mockMvc.perform(
+              get("/users/notFound")
+                  .headers(authHeader())
+          )
+          .andExpect(status().isForbidden())
+          .andExpect(jsonPath("$.detail").exists())
+          .andExpect(content().contentType(org.zalando.problem.spring.web.advice.MediaTypes.PROBLEM_VALUE));
+    }
+
   }
 
-  @Test
-  void whenUserIsInvalid_then400StatusIsReturned() throws Exception {
-    User providedUser = User.builder()
-        .username("hik")
-        .password("1234")
-        .build();
+  @Nested
+  class UpdateUser {
 
-    mockMvc
-        .perform(
-            post(UserController.BASE_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtils.asJsonString(providedUser))
-                .with(jwt())
-        )
-        .andDo(print())
-        .andExpect(status().isBadRequest());
+    @Test
+    void shouldOnlyUpdateUserPassword() throws Exception {
+      doLogin();
+      var updatedUser = Map.of("username", "newHikingCarrot", "password", "new-password123");
+
+      mockMvc.perform(
+              patch("/users/hikingcarrot7")
+                  .contentType(MediaType.APPLICATION_JSON)
+                  .content(JsonUtils.asJsonString(updatedUser))
+                  .headers(authHeader())
+          )
+          .andExpect(status().isOk())
+          .andExpect(jsonPath("$.username").value("hikingcarrot7"))
+          .andExpect(content().contentType(MediaTypes.HAL_JSON_VALUE));
+
+      var updatedUserPassword = Map.of("username", "hikingcarrot7", "password", "new-password123");
+      mockMvc.perform(
+              post("/login")
+                  .contentType(MediaType.APPLICATION_JSON)
+                  .content(JsonUtils.asJsonString(updatedUserPassword))
+          )
+          .andExpect(jsonPath("$.accessToken").exists())
+          .andExpect(jsonPath("$.refreshToken").exists());
+    }
+
+    @Test
+    void shouldReturn403_whenUsernameDifferentFromLoggedUser() throws Exception {
+      doLogin();
+      var updatedUser = Map.of("username", "newHikingCarrot", "password", "new-password123");
+
+      mockMvc.perform(
+              patch("/users/notFound")
+                  .contentType(MediaType.APPLICATION_JSON)
+                  .content(JsonUtils.asJsonString(updatedUser))
+                  .headers(authHeader())
+          )
+          .andExpect(status().isForbidden())
+          .andExpect(jsonPath("$.detail").exists())
+          .andExpect(content().contentType(org.zalando.problem.spring.web.advice.MediaTypes.PROBLEM_VALUE));
+    }
+
   }
 
-  @Test
-  void whenUserIsDeleted_then200StatusIsReturned() throws Exception {
-    doLogin();
+  @Nested
+  class DeleteUser {
 
-    mockMvc
-        .perform(
-            delete("/users/hikingcarrot7")
-                .header("Authorization", "Bearer " + accessToken)
-        )
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.id").exists())
-        .andExpect(jsonPath("$.username").value("hikingcarrot7"))
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+    @Test
+    void shouldDeleteUser() throws Exception {
+      doLogin();
+      
+      mockMvc
+          .perform(
+              delete("/users/hikingcarrot7")
+                  .headers(authHeader())
+          )
+          .andExpect(status().isOk())
+          .andExpect(jsonPath("$.id").exists())
+          .andExpect(jsonPath("$.username").value("hikingcarrot7"))
+          .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+    }
+
+    @Test
+    void shouldReturn403_whenUsernameDifferentFromLoggedUser() throws Exception {
+      doLogin();
+
+      mockMvc.perform(
+              delete("/users/notFound")
+                  .headers(authHeader())
+          )
+          .andExpect(status().isForbidden())
+          .andExpect(jsonPath("$.detail").exists())
+          .andExpect(content().contentType(org.zalando.problem.spring.web.advice.MediaTypes.PROBLEM_VALUE));
+    }
+
   }
 
 }

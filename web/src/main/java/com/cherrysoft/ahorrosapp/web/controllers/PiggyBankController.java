@@ -3,9 +3,9 @@ package com.cherrysoft.ahorrosapp.web.controllers;
 import com.cherrysoft.ahorrosapp.common.core.models.PiggyBank;
 import com.cherrysoft.ahorrosapp.common.core.models.specs.piggybank.UpdatePiggyBankSpec;
 import com.cherrysoft.ahorrosapp.common.services.PiggyBankService;
-import com.cherrysoft.ahorrosapp.web.hateoas.assemblers.PiggyBankModelAssembler;
 import com.cherrysoft.ahorrosapp.web.dtos.PiggyBankDTO;
 import com.cherrysoft.ahorrosapp.web.dtos.validation.OnCreate;
+import com.cherrysoft.ahorrosapp.web.hateoas.assemblers.PiggyBankModelAssembler;
 import com.cherrysoft.ahorrosapp.web.mappers.PiggyBankMapper;
 import com.cherrysoft.ahorrosapp.web.security.SecurityUser;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,6 +24,7 @@ import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.data.web.SortDefault;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
@@ -126,7 +127,7 @@ public class PiggyBankController {
       }),
       @ApiResponse(ref = NOT_FOUND_RESPONSE_REF, responseCode = "404")
   })
-  @DeleteMapping("/{pbName}")
+  @DeleteMapping(value = "/{pbName}", produces = MediaType.APPLICATION_JSON_VALUE)
   public PiggyBankDTO deletePiggyBank(
       @AuthenticationPrincipal SecurityUser loggedUser,
       @PathVariable String pbName

@@ -4,6 +4,8 @@ import com.cherrysoft.ahorrosapp.web.dtos.validation.OnCreate;
 import com.cherrysoft.ahorrosapp.web.dtos.validation.PiggyBankName;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.hateoas.RepresentationModel;
@@ -17,8 +19,10 @@ import java.time.LocalDate;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
+@Builder
+@AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Relation(itemRelation = "piggybank", collectionRelation = "piggybanks")
+@Relation(itemRelation = "piggy_bank", collectionRelation = "piggy_banks")
 public class PiggyBankDTO extends RepresentationModel<PiggyBankDTO> {
   @Null
   @JsonProperty(access = JsonProperty.Access.READ_ONLY)
